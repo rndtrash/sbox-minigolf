@@ -12,6 +12,8 @@ namespace Minigolf
 	[Library("minigolf_ball")]
 	public partial class PlayerBall : ModelEntity
 	{
+		// public GolfPlayer Owner;
+
 		public override void Spawn()
 		{
 			base.Spawn();
@@ -37,34 +39,35 @@ namespace Minigolf
 		/// <param name="hitEntity"></param>
 		/// <param name="speed"></param>
 		/// <param name="timeDelta"></param>
-		protected override void OnPhysicsCollision(Entity hitEntity, float speed, float timeDelta)
+		protected override void OnPhysicsCollision(CollisionEventData eventData)
 		{
-			// todo: remove this
-			if (!hitEntity.IsWorld)
-				return;
+			// We only want to adjust how we bounce off walls for now
+			// if (!eventData.Entity.IsWorld)
+			// 	return;
 
-			PlaySound("ballcollision_standard");
+			Sandbox.UI.ChatBox.AddInformation(Player.All, $"Bounce at normal: {eventData.Normal}");
 
-			// todo when more data exists:
-			var HitNormal = new Vector3(0, 0, 0);
-			var OldVelocity = new Vector3(0, 0, 0);
-
-			if (false && Vector3.Up.Dot(HitNormal) >= -0.35)
+			if (true || Vector3.Up.Dot(eventData.Normal) >= -0.35)
             {
 				// calculate our bounce normal
-				var normal = OldVelocity.Normal;
+				var normal = eventData.PreVelocity.Normal;
 
-				var dot = HitNormal.Dot(normal * -1);
-				var reflect = (2 * HitNormal * dot) + normal;
-				var newSpeed = Math.Max(OldVelocity.Length, speed);
+				//var dot = eventData.Normal.Dot(normal * -1);
+				//var reflect = (2 * eventData.Normal * dot) + normal;
+				var reflect = Vector3.Reflect(eventData.PreVelocity.Normal, eventData.Normal.Normal).Normal;
+				var newSpeed = Math.Max(eventData.PreVelocity.Length, eventData.Speed);
+
+				Sandbox.UI.ChatBox.AddInformation(Player.All, $"Reflect normal: {reflect}");
+				DebugOverlay.Line(eventData.Pos, eventData.Pos + (reflect * 32.0f), 5);
 
 				Velocity = reflect * newSpeed * 0.8f;
 
+				PlaySound("ballcollision_standard");
+
 				// make particle effect
-				// play bounce sound
 			}
 
-			base.OnPhysicsCollision(hitEntity, speed, timeDelta);
+			base.OnPhysicsCollision(eventData);
 		}
 	}
 }
