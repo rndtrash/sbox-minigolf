@@ -1,0 +1,22 @@
+﻿powerbar {
+    position: absolute;
+    bottom: 86px;
+    left: 120px;
+    border: 4px rgba(0, 0, 0, 0.9) solid;
+    border-radius: 4px;
+    padding: 4px;
+    background-color: rgba(0, 0, 0, 0.25);
+    height: 48px;
+    width: 400px;
+
+    .bar {
+        opacity: 0;
+        background-color: green;
+        height: 100%;
+        border-radius: 4px;
+    }
+
+    &.active .bar {
+        opacity: 1;
+    }
+}

@@ -1,0 +1,16 @@
+﻿# Sandbox
+code/accesslist.txt
+Properties
+.intermediate
+tools_asset_info.bin
+*.csproj
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Oo]bj/

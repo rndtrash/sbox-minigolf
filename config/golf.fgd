@@ -1,0 +1,9 @@
+@PointClass base(Targetname) editormodel("models/golf_hole.mdl") = minigolf_hole : "Minigolf Hole"
+[
+    hole(integer): "Hole" : 0 : "Which hole this hole is on."
+]
+
+@PointClass base(Targetname) editormodel("models/golf_ball.vmdl") = minigolf_ball_spawn : "Minigolf Ball Spawn"
+[
+    hole(integer): "Hole" : 0 : "Which hole this spawnpoint is on."
+]
