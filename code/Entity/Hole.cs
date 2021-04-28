@@ -2,7 +2,7 @@
 
 namespace Minigolf
 {
-	[Library("golf_hole")]
+	[Library("minigolf_hole")]
 	public partial class GolfHole : ModelEntity
 	{
 		[HammerProp("hole")]

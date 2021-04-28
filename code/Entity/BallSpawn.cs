@@ -2,8 +2,8 @@
 
 namespace Minigolf
 {
-	[Library("golf_tee")]
-	public partial class GolfTee : ModelEntity
+	[Library("minigolf_ball_spawn")]
+	public partial class BallSpawn : ModelEntity
 	{
 		[HammerProp("hole")]
 		public int Hole { get; set; }
