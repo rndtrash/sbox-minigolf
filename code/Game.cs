@@ -56,6 +56,24 @@ namespace Minigolf
 			// player.Ball.PlaySound(sound.Name);
 		}
 
+		public override void DoPlayerDevCam(Player player)
+		{
+			if (!player.HasPermission("devcam"))
+				return;
+
+			if (player is GolfPlayer basePlayer)
+			{
+				if (basePlayer.DevCamera is DevCamera)
+				{
+					basePlayer.DevCamera = null;
+				}
+				else
+				{
+					basePlayer.DevCamera = new DevCamera();
+				}
+			}
+		}
+
 		static readonly SoundEvent[][] SwingSounds = new SoundEvent[][] {
             new SoundEvent[] {
 				new("sounds/golfswing_supersoft_01.vsnd"),

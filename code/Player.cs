@@ -13,6 +13,9 @@ namespace Minigolf
 		public FollowBallCamera BallCamera { get; set; }
 
 		[NetPredicted]
+		public Camera DevCamera { get; set; }
+
+		[NetPredicted]
 		public PlayerBall Ball { get; set; }
 
 		public override void Respawn()
@@ -51,6 +54,12 @@ namespace Minigolf
 
 			VoiceRecord = input.Down(InputButton.Voice);
 
+			GetActiveCamera()?.BuildInput(input);
+
+			// Devcam might stop processing
+			if (input.StopProcessing)
+				return;
+
 			// Okay maybe this should be a controller or something?
 			if (input.Down(InputButton.Attack1))
 			{
@@ -64,8 +73,6 @@ namespace Minigolf
 				Log.Info($"Power: {ShotPower}");
 				ShotPower = 0;
             }
-
-			GetActiveCamera()?.BuildInput(input);
 		}
 
 		public override void PostCameraSetup(Camera camera)
@@ -75,6 +82,9 @@ namespace Minigolf
 
 		public override Camera GetActiveCamera()
 		{
+			if (DevCamera != null)
+				return DevCamera;
+
 			// If the Game wants to show a cinematic camera here let it
 
 			// Otherwise use our BallCamera

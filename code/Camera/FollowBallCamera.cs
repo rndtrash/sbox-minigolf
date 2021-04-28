@@ -50,8 +50,6 @@ namespace Minigolf
 			if (!input.Down(InputButton.Attack1))
 				Angles.pitch = Angles.pitch.Clamp(0, 89);
 
-			input.AnalogLook = Angles.Zero;
-
 			base.BuildInput(input);
 		}
 	}
