@@ -20,7 +20,7 @@ namespace Minigolf
 			if (Ball == null)
 				Ball = new PlayerBall();
 
-			Ball.WorldPos = new Vector3(0, 0, 128);
+			Ball.WorldPos = (Game.Current as GolfGame).FindBallSpawn(0);
 
 			// Setup our dud controller and animator
 			SetupControllerAndAnimator();

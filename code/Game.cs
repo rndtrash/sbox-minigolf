@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Sandbox;
 
 namespace Minigolf
@@ -13,6 +16,15 @@ namespace Minigolf
 		}
 
 		public override Player CreatePlayer() => new GolfPlayer();
+
+		public Vector3 FindBallSpawn(int hole)
+        {
+			var spawn = Entity.All.OfType<BallSpawn>().Where(x => x.Hole == hole).FirstOrDefault();
+
+			// TODO: Trace to find a valid Up coord
+
+			return spawn != null ? spawn.WorldPos : Vector3.Zero;
+        }
 
 		[ServerCmd("golf_shoot")]
 		public static void GolfShoot( float yaw, float power )
