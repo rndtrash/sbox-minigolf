@@ -1,4 +1,4 @@
-﻿using Sandbox;
+using Sandbox;
 using Sandbox.UI;
 using System;
 using System.Collections.Generic;
@@ -13,6 +13,12 @@ namespace Minigolf
 	public partial class PlayerBall : ModelEntity
 	{
 		// public GolfPlayer Owner;
+
+		static readonly SoundEvent HitSound = new("sounds/ballcollision_standard.vsnd")
+		{
+			Volume = 1,
+			DistanceMax = 500.0f
+		};
 
 		public override void Spawn()
 		{
@@ -62,9 +68,13 @@ namespace Minigolf
 
 				Velocity = reflect * newSpeed * 0.8f;
 
-				PlaySound("ballcollision_standard");
+				var particle = Particles.Create("particles/ball_hit.vpcf", eventData.Pos);
+				particle.SetPos(0, eventData.Pos);
+				particle.SetForward(0, reflect);
+				particle.Destroy(false);
 
-				// make particle effect
+				// Collision sound happens at this point, not entity
+				Sound.FromWorld(HitSound.Name, eventData.Pos);
 			}
 
 			base.OnPhysicsCollision(eventData);

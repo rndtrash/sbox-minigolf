@@ -27,6 +27,7 @@ namespace Minigolf
 			var player = owner as GolfPlayer;
 			player.Ball.Velocity += Angles.AngleVector(angles) * power * 25.0f;
 
+			// remove when SoundEvents aren't fucked
 			var modifier = "";
 			if (power < 25.0f)
 				modifier = "supersoft";
@@ -38,6 +39,32 @@ namespace Minigolf
 				modifier = "hard";
 
 			player.Ball.PlaySound($"golfswing_{modifier}_0{Rand.Int(1, 3)}");
+
+			// var sound = SwingSounds[(int)MathF.Ceiling(power / 25)][Rand.Int(0, 2)];
+			// player.Ball.PlaySound(sound.Name);
 		}
+
+		static readonly SoundEvent[][] SwingSounds = new SoundEvent[][] {
+            new SoundEvent[] {
+				new("sounds/golfswing_supersoft_01.vsnd"),
+				new("sounds/golfswing_supersoft_02.vsnd"),
+				new("sounds/golfswing_supersoft_03.vsnd"),
+			},
+			new SoundEvent[] {
+				new("sounds/golfswing_soft_01.vsnd"),
+				new("sounds/golfswing_soft_02.vsnd"),
+				new("sounds/golfswing_soft_03.vsnd"),
+			},
+			new SoundEvent[] {
+				new("sounds/golfswing_medium_01.vsnd"),
+				new("sounds/golfswing_medium_02.vsnd"),
+				new("sounds/golfswing_medium_03.vsnd"),
+			},
+			new SoundEvent[] {
+				new("sounds/golfswing_hard_01.vsnd"),
+				new("sounds/golfswing_hard_02.vsnd"),
+				new("sounds/golfswing_hard_03.vsnd"),
+			},
+		};
 	}
 }
