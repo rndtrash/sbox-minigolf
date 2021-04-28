@@ -10,7 +10,7 @@ namespace Minigolf
 	/// Player golf ball
 	/// </summary>
 	[Library("minigolf_ball")]
-	public partial class PlayerBall : ModelEntity
+	public partial class PlayerBall : ModelEntity, IFrameUpdate
 	{
 		// public GolfPlayer Owner;
 
@@ -19,6 +19,8 @@ namespace Minigolf
 			Volume = 1,
 			DistanceMax = 500.0f
 		};
+
+		/*[Net]*/ public Particles Trail { get; set; }
 
 		public override void Spawn()
 		{
@@ -39,6 +41,19 @@ namespace Minigolf
 			// PhysicsBody.LinearDamping = 0.8f;
 		}
 
+		public void OnFrame()
+		{
+			if (Trail == null)
+            {
+				Log.Info("New trail");
+
+				Trail = Particles.Create("particles/ball_trail.vpcf");
+				//Trail.SetPos(0, WorldPos);
+				Trail.SetEntity(0, this);
+			}
+
+			// Trail.SetPos(0, WorldPos);
+		}
 		/// <summary>
 		/// Do our own bounce physics and collision sounds here
 		/// </summary>
