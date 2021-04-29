@@ -27,11 +27,11 @@ namespace Minigolf
 
 			Pos = ball.WorldPos;
 
-			Pos += Vector3.Up * (32 + (ball.CollisionBounds.Center.z * ball.WorldScale));
+			Pos += Vector3.Up * (16 + (ball.CollisionBounds.Center.z * ball.WorldScale));
 			Rot = Rotation.From(Angles);
 
 			Pos = Pos + Rot.Backward * Distance;
-			FieldOfView = 70;
+			FieldOfView = 50;
 
 			Viewer = null;
 		}
