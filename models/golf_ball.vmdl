@@ -12,9 +12,9 @@
 					{
 						_class = "PhysicsShapeSphere"
 						parent_bone = ""
-						surface_prop = "default"
+						surface_prop = "plastic"
 						collision_prop = "default"
-						radius = 4.0
+						radius = 8.0
 						center = [ 0.0, 0.0, 0.0 ]
 					},
 				]
@@ -32,7 +32,7 @@
 						angles = [ 0.0, 0.0, 0.0 ]
 						max_u = 1.0
 						max_v = 1.0
-						radius = 4.0
+						radius = 8.0
 						segments_u = 32
 						segments_v = 32
 					},
@@ -45,12 +45,29 @@
 					{
 						_class = "PhysicsBodyMarkup"
 						target_body = "undefined"
-						mass_override = 30.0
+						mass_override = 90.0
 						inertia_scale = 1.0
 						linear_damping = 0.8
 						angular_damping = 0.8
 						use_mass_center_override = false
 						mass_center_override = [ 0.0, 0.0, 0.0 ]
+					},
+				]
+			},
+			{
+				_class = "GameDataList"
+				children = 
+				[
+					{
+						_class = "GenericGameData"
+						game_class = "ao_proxy_capsule"
+						game_keys = 
+						{
+							bonename = ""
+							radius = 8.0
+							point0 = [ 0.0, 0.0, 0.0 ]
+							point1 = [ 0.0, 0.0, 0.0 ]
+						}
 					},
 				]
 			},
