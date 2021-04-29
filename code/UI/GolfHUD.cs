@@ -27,6 +27,7 @@ namespace Minigolf
 			RootPanel.StyleSheet.Load("/ui/GolfHUD.scss");
 
 			RootPanel.AddChild<Sandbox.UI.ChatBox>();
+			RootPanel.AddChild<Sandbox.UI.Scoreboard<Sandbox.UI.ScoreboardEntry>>();
 			RootPanel.AddChild<PowerBar>();
 			RootPanel.AddChild<HoleScore>();
 			RootPanel.AddChild<EndScore>();
