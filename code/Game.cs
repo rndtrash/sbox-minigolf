@@ -8,6 +8,9 @@ namespace Minigolf
 	[Library("minigolf", Title = "Minigolf")]
 	partial class GolfGame : Sandbox.Game
 	{
+		[ServerVar("minigolf_power_multiplier")]
+		public static float PowerMultiplier { get; set; } = 25.0f;
+
 
 		[Net] public int CurrentHole { get; set; } = 1;
 
@@ -113,10 +116,14 @@ namespace Minigolf
 			if (owner == null)
 				return;
 
+			// scale the power
+			var velocityPower = power * PowerMultiplier;
+
 			var angles = new Angles(0, yaw, 0);
 
 			var player = owner as GolfPlayer;
-			player.Ball.Velocity += Angles.AngleVector(angles) * power * 25.0f;
+			player.Ball.PhysicsBody.Velocity += Angles.AngleVector(angles) * velocityPower;
+			player.Ball.PhysicsBody.AngularVelocity = Vector3.Zero;
 
 			// remove when SoundEvents aren't fucked
 			var modifier = "";
