@@ -26,6 +26,38 @@ namespace Minigolf
 			return spawn != null ? spawn.WorldPos : Vector3.Zero;
         }
 
+		public void OnBallInHole(PlayerBall ball, int hole)
+        {
+			var player = ball.Owner;
+			Sandbox.UI.ChatBox.AddInformation(Player.All, $"{player.Name} putted on hole {hole}!", $"avatar:{player.SteamId}");
+			ball.PlaySound(PuttSound.Name);
+
+			_ = DoBallStuff(ball, hole);
+		}
+
+		public async Task DoBallStuff(PlayerBall ball, int hole)
+		{
+			var strokes = (ball.Owner as GolfPlayer).Strokes;
+			DoBallClientSide(ball.Owner, ball, hole, HolePar, strokes);
+
+			await Task.DelaySeconds(5);
+
+			if (CurrentHole == 1)
+				CurrentHole = 2;
+			else
+				CurrentHole = 1;
+
+			(ball.Owner as GolfPlayer).Strokes = 0;
+			ball.WorldPos = FindBallSpawn(CurrentHole);
+		}
+
+		[ClientRpc]
+		public void DoBallClientSide(PlayerBall ball, int hole, int par, int strokes)
+        {
+			Host.AssertClient();
+			_ = EndScore.Current.ShowScore(hole, par, strokes);
+        }
+
 		[ServerCmd("golf_shoot")]
 		public static void GolfShoot( float yaw, float power )
 		{
@@ -73,6 +105,8 @@ namespace Minigolf
 				}
 			}
 		}
+
+		static readonly SoundEvent PuttSound = new SoundEvent("sounds/ballinhole.vsnd");
 
 		static readonly SoundEvent[][] SwingSounds = new SoundEvent[][] {
             new SoundEvent[] {

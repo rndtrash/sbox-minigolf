@@ -1,4 +1,4 @@
-﻿using Sandbox;
+using Sandbox;
 using System;
 using System.Linq;
 
@@ -23,7 +23,8 @@ namespace Minigolf
 			if (Ball == null)
 				Ball = new PlayerBall();
 
-			Ball.WorldPos = (Game.Current as GolfGame).FindBallSpawn(0);
+			Ball.Owner = this;
+			Ball.WorldPos = (Game.Current as GolfGame).FindBallSpawn(1);
 
 			// Setup our dud controller and animator
 			SetupControllerAndAnimator();

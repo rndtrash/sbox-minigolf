@@ -2,18 +2,31 @@
 using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Minigolf
 {
 	public partial class EndScore : Panel
 	{
+		public static readonly string HoleInOne = "Hole-in-One!";
+		public static readonly Dictionary<int, string> ScoreText = new Dictionary<int, string>
+		{
+			{ 4, "Condor" },
+			{ 3, "Double Eagle" },
+			{ 2, "Eagle" },
+			{ 1, "Birdie" },
+			{ 0, "Par" },
+			{ -1, "Bogey" },
+			{ -2, "Double Bogey" },
+			{ -3, "Triple Bogey" },
+			{ -4, "Quadruple Bogey" },
+		};
+
 		public static EndScore Current;
 
-		public bool Show;
-
-		private Label score;
-		private Label hole;
+		private Label scoreLabel;
+		private Label holeLabel;
 
 		public EndScore()
 		{
@@ -21,25 +34,27 @@ namespace Minigolf
 
 			StyleSheet.Load("/ui/EndScore.scss");
 
-			score = Add.Label("BOGEY", "score");
-			hole = Add.Label("HOLE 1", "hole");
+			scoreLabel = Add.Label("", "score");
+			holeLabel = Add.Label("", "hole");
 		}
 
-		public override void Tick()
-		{
-			Show = Player.Local.Input.Down(InputButton.Jump);
+		public async Task ShowScore(int hole, int par, int strokes)
+        {
+			if (strokes == 1)
+				scoreLabel.Text = HoleInOne;
+			else
+				scoreLabel.Text = ScoreText.GetValueOrDefault(par - strokes, $"WTF +{par - strokes}");
 
-			if (!Show)
-            {
-				(GolfHUD.Current as GolfHUD).Fade = false;
-				RemoveClass("show");
-				return;
-            }
+			holeLabel.Text = $"Hole {hole}".ToUpper();
 
-			AddClass("show");
-			// when we are showing, make sure the rootpanel is faded, probably a better way to do this
 			(GolfHUD.Current as GolfHUD).Fade = true;
-		}
+			AddClass("show");
+
+			await Task.DelaySeconds(5);
+
+			(GolfHUD.Current as GolfHUD).Fade = false;
+			RemoveClass("show");
+        }
 	}
 
 }
