@@ -15,12 +15,7 @@ namespace Minigolf
 		public bool IsMoving { get; set; }
 		public bool InHole { get; set; }
 
-		static readonly SoundEvent HitSound = new("sounds/ballcollision_standard.vsnd")
-		{
-			Volume = 1,
-			DistanceMax = 500.0f
-		};
-
+		static readonly SoundEvent BounceSound = new("sounds/minigolf.ball_bounce1.vsnd");
 		[Net] public Particles Trail { get; set; }
 
 		public override void Spawn()
@@ -60,8 +55,6 @@ namespace Minigolf
 			if (eventData.Entity.IsWorld)
 				return;
 
-			DebugOverlay.Text(eventData.Pos, $"Up Dot Normal: {Vector3.Up.Dot(eventData.Normal)}", Color.White, 5);
-
 			// Don't do ridiculous bounces upwards, just bounce off walls mainly
 			if (Vector3.Up.Dot(eventData.Normal) >= -0.35)
             {
@@ -80,7 +73,7 @@ namespace Minigolf
 				particle.Destroy(false);
 
 				// Collision sound happens at this point, not entity
-				var sound = Sound.FromWorld(HitSound.Name, eventData.Pos);
+				var sound = Sound.FromWorld(BounceSound.Name, eventData.Pos);
 				sound.SetVolume(1.0f); // todo: scale this based on speed (it can go above 1.0)
 			}
 		}

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,28 +15,32 @@ namespace Minigolf
 		[Net] public int CurrentHole { get; set; } = 1;
 		public int HolePar { get; set; } = 2;
 
-		static readonly SoundEvent PuttSound = new SoundEvent("sounds/ballinhole.vsnd");
+		[Net] public bool WaitingToStart { get; set; } = true;
+
+		static readonly SoundEvent SoundHoleInOne = new SoundEvent("sounds/minigolf.crowd_ovation.vsnd");
+		static readonly SoundEvent SoundBelowPar = new SoundEvent("sounds/minigolf.fart.vsnd");
+		static readonly SoundEvent InHoleSound = new SoundEvent("sounds/minigolf.ball_inhole.vsnd");
 
 		static readonly SoundEvent[][] SwingSounds = new SoundEvent[][] {
 			new SoundEvent[] {
-				new("sounds/golfswing_supersoft_01.vsnd"),
-				new("sounds/golfswing_supersoft_02.vsnd"),
-				new("sounds/golfswing_supersoft_03.vsnd"),
+				new("sounds/minigolf.swing_supersoft_01.vsnd"),
+				new("sounds/minigolf.swing_supersoft_02.vsnd"),
+				new("sounds/minigolf.swing_supersoft_03.vsnd"),
 			},
 			new SoundEvent[] {
-				new("sounds/golfswing_soft_01.vsnd"),
-				new("sounds/golfswing_soft_02.vsnd"),
-				new("sounds/golfswing_soft_03.vsnd"),
+				new("sounds/minigolf.swing_soft_01.vsnd"),
+				new("sounds/minigolf.swing_soft_02.vsnd"),
+				new("sounds/minigolf.swing_soft_03.vsnd"),
 			},
 			new SoundEvent[] {
-				new("sounds/golfswing_medium_01.vsnd"),
-				new("sounds/golfswing_medium_02.vsnd"),
-				new("sounds/golfswing_medium_03.vsnd"),
+				new("sounds/minigolf.swing_medium_01.vsnd"),
+				new("sounds/minigolf.swing_medium_02.vsnd"),
+				new("sounds/minigolf.swing_medium_03.vsnd"),
 			},
 			new SoundEvent[] {
-				new("sounds/golfswing_hard_01.vsnd"),
-				new("sounds/golfswing_hard_02.vsnd"),
-				new("sounds/golfswing_hard_03.vsnd"),
+				new("sounds/minigolf.swing_hard_01.vsnd"),
+				new("sounds/minigolf.swing_hard_02.vsnd"),
+				new("sounds/minigolf.swing_hard_03.vsnd"),
 			},
 		};
 
@@ -86,7 +90,7 @@ namespace Minigolf
 			var player = ball.Owner as GolfPlayer;
 
 			ball.InHole = true;
-			ball.PlaySound(PuttSound.Name);
+			ball.PlaySound(InHoleSound.Name);
 
 			// Announce to all players
 			Sandbox.UI.ChatBox.AddInformation(Player.All, $"{player.Name} putted on hole {hole}!", $"avatar:{player.SteamId}");
@@ -141,7 +145,7 @@ namespace Minigolf
 			player.Ball.PhysicsBody.AngularVelocity = Vector3.Zero;
 
 			// Play the sound from where the ball was, the sound shouldn't follow the ball
-			Sound.FromWorld($"golfswing_{modifier}_0{Rand.Int(1, 3)}", player.Ball.WorldPos);
+			Sound.FromWorld($"minigolf.swing_{modifier}_0{Rand.Int(1, 3)}", player.Ball.WorldPos);
 
 			// var sound = SwingSounds[(int)MathF.Ceiling(power / 25)][Rand.Int(0, 2)];
 			// Sound.FromWorld(sound.Name, player.Ball.WorldPos);
