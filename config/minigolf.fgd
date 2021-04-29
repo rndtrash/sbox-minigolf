@@ -1,9 +1,14 @@
-@PointClass base(Targetname) editormodel("models/golf_hole.mdl") = minigolf_hole : "Minigolf Hole"
+@SolidClass base(Targetname) = minigolf_brush_hole : "Minigolf Hole"
 [
-    hole(integer): "Hole" : 0 : "Which hole this hole is on."
+    hole(integer): "Hole" : 1 : "Which hole this hole is on."
 ]
 
 @PointClass base(Targetname) editormodel("models/golf_ball.vmdl") = minigolf_ball_spawn : "Minigolf Ball Spawn"
 [
-    hole(integer): "Hole" : 0 : "Which hole this spawnpoint is on."
+    hole(integer): "Hole" : 1 : "Which hole this spawnpoint is on."
+]
+
+@SolidClass base(Targetname) = minigolf_hole_bounds : "Minigolf Bounds of a Hole"
+[
+    hole(integer): "Hole" : 1 : "Which hole these boundries are."
 ]
