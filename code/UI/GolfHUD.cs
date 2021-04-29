@@ -1,4 +1,4 @@
-﻿using Sandbox;
+using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 
@@ -29,6 +29,7 @@ namespace Minigolf
 			RootPanel.AddChild<Sandbox.UI.ChatBox>();
 			RootPanel.AddChild<PowerBar>();
 			RootPanel.AddChild<EndScore>();
+			RootPanel.AddChild<OutOfBounds>();
 		}
 	}
 }

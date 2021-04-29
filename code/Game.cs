@@ -13,9 +13,51 @@ namespace Minigolf
 			// easy way for now.. todo look into actual clientside huds?
 			if (IsServer)
 				new GolfHUD();
+
+			_ = StartTickTimer();
 		}
 
 		public override Player CreatePlayer() => new GolfPlayer();
+
+		public async Task StartTickTimer()
+		{
+			while (true)
+			{
+				await Task.NextPhysicsFrame();
+				OnTick();
+			}
+		}
+
+		public void OnTick()
+        {
+			if (Host.IsClient)
+				return;
+
+			var balls = Entity.All.OfType<PlayerBall>();
+			foreach(var ball in balls)
+            {
+				var wasMoving = ball.IsMoving;
+				ball.IsMoving = ball.Velocity.Length != 0.0f;
+
+				if (ball.IsMoving == false && wasMoving == true)
+					OnBallStoppedMoving(ball);
+			}
+		}
+
+		public void OnBallStoppedMoving(PlayerBall ball)
+        {
+			if (HoleInfo.InBounds(CurrentHole, ball))
+				return;
+
+			BallOutOfBounds(ball.Owner, ball);
+			ball.WorldPos = FindBallSpawn(CurrentHole);
+		}
+
+		[ClientRpc]
+		public void BallOutOfBounds(PlayerBall ball)
+        {
+			_ = OutOfBounds.Current.Show();
+		}
 
 		public Vector3 FindBallSpawn(int hole)
         {
