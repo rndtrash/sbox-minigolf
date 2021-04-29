@@ -35,13 +35,15 @@ namespace Minigolf
 			EnableHideInFirstPerson = true;
 			EnableShadowInFirstPerson = true;
 
+			Transmit = TransmitType.Always;
+
 			// fiddlsticks
 			// PhysicsBody.Mass = 30.0f;
 			// PhysicsBody.AngularDamping = 0.8f;
 			// PhysicsBody.LinearDamping = 0.8f;
 		}
 
-		public void OnFrame()
+        public void OnFrame()
 		{
 			if (Trail == null)
             {
