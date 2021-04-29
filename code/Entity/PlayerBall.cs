@@ -10,7 +10,7 @@ namespace Minigolf
 	/// Player golf ball
 	/// </summary>
 	[Library("minigolf_ball")]
-	public partial class PlayerBall : ModelEntity, IFrameUpdate
+	public partial class PlayerBall : ModelEntity
 	{
 		public bool IsMoving { get; set; }
 		public bool InHole { get; set; }
@@ -21,22 +21,28 @@ namespace Minigolf
 			DistanceMax = 500.0f
 		};
 
-		/*[Net]*/ public Particles Trail { get; set; }
+		[Net] public Particles Trail { get; set; }
 
 		public override void Spawn()
 		{
 			base.Spawn();
 
 			SetModel("models/golf_ball.vmdl");
+			SetupPhysicsFromModel(PhysicsMotionType.Dynamic, false);
 
 			MoveType = MoveType.Physics;
 			CollisionGroup = CollisionGroup.Interactive;
 			PhysicsEnabled = true;
 			UsePhysicsCollision = true;
-			EnableHideInFirstPerson = true;
-			EnableShadowInFirstPerson = true;
+
+			// Disable shadows, they seem weirdly busted.
+			EnableShadowCasting = true;
 
 			Transmit = TransmitType.Always;
+
+			// Create a networked trail for all players to see
+			Trail = Particles.Create("particles/ball_trail.vpcf");
+			Trail.SetEntity(0, this);
 
 			// fiddlsticks
 			// PhysicsBody.Mass = 30.0f;
@@ -44,25 +50,10 @@ namespace Minigolf
 			// PhysicsBody.LinearDamping = 0.8f;
 		}
 
-        public void OnFrame()
-		{
-			if (Trail == null)
-            {
-				Log.Info("New trail");
-
-				Trail = Particles.Create("particles/ball_trail.vpcf");
-				//Trail.SetPos(0, WorldPos);
-				Trail.SetEntity(0, this);
-			}
-
-			// Trail.SetPos(0, WorldPos);
-		}
 		/// <summary>
-		/// Do our own bounce physics and collision sounds here
+		/// Do our own physics collisions, we create a fun bouncing effect this way and handle collision sounds.
 		/// </summary>
-		/// <param name="hitEntity"></param>
-		/// <param name="speed"></param>
-		/// <param name="timeDelta"></param>
+		/// <param name="eventData"></param>
 		protected override void OnPhysicsCollision(CollisionEventData eventData)
 		{
 			// Walls are non world cause it's fucked
@@ -74,11 +65,6 @@ namespace Minigolf
 			// Don't do ridiculous bounces upwards, just bounce off walls mainly
 			if (Vector3.Up.Dot(eventData.Normal) >= -0.35)
             {
-				// calculate our bounce normal
-				var normal = eventData.PreVelocity.Normal;
-
-				//var dot = eventData.Normal.Dot(normal * -1);
-				//var reflect = (2 * eventData.Normal * dot) + normal;
 				var reflect = Vector3.Reflect(eventData.PreVelocity.Normal, eventData.Normal.Normal).Normal;
 				var newSpeed = Math.Max(eventData.PreVelocity.Length, eventData.Speed);
 
@@ -94,7 +80,8 @@ namespace Minigolf
 				particle.Destroy(false);
 
 				// Collision sound happens at this point, not entity
-				Sound.FromWorld(HitSound.Name, eventData.Pos);
+				var sound = Sound.FromWorld(HitSound.Name, eventData.Pos);
+				sound.SetVolume(1.0f); // todo: scale this based on speed (it can go above 1.0)
 			}
 		}
 	}
