@@ -18,7 +18,8 @@ namespace Minigolf
 
 			StyleSheet.Load("/ui/PowerBar.scss");
 
-			bar = Add.Panel("bar");
+			Add.Label("POWER");
+			bar = Add.Panel("bar").Add.Panel();
 		}
 
         public override void Tick()
