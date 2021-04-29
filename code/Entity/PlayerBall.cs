@@ -13,6 +13,7 @@ namespace Minigolf
 	public partial class PlayerBall : ModelEntity, IFrameUpdate
 	{
 		public bool IsMoving { get; set; }
+		public bool InHole { get; set; }
 
 		static readonly SoundEvent HitSound = new("sounds/ballcollision_standard.vsnd")
 		{

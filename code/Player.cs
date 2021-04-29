@@ -26,7 +26,7 @@ namespace Minigolf
 				Ball = new PlayerBall();
 
 			Ball.Owner = this;
-			Ball.WorldPos = (Game.Current as GolfGame).FindBallSpawn(1);
+			(Game.Current as GolfGame).ResetBall(Ball);
 
 			// Setup our dud controller and animator
 			SetupControllerAndAnimator();
@@ -71,7 +71,7 @@ namespace Minigolf
 
 			if (ShotPower > 0.0f && !input.Down(InputButton.Attack1))
             {
-				ConsoleSystem.Run("golf_shoot", BallCamera.Angles.yaw, ShotPower);
+				ConsoleSystem.Run("minigolf_stroke", BallCamera.Angles.yaw, (int)ShotPower);
 
 				Log.Info($"Power: {ShotPower}");
 				ShotPower = 0;
