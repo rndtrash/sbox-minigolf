@@ -2,8 +2,8 @@
 
 namespace Minigolf
 {
-	[Library("minigolf_ball_spawn")]
-	public partial class BallSpawn : ModelEntity
+	[Library("minigolf_hole_spawn")]
+	public partial class HoleSpawn : ModelEntity
 	{
 		[HammerProp("hole")]
 		public int Hole { get; set; }
@@ -12,7 +12,7 @@ namespace Minigolf
 		{
 			base.Spawn();
 
-			Transmit = TransmitType.Always;
+			Transmit = TransmitType.Never;
 		}
 	}
 }

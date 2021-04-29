@@ -2,8 +2,8 @@
 
 namespace Minigolf
 {
-	[Library("minigolf_brush_hole")]
-	public partial class BrushHole : ModelEntity
+	[Library("minigolf_hole_goal")]
+	public partial class HoleGoal : ModelEntity
 	{
 		[HammerProp("hole")]
 		public int Hole { get; set; }

@@ -1,6 +1,17 @@
 ﻿minigolf bro!!
 
-TODO:
+### Note on making maps
+
+* A course consists of holes, each hole needs the following entities:
+  * `minigolf_hole_info` - a point entity describing the hole
+  * `minigolf_hole_spawn` - a point entity where the ball spawns on the hole
+  * `minigolf_hole_goal` - a brush entity that triggers goal on a hole
+  * `minigolf_hole_bounds` - a brush entity that contains the bounds
+* There is a prefab for the hole goal.
+* **Sides have to be a func_brush** to do collisions properly, this may change in the future.
+
+### TODO
+
 * [ ] Get a better map
 * [ ] Determine holes info from the map entities and network this to clients.
 * [ ] On powering show an arrow on the ball in 3D space.
