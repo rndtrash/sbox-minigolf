@@ -7,8 +7,12 @@
   * `minigolf_hole_spawn` - a point entity where the ball spawns on the hole
   * `minigolf_hole_goal` - a brush entity that triggers goal on a hole
   * `minigolf_hole_bounds` - a brush entity that contains the bounds
-* There is a prefab for the hole goal.
-* **Sides have to be a func_brush** to do collisions properly, this may change in the future.
+* Use the provided prefabs for holes.
+* A ball is 16x16x16 (8 radius).
+* **Sides have to be a func_brush** to do collisions properly, use the following properties:
+  * Solidity: Always Solid
+  * Render to Cubemaps: Yes
+  * Lightmap Static: Yes
 
 ### TODO
 
