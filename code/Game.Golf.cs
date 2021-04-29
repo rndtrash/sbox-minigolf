@@ -109,6 +109,12 @@ namespace Minigolf
 		[ClientRpc]
 		protected void PlayerBallInHole(PlayerBall ball, int strokes)
         {
+			// nice job bro, hole in one!
+			if (strokes == 1)
+				Sound.FromScreen(SoundHoleInOne.Name).SetVolume(1.5f);
+			else if (strokes - HolePar > 0)
+				Sound.FromScreen(SoundBelowPar.Name);
+
 			_ = EndScore.Current.ShowScore(CurrentHole, HolePar, strokes);
 		}
 
