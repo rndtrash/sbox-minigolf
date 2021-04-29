@@ -93,17 +93,20 @@ namespace Minigolf
 			ball.PlaySound(InHoleSound.Name);
 
 			// Announce to all players
-			Sandbox.UI.ChatBox.AddInformation(Player.All, $"{player.Name} putted on hole {hole}!", $"avatar:{player.SteamId}");
+			Sandbox.UI.ChatBox.AddInformation(Player.All, $"{player.Name} scored on hole {hole}!", $"avatar:{player.SteamId}");
 			PlayerBallInHole(ball, player.Strokes);
 
-			// await Task.DelaySeconds(5);
+			Action task = async () =>
+			{
+				await Task.DelaySeconds(5);
 
-			// Advance hole like this for now
 			CurrentHole = CurrentHole == 1 ? 2 : 1;
 
 			// Reset for now
 			player.Strokes = 0;
 			ResetBall(ball);
+			};
+			task.Invoke();
 		}
 
 		[ClientRpc]
