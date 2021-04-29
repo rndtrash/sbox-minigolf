@@ -14,3 +14,6 @@ TODO:
 * [ ] Spectating: for players not playing and players who hve finished their current hole.
 * [ ] Map voting at the end of a course.
 * [ ] Scoreboard that looks like a score card, show on tab and after every hole.
+* [ ] Name tags on other peoples balls
+* [ ] Customization options for your balls
+* [ ] Music and more sounds
