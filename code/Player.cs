@@ -72,8 +72,6 @@ namespace Minigolf
 			if (ShotPower > 0.0f && !input.Down(InputButton.Attack1))
             {
 				ConsoleSystem.Run("minigolf_stroke", BallCamera.Angles.yaw, (int)ShotPower);
-
-				Log.Info($"Power: {ShotPower}");
 				ShotPower = 0;
             }
 		}
