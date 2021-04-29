@@ -8,6 +8,11 @@ namespace Minigolf
 	[Library("minigolf", Title = "Minigolf")]
 	partial class GolfGame : Sandbox.Game
 	{
+
+		[Net] public int CurrentHole { get; set; } = 1;
+
+		public int HolePar { get; set; } = 2;
+
 		public GolfGame()
 		{
 			// easy way for now.. todo look into actual clientside huds?
@@ -125,6 +130,8 @@ namespace Minigolf
 				modifier = "hard";
 
 			player.Ball.PlaySound($"golfswing_{modifier}_0{Rand.Int(1, 3)}");
+
+			player.Strokes++;
 
 			// var sound = SwingSounds[(int)MathF.Ceiling(power / 25)][Rand.Int(0, 2)];
 			// player.Ball.PlaySound(sound.Name);

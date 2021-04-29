@@ -18,6 +18,8 @@ namespace Minigolf
 		[NetPredicted]
 		public PlayerBall Ball { get; set; }
 
+		[Net] public int Strokes { get; set; } = 0;
+
 		public override void Respawn()
 		{
 			if (Ball == null)

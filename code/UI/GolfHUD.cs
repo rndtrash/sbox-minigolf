@@ -28,6 +28,7 @@ namespace Minigolf
 
 			RootPanel.AddChild<Sandbox.UI.ChatBox>();
 			RootPanel.AddChild<PowerBar>();
+			RootPanel.AddChild<HoleScore>();
 			RootPanel.AddChild<EndScore>();
 			RootPanel.AddChild<OutOfBounds>();
 		}
