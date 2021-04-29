@@ -82,7 +82,8 @@ namespace Minigolf
 				DebugOverlay.Line(eventData.Pos, eventData.Pos - (eventData.PreVelocity.Normal * 64.0f), 5);
 				DebugOverlay.Line(eventData.Pos, eventData.Pos + (reflect * 64.0f), 5);
 
-				Velocity = reflect * newSpeed * 0.8f;
+				PhysicsBody.Velocity = reflect * newSpeed * 0.8f;
+				PhysicsBody.AngularVelocity = Vector3.Zero;
 
 				var particle = Particles.Create("particles/ball_hit.vpcf", eventData.Pos);
 				particle.SetPos(0, eventData.Pos);
@@ -92,8 +93,6 @@ namespace Minigolf
 				// Collision sound happens at this point, not entity
 				Sound.FromWorld(HitSound.Name, eventData.Pos);
 			}
-
-			base.OnPhysicsCollision(eventData);
 		}
 	}
 }
