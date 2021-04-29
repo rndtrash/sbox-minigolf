@@ -14,7 +14,7 @@
 						parent_bone = ""
 						surface_prop = "default"
 						collision_prop = "default"
-						radius = 5.0
+						radius = 4.0
 						center = [ 0.0, 0.0, 0.0 ]
 					},
 				]
@@ -32,7 +32,7 @@
 						angles = [ 0.0, 0.0, 0.0 ]
 						max_u = 1.0
 						max_v = 1.0
-						radius = 5.0
+						radius = 4.0
 						segments_u = 32
 						segments_v = 32
 					},
