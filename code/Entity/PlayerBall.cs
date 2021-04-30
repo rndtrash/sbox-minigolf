@@ -43,6 +43,43 @@ namespace Minigolf
 			// PhysicsBody.Mass = 30.0f;
 			// PhysicsBody.AngularDamping = 0.8f;
 			// PhysicsBody.LinearDamping = 0.8f;
+
+
+		}
+
+        public override void OnNewModel(Model model)
+        {
+            base.OnNewModel(model);
+
+			if (Host.IsServer)
+				return;
+
+			Quad = new ModelEntity();
+			Quad.SetModel("models/minigolf.ball_quad.vmdl");
+			Quad.WorldPos = WorldPos; // :/
+        }
+
+        public void OnFrame()
+        {
+			if (Quad == null)
+				return;
+
+			var player = Player.Local as GolfPlayer;
+			if (player == null) return;
+
+			// only rotate your own ball
+			if (Owner != player)
+				return;
+
+			Quad.RenderAlpha = IsMoving ? 0.0f : 1.0f;
+
+			// keep the quad under the ball
+			Quad.WorldPos = WorldPos - (Vector3.Up * 7.99f);
+
+			var camera = player.BallCamera;
+			if (camera == null) return;
+
+			Quad.WorldRot = Rotation.FromYaw(player.BallCamera.Angles.yaw + 180);
 		}
 
 		/// <summary>
