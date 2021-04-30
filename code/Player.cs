@@ -10,9 +10,6 @@ namespace Minigolf
 	partial class GolfPlayer : Sandbox.Player
 	{
 		[NetPredicted]
-		public FollowBallCamera BallCamera { get; set; }
-
-		[NetPredicted]
 		public Camera DevCamera { get; set; }
 
 		[NetPredicted]
@@ -20,18 +17,24 @@ namespace Minigolf
 
 		[Net] public int Strokes { get; set; } = 0;
 
+		public FollowBallCamera BallCamera { get; set; }
+
+		public GolfPlayer()
+        {
+			if (Host.IsClient)
+				BallCamera = new FollowBallCamera();
+		}
+
 		public override void Respawn()
 		{
 			if (Ball == null)
 				Ball = new PlayerBall();
-
 			Ball.Owner = this;
+
 			(Game.Current as GolfGame).ResetBall(Ball);
 
 			// Setup our dud controller and animator
 			SetupControllerAndAnimator();
-
-			BallCamera = new FollowBallCamera();
 
 			// Disable everythong on the player
 			PhysicsEnabled = false;
