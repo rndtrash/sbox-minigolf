@@ -43,6 +43,8 @@ namespace Minigolf
 			EnableHideInFirstPerson = true;
 			EnableShadowInFirstPerson = false;
 
+			Transmit = TransmitType.Always;
+
 			// needed?
 			UpdatePhysicsHull();
 			ResetInterpolation();
