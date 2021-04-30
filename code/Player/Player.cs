@@ -12,6 +12,10 @@ namespace Minigolf
 		[NetPredicted]
 		public Camera DevCamera { get; set; }
 
+		[NetPredicted] public EntityHandle<PlayerBall> BallHandle { get; set; }
+
+		// Lazy accessor
+		public PlayerBall Ball { get => BallHandle.Entity; }
 
 		[Net] public int Strokes { get; set; } = 0;
 
@@ -25,6 +29,8 @@ namespace Minigolf
 
 		public override void Respawn()
 		{
+			if (!BallHandle.IsValid)
+				BallHandle = new PlayerBall();
 			Ball.Owner = this;
 
 			(Game.Current as GolfGame).ResetBall(Ball);
