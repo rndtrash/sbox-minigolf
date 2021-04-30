@@ -10,13 +10,19 @@ namespace Minigolf
 	/// Player golf ball
 	/// </summary>
 	[Library("minigolf_ball")]
-	public partial class PlayerBall : ModelEntity
+	public partial class PlayerBall : ModelEntity, IFrameUpdate
 	{
 		[Net] public bool IsMoving { get; set; }
 		public bool InHole { get; set; }
 
 		static readonly SoundEvent BounceSound = new("sounds/minigolf.ball_bounce1.vsnd");
 		// [Net] public Particles Trail { get; set; }
+
+		// clientside only
+		public Particles PowerArrows { get; set; }
+
+		// Clientside only
+		public ModelEntity Quad { get; set; }
 
 		public override void Spawn()
 		{
@@ -80,6 +86,31 @@ namespace Minigolf
 			if (camera == null) return;
 
 			Quad.WorldRot = Rotation.FromYaw(player.BallCamera.Angles.yaw + 180);
+
+			var power = player.ShotPower;
+			var powerS = power / 100.0f; // 0-1
+
+			var yawRadians = player.BallCamera.Angles.yaw * (MathF.PI / 180);
+
+			if (power <= 0)
+			{
+				if (PowerArrows == null)
+					return;
+
+				PowerArrows.Destroy(true);
+				PowerArrows = null;
+
+				return;
+			}
+
+			if (PowerArrows == null)
+				PowerArrows = Particles.Create("particles/power_arrow.vpcf");
+
+			var moveDir = Angles.AngleVector(new Angles(0, player.BallCamera.Angles.yaw, 0)) * (0.1f + powerS);
+
+			PowerArrows.SetPos(0, WorldPos - Vector3.Up * 7.5f);
+			PowerArrows.SetPos(1, new Vector3(powerS, 0, yawRadians));
+			PowerArrows.SetPos(2, moveDir);
 		}
 
 		/// <summary>
