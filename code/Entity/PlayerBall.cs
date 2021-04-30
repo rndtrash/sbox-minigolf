@@ -16,7 +16,7 @@ namespace Minigolf
 		public bool InHole { get; set; }
 
 		static readonly SoundEvent BounceSound = new("sounds/minigolf.ball_bounce1.vsnd");
-		[Net] public Particles Trail { get; set; }
+		// [Net] public Particles Trail { get; set; }
 
 		public override void Spawn()
 		{
@@ -36,8 +36,8 @@ namespace Minigolf
 			Transmit = TransmitType.Always;
 
 			// Create a networked trail for all players to see
-			Trail = Particles.Create("particles/ball_trail.vpcf");
-			Trail.SetEntity(0, this);
+			// Trail = Particles.Create("particles/ball_trail.vpcf");
+			// Trail.SetEntity(0, this);
 
 			// fiddlsticks
 			// PhysicsBody.Mass = 30.0f;
