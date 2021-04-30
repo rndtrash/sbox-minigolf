@@ -1,4 +1,4 @@
-﻿rootpanel {
+rootpanel {
     background-color: rgba( #000, 0 );
     transition: background-color 0.8s ease-in;
 
@@ -6,5 +6,8 @@
         transition: background-color 0.3s ease-out;
         background-color: rgba( #000, 0.8 );
     }
-}
 
+    &.devcamera {
+        display: none;
+    }
+}
