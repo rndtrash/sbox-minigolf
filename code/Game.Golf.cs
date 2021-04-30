@@ -50,8 +50,14 @@ namespace Minigolf
 		/// <param name="ball"></param>
 		public void ResetBall(PlayerBall ball)
         {
-			var spawn = Entity.All.OfType<HoleSpawn>().Where(x => x.Hole == CurrentHole).FirstOrDefault();
-			if (spawn == null) return;
+			Entity spawn = Entity.All.OfType<HoleSpawn>().Where(x => x.Hole == CurrentHole).FirstOrDefault();
+			if (spawn == null)
+			{
+				// just spawn them here if they're trying to play on a normal map
+				spawn = Entity.All.Where(x => x.EngineEntityName == "info_player_start").FirstOrDefault();
+				if (spawn == null)
+					return;
+			}
 
 			// todo: trace up
 
