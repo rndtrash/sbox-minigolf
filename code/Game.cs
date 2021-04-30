@@ -38,7 +38,7 @@ namespace Minigolf
 			foreach(var ball in balls)
             {
 				var wasMoving = ball.IsMoving;
-				ball.IsMoving = ball.Velocity.Length > 0.1f;
+				ball.IsMoving = !ball.Velocity.IsNearlyZero();
 
 				if (ball.IsMoving == false && wasMoving == true)
 					OnBallStoppedMoving(ball);

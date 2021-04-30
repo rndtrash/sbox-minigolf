@@ -12,7 +12,7 @@ namespace Minigolf
 	[Library("minigolf_ball")]
 	public partial class PlayerBall : ModelEntity
 	{
-		public bool IsMoving { get; set; }
+		[Net] public bool IsMoving { get; set; }
 		public bool InHole { get; set; }
 
 		static readonly SoundEvent BounceSound = new("sounds/minigolf.ball_bounce1.vsnd");
