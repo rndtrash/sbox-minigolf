@@ -13,7 +13,7 @@
 						_class = "RenderPrimitivePlane"
 						name = "circle"
 						parent_bone = ""
-						material_name = "materials/minigolf.ball_circle2.vmat"
+						material_name = "materials/minigolf.ball_circle.vmat"
 						origin = [ 0.0, 0.0, 0.0 ]
 						angles = [ 0.0, 0.0, 0.0 ]
 						max_u = 1.0
