@@ -10,7 +10,7 @@ namespace Minigolf
 	/// Player golf ball
 	/// </summary>
 	[Library("minigolf_ball")]
-	public partial class PlayerBall : ModelEntity, IFrameUpdate
+	public partial class PlayerBall : ModelEntity
 	{
 		[Net] public bool IsMoving { get; set; }
 		public bool InHole { get; set; }
@@ -65,7 +65,8 @@ namespace Minigolf
 			Quad.WorldPos = WorldPos; // :/
         }
 
-        public void OnFrame()
+		[Event( "frame" )]
+		public void OnFrame()
         {
 			if (Quad == null)
 				return;
