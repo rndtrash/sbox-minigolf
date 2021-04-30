@@ -12,8 +12,6 @@ namespace Minigolf
 		[NetPredicted]
 		public Camera DevCamera { get; set; }
 
-		[NetPredicted]
-		public PlayerBall Ball { get; set; }
 
 		[Net] public int Strokes { get; set; } = 0;
 
@@ -27,8 +25,6 @@ namespace Minigolf
 
 		public override void Respawn()
 		{
-			if (Ball == null)
-				Ball = new PlayerBall();
 			Ball.Owner = this;
 
 			(Game.Current as GolfGame).ResetBall(Ball);
