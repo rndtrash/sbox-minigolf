@@ -31,7 +31,7 @@ namespace Minigolf
 			SetupPhysicsFromModel(PhysicsMotionType.Dynamic, false);
 
 			MoveType = MoveType.Physics;
-			CollisionGroup = CollisionGroup.Interactive;
+			CollisionGroup = CollisionGroup.Debris;
 			PhysicsEnabled = true;
 			UsePhysicsCollision = true;
 
