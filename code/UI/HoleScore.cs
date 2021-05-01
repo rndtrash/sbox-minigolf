@@ -1,4 +1,4 @@
-﻿
+
 using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
@@ -41,8 +41,11 @@ namespace Minigolf
 			var player = Player.Local as GolfPlayer;
 			if (player == null) return;
 
-			holeLabel.Text = $"{game.CurrentHole}";
-			parLabel.Text = $"{game.HolePar}";
+			var hole = game.Course.CurrentHole;
+			if (hole == null) return;
+
+			holeLabel.Text = $"{hole.Number}";
+			parLabel.Text = $"{hole.Par}";
 			strokeLabel.Text = $"{player.Strokes}";
 		}
 	}

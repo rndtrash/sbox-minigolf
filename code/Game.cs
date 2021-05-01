@@ -9,30 +9,44 @@ namespace Minigolf
 	[Library("minigolf", Title = "Minigolf")]
 	partial class GolfGame : Sandbox.Game
 	{
+
+		[Net] public Course Course { get; set; }
+
 		public GolfGame()
 		{
 			// easy way for now.. todo look into actual clientside huds?
 			if (IsServer)
+            {
 				new GolfHUD();
-
-			_ = StartTickTimer();
+				Course = new();
+		}
 		}
 
 		public override Player CreatePlayer() => new GolfPlayer();
 
-		public async Task StartTickTimer()
+		public override void PostLevelLoaded()
 		{
-			while (true)
-			{
-				await Task.NextPhysicsFrame();
-				OnTick();
+
+			Course = new Course();
+			Course.LoadFromMap();
+			foreach (var hole in Course.Holes)
+				Log.Info($"[{hole.Key}] {hole.Value.Name} (Par {hole.Value.Par}) (Spawn: {hole.Value.SpawnPosition}) (Bounds {hole.Value.Bounds.Count})");
 			}
-		}
 
 		public void OnTick()
         {
 			if (Host.IsClient)
+            {
+				if (Course == null || Course.CurrentHole == null)
 				return;
+
+				DebugOverlay.ScreenText($"Course.CurrentHole: Hole {Course.CurrentHole.Number} - {Course.CurrentHole.Name} (Par {Course.CurrentHole.Par})");
+
+				foreach (var hole in Course.Holes)
+					DebugOverlay.ScreenText(hole.Key, $"[{hole.Key}]: {hole.Value.Name} (Par {hole.Value.Par})");
+
+				return;
+			}
 
 			var balls = Entity.All.OfType<PlayerBall>();
 			foreach(var ball in balls)

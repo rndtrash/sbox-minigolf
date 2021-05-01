@@ -50,22 +50,11 @@ namespace Minigolf
 		/// <param name="ball"></param>
 		public void ResetBall(PlayerBall ball)
         {
-			Entity spawn = Entity.All.OfType<HoleSpawn>().Where(x => x.Hole == CurrentHole).FirstOrDefault();
-			if (spawn == null)
-			{
-				// just spawn them here if they're trying to play on a normal map
-				spawn = Entity.All.Where(x => x.EngineEntityName == "info_player_start").FirstOrDefault();
-				if (spawn == null)
-					return;
-			}
-
-			// todo: trace up
-
 			// Reset all velocity
 			ball.PhysicsBody.Velocity = Vector3.Zero;
 			ball.PhysicsBody.AngularVelocity = Vector3.Zero;
 
-			ball.WorldPos = spawn.WorldPos;
+			ball.WorldPos = Course.CurrentHole.SpawnPosition;
 
 			ball.IsMoving = false;
 			ball.InHole = false;
@@ -73,7 +62,7 @@ namespace Minigolf
 
 		public void OnBallStoppedMoving(PlayerBall ball)
 		{
-			if (!ball.InHole && !HoleInfo.InBounds(CurrentHole, ball))
+			if (!ball.InHole && !Course.CurrentHole.InBounds(ball))
 				BallOutOfBounds(ball);
 		}
 
@@ -106,7 +95,7 @@ namespace Minigolf
 			{
 				await Task.DelaySeconds(5);
 
-				CurrentHole = CurrentHole == 1 ? 2 : 1;
+				Course.AdvancedHole();
 
 				// Reset for now
 				player.Strokes = 0;
@@ -121,10 +110,10 @@ namespace Minigolf
 			// nice job bro, hole in one!
 			if (strokes == 1)
 				Sound.FromScreen(SoundHoleInOne.Name).SetVolume(1.5f);
-			else if (strokes - HolePar > 0)
+			else if (strokes - Course.CurrentHole.Par > 0)
 				Sound.FromScreen(SoundBelowPar.Name);
 
-			_ = EndScore.Current.ShowScore(CurrentHole, HolePar, strokes);
+			_ = EndScore.Current.ShowScore(Course.CurrentHole.Number, Course.CurrentHole.Par, strokes);
 		}
 
 		[ServerCmd("minigolf_stroke")]
