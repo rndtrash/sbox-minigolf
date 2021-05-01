@@ -16,13 +16,12 @@ namespace Minigolf
 		public bool InHole { get; set; }
 
 		static readonly SoundEvent BounceSound = new("sounds/minigolf.ball_bounce1.vsnd");
-		// [Net] public Particles Trail { get; set; }
-
-		// clientside only
-		public Particles PowerArrows { get; set; }
 
 		// Clientside only
 		public ModelEntity Quad { get; set; }
+		public Particles Trail { get; set; }
+		public Particles PowerArrows { get; set; }
+
 
 		public override void Spawn()
 		{
@@ -36,21 +35,7 @@ namespace Minigolf
 			PhysicsEnabled = true;
 			UsePhysicsCollision = true;
 
-			// Disable shadows, they seem weirdly busted.
-			EnableShadowCasting = true;
-
 			Transmit = TransmitType.Always;
-
-			// Create a networked trail for all players to see
-			// Trail = Particles.Create("particles/ball_trail.vpcf");
-			// Trail.SetEntity(0, this);
-
-			// fiddlsticks
-			// PhysicsBody.Mass = 30.0f;
-			// PhysicsBody.AngularDamping = 0.8f;
-			// PhysicsBody.LinearDamping = 0.8f;
-
-
 		}
 
         public override void OnNewModel(Model model)
@@ -62,8 +47,10 @@ namespace Minigolf
 
 			Quad = new ModelEntity();
 			Quad.SetModel("models/minigolf.ball_quad.vmdl");
-			Quad.WorldPos = WorldPos; // :/
-        }
+
+			// Trail = Particles.Create("particles/ball_trail.vpcf");
+			// Trail.SetEntity(0, this);
+		}
 
 		[Event( "frame" )]
 		public void OnFrame()
@@ -74,14 +61,16 @@ namespace Minigolf
 			var player = Player.Local as GolfPlayer;
 			if (player == null) return;
 
-			// only rotate your own ball
+			// only do stuff with your own ball
 			if (Owner != player)
+            {
+				Quad.RenderAlpha = 0.0f;
 				return;
-
-			Quad.RenderAlpha = IsMoving ? 0.0f : 1.0f;
+			}
 
 			// keep the quad under the ball
 			Quad.WorldPos = WorldPos - (Vector3.Up * 7.99f);
+			Quad.RenderAlpha = IsMoving ? 0.0f : 1.0f;
 
 			var camera = player.BallCamera;
 			if (camera == null) return;
@@ -124,6 +113,8 @@ namespace Minigolf
 			if (eventData.Entity.IsWorld)
 				return;
 
+			DebugOverlay.Text(eventData.Pos, $"{eventData.Speed}", 5f);
+
 			// Don't do ridiculous bounces upwards, just bounce off walls mainly
 			if (Vector3.Up.Dot(eventData.Normal) >= -0.35)
             {
@@ -136,14 +127,22 @@ namespace Minigolf
 				PhysicsBody.Velocity = reflect * newSpeed * 0.8f;
 				PhysicsBody.AngularVelocity = Vector3.Zero;
 
+				// Get a scalar of how hard we hit the wall, 50 is a light tap, 1000 is hard as fuck
+
+				// Go a minimum speed to do effects
+				if (eventData.Speed < 50)
+					return;
+
 				var particle = Particles.Create("particles/ball_hit.vpcf", eventData.Pos);
 				particle.SetPos(0, eventData.Pos);
 				particle.SetForward(0, reflect);
+				// todo: pass scalar to particle
 				particle.Destroy(false);
 
 				// Collision sound happens at this point, not entity
 				var sound = Sound.FromWorld(BounceSound.Name, eventData.Pos);
 				sound.SetVolume(1.0f); // todo: scale this based on speed (it can go above 1.0)
+				sound.SetPitch(0.5f + Math.Clamp(eventData.Speed / 2000, 0.0f, 0.5f));
 			}
 		}
 	}
