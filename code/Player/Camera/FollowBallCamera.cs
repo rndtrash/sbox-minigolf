@@ -6,9 +6,13 @@ namespace Minigolf
 	public class FollowBallCamera : BaseCamera
 	{
 		public Angles Angles;
+
+		private float actualDistance = 150.0f;
+		private float distanceVel = 0.0f;
+
 		public float Distance = 150.0f;
 		public float MinDistance => 100.0f;
-		public float MaxDistance => 500.0f;
+		public float MaxDistance => 400.0f;
 		public float DistanceStep => 50.0f;
 
 
@@ -30,15 +34,18 @@ namespace Minigolf
 			Pos += Vector3.Up * (24 + (ball.CollisionBounds.Center.z * ball.WorldScale));
 			Rot = Rotation.From(Angles);
 
-			Pos = Pos + Rot.Backward * Distance;
-			FieldOfView = 50;
+			// SmoothDamp our camera zoom
+			actualDistance = MathFUtil.SmoothDamp(actualDistance, Distance, ref distanceVel, 0.5f, 10000.0f, Time.Delta);
+
+			Pos = Pos + Rot.Backward * actualDistance;
+			FieldOfView = 90;
 
 			Viewer = null;
 		}
 
 		public override void BuildInput(ClientInput input)
 		{
-			Distance = Math.Clamp(Distance + (-input.MouseWheel * Time.Delta * 100.0f * DistanceStep), MinDistance, MaxDistance);
+			Distance = Math.Clamp(Distance + (-input.MouseWheel * DistanceStep), MinDistance, MaxDistance);
 
 			Angles.yaw += input.AnalogLook.yaw;
 
