@@ -10,4 +10,17 @@ rootpanel {
     &.devcamera {
         display: none;
     }
+
+    .wip {
+        position: absolute;
+        right: 0;
+        top: 0;
+
+        padding: 16px;
+        color: white;
+        font-size: 24px;
+        font-family: No Virus;
+        font-weight: bold;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+    }
 }
