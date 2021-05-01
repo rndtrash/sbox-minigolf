@@ -33,6 +33,8 @@ namespace Minigolf
 			RootPanel.AddChild<EndScore>();
 			RootPanel.AddChild<OutOfBounds>();
 
+			RootPanel.AddChild<NameTags>();
+
 			RootPanel.Add.Label("Work In Progress", "wip");
 		}
 	}
