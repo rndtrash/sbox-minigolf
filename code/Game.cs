@@ -9,6 +9,8 @@ namespace Minigolf
 	[Library("minigolf", Title = "Minigolf")]
 	partial class GolfGame : Sandbox.Game
 	{
+		[Net] public bool WaitingToStart { get; set; } = true;
+		[Net] public float StartTime { get; set; }
 
 		[Net] public Course Course { get; set; }
 
@@ -19,26 +21,29 @@ namespace Minigolf
             {
 				new GolfHUD();
 				Course = new();
-		}
+			}
 		}
 
 		public override Player CreatePlayer() => new GolfPlayer();
 
 		public override void PostLevelLoaded()
 		{
+			WaitingToStart = true;
+			StartTime = (float)Math.Floor(Time.Now + 5.0f);
 
 			Course = new Course();
 			Course.LoadFromMap();
 			foreach (var hole in Course.Holes)
 				Log.Info($"[{hole.Key}] {hole.Value.Name} (Par {hole.Value.Par}) (Spawn: {hole.Value.SpawnPosition}) (Bounds {hole.Value.Bounds.Count})");
-			}
+		}
 
+		[Event( "tick" )]
 		public void OnTick()
         {
 			if (Host.IsClient)
             {
 				if (Course == null || Course.CurrentHole == null)
-				return;
+					return;
 
 				DebugOverlay.ScreenText($"Course.CurrentHole: Hole {Course.CurrentHole.Number} - {Course.CurrentHole.Name} (Par {Course.CurrentHole.Par})");
 
@@ -47,6 +52,9 @@ namespace Minigolf
 
 				return;
 			}
+
+			if (Time.Now > StartTime)
+				WaitingToStart = false;
 
 			var balls = Entity.All.OfType<PlayerBall>();
 			foreach(var ball in balls)

@@ -94,6 +94,8 @@ namespace Minigolf
 				return DevCamera;
 
 			// If the Game wants to show a cinematic camera here let it
+			if ((Game.Current as GolfGame).WaitingToStart)
+					return (Game.Current as GolfGame).MapCamera;
 
 			// Otherwise use our BallCamera
 			return BallCamera;

@@ -32,6 +32,7 @@ namespace Minigolf
 			RootPanel.AddChild<HoleScore>();
 			RootPanel.AddChild<EndScore>();
 			RootPanel.AddChild<OutOfBounds>();
+			RootPanel.AddChild<StartingGame>();
 
 			RootPanel.AddChild<NameTags>();
 

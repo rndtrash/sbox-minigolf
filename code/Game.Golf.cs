@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,13 +11,9 @@ namespace Minigolf
 		[ServerVar("minigolf_power_multiplier")]
 		public static float PowerMultiplier { get; set; } = 50.0f;
 
-		// todo: move this stuff out!!
-		[Net] public int CurrentHole { get; set; } = 1;
-		public int HolePar { get; set; } = 2;
+		public StaticCamera MapCamera = new StaticCamera();
 
-		[Net] public bool WaitingToStart { get; set; } = true;
-
-		static readonly SoundEvent SoundHoleInOne = new SoundEvent("sounds/minigolf.crowd_ovation.vsnd");
+        static readonly SoundEvent SoundHoleInOne = new SoundEvent("sounds/minigolf.crowd_ovation.vsnd");
 		static readonly SoundEvent SoundBelowPar = new SoundEvent("sounds/minigolf.fart.vsnd");
 		static readonly SoundEvent InHoleSound = new SoundEvent("sounds/minigolf.ball_inhole.vsnd");
 
@@ -132,6 +128,8 @@ namespace Minigolf
 
 			// Clamp the power, should be 0-100
 			power = Math.Clamp(power, 0, 100);
+
+			// Turn it into a gradient
 
 			// remove when SoundEvents aren't fucked
 			string modifier;
