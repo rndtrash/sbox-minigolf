@@ -7,7 +7,7 @@ namespace Minigolf
 	[Library("minigolf_hole_bounds")]
 	public partial class HoleBounds : BaseTrigger
 	{
-		[HammerProp("hole")]
+		[HammerProp("hole_number")]
 		public int Hole { get; set; }
 
 		public IEnumerable<PlayerBall> TouchingBalls => touchingBalls;

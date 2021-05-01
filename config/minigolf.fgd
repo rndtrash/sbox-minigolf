@@ -1,21 +1,21 @@
 @PointClass editormodel("models/golf_ball.vmdl") = minigolf_hole_info : "Minigolf Hole Info"
 [
-    hole(integer): "Hole" : 1 : "Which hole this is."
-    name(string): "Name": "Holey" : "A witty name for this hole."
-    par(integer): "Par" : 3 : "How many strokes should this hole be done in."
+    hole_number(integer): "Hole Number" : 1 : "Which hole this is."
+    hole_name(string): "Hole Name" : "wanker" : "cool"
+    hole_par(integer): "Hole Par" : 3 : "How many strokes should this hole be done in."
 ]
 
 @PointClass editormodel("models/golf_ball.vmdl") = minigolf_hole_spawn : "Minigolf Ball Spawn"
 [
-    hole(integer): "Hole" : 1 : "Which hole this spawnpoint is on."
+    hole_number(integer): "Hole Number" : 1 : "Which hole this spawnpoint is on."
 ]
 
 @SolidClass = minigolf_hole_goal : "Minigolf Hole"
 [
-    hole(integer): "Hole" : 1 : "Which hole this hole is on."
+    hole_number(integer): "Hole Number" : 1 : "Which hole this hole is on."
 ]
 
 @SolidClass = minigolf_hole_bounds : "Minigolf Bounds of a Hole"
 [
-    hole(integer): "Hole" : 1 : "Which hole these boundries are."
+    hole_number(integer): "Hole Number" : 1 : "Which hole these boundries are."
 ]
