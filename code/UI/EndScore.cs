@@ -41,7 +41,7 @@ namespace Minigolf
 		public async Task ShowScore(int hole, int par, int strokes)
         {
 			if (strokes == 1)
-				scoreLabel.Text = HoleInOne;
+				scoreLabel.Text = $"< {HoleInOne} >";
 			else
 				scoreLabel.Text = ScoreText.GetValueOrDefault(par - strokes, $"WTF +{par - strokes}");
 
