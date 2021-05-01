@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,7 +9,7 @@ namespace Minigolf
 	partial class GolfGame
 	{
 		[ServerVar("minigolf_power_multiplier")]
-		public static float PowerMultiplier { get; set; } = 25.0f;
+		public static float PowerMultiplier { get; set; } = 50.0f;
 
 		// todo: move this stuff out!!
 		[Net] public int CurrentHole { get; set; } = 1;
