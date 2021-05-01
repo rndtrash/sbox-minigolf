@@ -41,7 +41,7 @@ namespace Minigolf
 			// Disable everythong on the player
 			PhysicsEnabled = false;
 			EnableAllCollisions = false;
-			EnableDrawing = false;
+			EnableDrawing = true;
 			EnableHideInFirstPerson = true;
 			EnableShadowInFirstPerson = false;
 
