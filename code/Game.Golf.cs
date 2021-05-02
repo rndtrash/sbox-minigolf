@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -143,7 +143,9 @@ namespace Minigolf
 				modifier = "hard";
 
 			// Smack that ball
-			player.Ball.PhysicsBody.Velocity += Angles.AngleVector(new Angles(0, yaw, 0)) * (float)power * PowerMultiplier;
+			var velocity = player.Ball.PhysicsBody.Velocity += Angles.AngleVector(new Angles(0, yaw, 0)) * (float)power * PowerMultiplier;
+			velocity.z = 0;
+			player.Ball.PhysicsBody.Velocity = velocity;
 			player.Ball.PhysicsBody.AngularVelocity = Vector3.Zero;
 
 			// Play the sound from where the ball was, the sound shouldn't follow the ball
