@@ -52,6 +52,51 @@ namespace Minigolf
 			// Trail.SetEntity(0, this);
 		}
 
+		[Event("server.tick")]
+		public void FixBall()
+        {
+			// Delete ball if the owner has disconnected
+			if (!Owner.IsValid())
+            {
+				Delete();
+				return;
+            }
+
+			// If the ball is in the hole, do nothing
+			if (InHole)
+				return;
+
+			DebugOverlay.Text(WorldPos + Vector3.Up * 4.0f, $"LinearDamping: {PhysicsBody.LinearDamping}");
+			DebugOverlay.Text(WorldPos, $"AngularDamping: {PhysicsBody.AngularDamping}");
+
+			// TODO: Check if the ball is determined ready to hit again
+			// TODO: Do out of bounds check here instead
+
+			// Do physics to change dampening
+			var trace = Trace.Ray(WorldPos, WorldPos + Vector3.Down * 8);
+			trace.HitLayer(CollisionLayer.Debris);
+			trace.Ignore(this);
+			var traceResult = trace.Run();
+
+			if (!traceResult.Hit)
+				return;
+
+			var normalDot = traceResult.Normal.Dot(Vector3.Up);
+			DebugOverlay.Text(WorldPos + Vector3.Up * 8.0f, $"N.Dot: {normalDot}");
+
+			if (normalDot.AlmostEqual(1))
+            {
+				PhysicsBody.LinearDamping = 0.05f;
+				PhysicsBody.AngularDamping = 4.00f;
+				return;
+			}
+
+			// PhysicsBody.LinearDamping = 0.015f;
+			// PhysicsBody.AngularDamping = 2.00f;
+			PhysicsBody.LinearDamping = 0.0f;
+			PhysicsBody.AngularDamping = 1.0f;
+		}
+
 		[Event( "frame" )]
 		public void OnFrame()
         {
@@ -69,7 +114,7 @@ namespace Minigolf
 			}
 
 			// keep the quad under the ball
-			Quad.WorldPos = WorldPos - (Vector3.Up * 7.99f);
+			Quad.WorldPos = WorldPos - (Vector3.Up * 3.99f);
 			Quad.RenderAlpha = IsMoving ? 0.0f : 1.0f;
 
 			var camera = player.BallCamera;
@@ -98,7 +143,7 @@ namespace Minigolf
 
 			var moveDir = Angles.AngleVector(new Angles(0, player.BallCamera.Angles.yaw, 0)) * (0.1f + powerS);
 
-			PowerArrows.SetPos(0, WorldPos - Vector3.Up * 7.5f);
+			PowerArrows.SetPos(0, WorldPos - Vector3.Up * 3.5f);
 			PowerArrows.SetPos(1, new Vector3(powerS, 0, yawRadians));
 			PowerArrows.SetPos(2, moveDir);
 		}
@@ -109,41 +154,50 @@ namespace Minigolf
 		/// <param name="eventData"></param>
 		protected override void OnPhysicsCollision(CollisionEventData eventData)
 		{
-			// Walls are non world cause it's fucked
+			// World collision is pretty buggy
 			if (eventData.Entity.IsWorld)
 				return;
 
-			DebugOverlay.Text(eventData.Pos, $"{eventData.Speed}", 5f);
+			if (eventData.Speed < 50)
+				return;
 
-			// Don't do ridiculous bounces upwards, just bounce off walls mainly
-			if (Vector3.Up.Dot(eventData.Normal) >= -0.35)
+			// var reflecta = Vector3.Reflect(eventData.PreVelocity.Normal, eventData.Normal.Normal).Normal;
+			// DebugOverlay.Line(eventData.Pos, eventData.Pos - (eventData.PreVelocity.Normal * 64.0f), 5);
+			// DebugOverlay.Line(eventData.Pos, eventData.Pos + (reflecta * 64.0f), 5);
+
+			// Ball randomly bounces off the ground, this should stop it.
+			// if (Vector3.Up.Dot(eventData.Normal) < -0.35)
+			// 	return;
+
+			// Time since last collision, don't make too many noises
+			if (eventData.TimeDelta > 0.2)
             {
-				var reflect = Vector3.Reflect(eventData.PreVelocity.Normal, eventData.Normal.Normal).Normal;
-				var newSpeed = Math.Max(eventData.PreVelocity.Length, eventData.Speed);
-
-				DebugOverlay.Line(eventData.Pos, eventData.Pos - (eventData.PreVelocity.Normal * 64.0f), 5);
-				DebugOverlay.Line(eventData.Pos, eventData.Pos + (reflect * 64.0f), 5);
-
-				PhysicsBody.Velocity = reflect * newSpeed * 0.8f;
-				PhysicsBody.AngularVelocity = Vector3.Zero;
-
-				// Get a scalar of how hard we hit the wall, 50 is a light tap, 1000 is hard as fuck
-
-				// Go a minimum speed to do effects
-				if (eventData.Speed < 50)
-					return;
+				// Collision sound happens at this point, not entity
+				var sound = Sound.FromWorld(BounceSound.Name, eventData.Pos);
+				sound.SetVolume(0.8f);
+				sound.SetPitch(0.5f + Math.Clamp(eventData.Speed / 1250.0f, 0.0f, 0.5f));
 
 				var particle = Particles.Create("particles/ball_hit.vpcf", eventData.Pos);
 				particle.SetPos(0, eventData.Pos);
-				particle.SetForward(0, reflect);
+				// particle.SetForward(0, reflect);
 				// todo: pass scalar to particle
 				particle.Destroy(false);
-
-				// Collision sound happens at this point, not entity
-				var sound = Sound.FromWorld(BounceSound.Name, eventData.Pos);
-				sound.SetVolume(1.0f); // todo: scale this based on speed (it can go above 1.0)
-				sound.SetPitch(0.5f + Math.Clamp(eventData.Speed / 2000, 0.0f, 0.5f));
 			}
+
+			// Walls are non world cause it's fucked
+			// if (eventData.Entity.IsWorld)
+			// 	return;
+
+			// DebugOverlay.Text(eventData.Pos, $"{eventData.Speed}", 5f);
+
+			var reflect = Vector3.Reflect(eventData.PreVelocity.Normal, eventData.Normal.Normal).Normal;
+			var newSpeed = Math.Max(eventData.PreVelocity.Length, eventData.Speed);
+
+			var newVelocity = reflect * newSpeed * 0.8f;
+			newVelocity.z = 0;
+
+			PhysicsBody.Velocity = newVelocity;
+			PhysicsBody.AngularVelocity = Vector3.Zero;
 		}
 	}
 }
