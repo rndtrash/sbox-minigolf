@@ -84,6 +84,7 @@ namespace Minigolf
 			var normalDot = traceResult.Normal.Dot(Vector3.Up);
 			DebugOverlay.Text(WorldPos + Vector3.Up * 8.0f, $"N.Dot: {normalDot}");
 
+			// Flat surface
 			if (normalDot.AlmostEqual(1))
             {
 				PhysicsBody.LinearDamping = 0.05f;
@@ -91,8 +92,20 @@ namespace Minigolf
 				return;
 			}
 
-			// PhysicsBody.LinearDamping = 0.015f;
-			// PhysicsBody.AngularDamping = 2.00f;
+			var velocity = PhysicsBody.Velocity;
+			velocity.z = 0;
+			trace = Trace.Ray(WorldPos, WorldPos + velocity);
+			trace.HitLayer(CollisionLayer.Debris);
+			trace.Ignore(this);
+			traceResult = trace.Run();
+
+			if (traceResult.Hit)
+            {
+				PhysicsBody.LinearDamping = 0.015f;
+				PhysicsBody.AngularDamping = 2.00f;
+				return;
+			}
+
 			PhysicsBody.LinearDamping = 0.0f;
 			PhysicsBody.AngularDamping = 1.0f;
 		}
