@@ -19,3 +19,10 @@
 [
     hole_number(integer): "Hole Number" : 1 : "Which hole these boundries are."
 ]
+
+@SolidClass base(Door) drawangles( movedir, movedir_islocal ) = func_moving_obstacle : 
+	"A brush entity for an automatic moving obstacle."
+[
+	movedir(angle) : "Move Direction (Pitch Yaw Roll)" : "0 0 0" : "The direction the brushes will move, when told to."
+	movedir_islocal(boolean) : "Move Direction is Expressed in Local Space" : "1" : "If checked, the movement direction angle is in local space and should be rotated by the entity's angles after spawning."
+]
