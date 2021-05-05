@@ -48,13 +48,14 @@ namespace Minigolf
 			Quad = new ModelEntity();
 			Quad.SetModel("models/minigolf.ball_quad.vmdl");
 
-			// Trail = Particles.Create("particles/ball_trail.vpcf");
-			// Trail.SetEntity(0, this);
+			Trail = Particles.Create("particles/ball_trail.vpcf");
 		}
 
 		[Event("server.tick")]
 		public void FixBall()
         {
+			// DebugOverlay.Text( WorldPos + Vector3.Up * 8f, $"Server Velocity: {Velocity.Length}" );
+
 			// Delete ball if the owner has disconnected
 			if (!Owner.IsValid())
             {
@@ -66,8 +67,8 @@ namespace Minigolf
 			if (InHole)
 				return;
 
-			DebugOverlay.Text(WorldPos + Vector3.Up * 4.0f, $"LinearDamping: {PhysicsBody.LinearDamping}");
-			DebugOverlay.Text(WorldPos, $"AngularDamping: {PhysicsBody.AngularDamping}");
+			// DebugOverlay.Text(WorldPos + Vector3.Up * 4.0f, $"LinearDamping: {PhysicsBody.LinearDamping}");
+			// DebugOverlay.Text(WorldPos, $"AngularDamping: {PhysicsBody.AngularDamping}");
 
 			// TODO: Check if the ball is determined ready to hit again
 			// TODO: Do out of bounds check here instead
@@ -82,7 +83,7 @@ namespace Minigolf
 				return;
 
 			var normalDot = traceResult.Normal.Dot(Vector3.Up);
-			DebugOverlay.Text(WorldPos + Vector3.Up * 8.0f, $"N.Dot: {normalDot}");
+			// DebugOverlay.Text(WorldPos + Vector3.Up * 8.0f, $"N.Dot: {normalDot}");
 
 			// Flat surface
 			if (normalDot.AlmostEqual(1))
@@ -108,6 +109,27 @@ namespace Minigolf
 
 			PhysicsBody.LinearDamping = 0.0f;
 			PhysicsBody.AngularDamping = 1.0f;
+		}
+
+		Vector3 prevWorldPos;
+		Vector3 clientVelocity;
+
+		[Event( "client.tick")]
+		protected void HackyClientVelocity()
+		{
+			// Calculate our velocity manually on the client.
+
+			clientVelocity = WorldPos - prevWorldPos;
+
+			Trail.SetPos( 0, WorldPos );
+			Trail.SetPos( 1, prevWorldPos );
+
+			var clientVelocityLength = clientVelocity.Length;
+			Trail.SetPos( 2, new Vector3(clientVelocityLength) );
+
+			// DebugOverlay.Text( WorldPos, $"Client Velocity: {clientVelocityLength * 100}" );
+
+			prevWorldPos = WorldPos;
 		}
 
 		[Event( "frame" )]
