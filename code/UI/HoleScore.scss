@@ -1,24 +1,36 @@
 ﻿holescore {
     position: absolute;
-    bottom: 86px;
-    right: 120px;
-    flex-direction: column;
+    bottom: 32px;
+    left: 64px;
+    flex-direction: row;
 
     panel {
         flex-direction: row;
         justify-content: flex-end;
+        margin-right: 16px;
+        align-items: center;
 
         label {
             color: white;
-            font-size: 32px;
-            font-family: No Virus;
+            font-size: 36px;
+            font-family: Asdonuts;
             font-weight: bold;
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
-            margin-top: 4px;
 
-            &:first-child {
-                margin-right: 16px;
+            &.first {
+                margin-right: 8px;
             }
+        }
+
+        &.hole label.last {
+            padding-left: 8px;
+            padding-right: 8px;
+            padding-top: 4px;
+            padding-bottom: 8px;
+            background-color: rgba(#111, 0.9);
+            border-radius: 50%;
+            min-width: 52px;
+            text-align: center;
         }
     }
 }

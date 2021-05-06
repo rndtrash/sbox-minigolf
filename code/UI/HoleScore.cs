@@ -21,16 +21,16 @@ namespace Minigolf
 			StyleSheet.Load("/ui/HoleScore.scss");
 
 			var holeContainer = Add.Panel("hole");
-			holeContainer.Add.Label("HOLE");
-			holeLabel = holeContainer.Add.Label("0");
+			holeContainer.Add.Label("HOLE", "first");
+			holeLabel = holeContainer.Add.Label("0", "last");
 
 			var parContainer = Add.Panel("par");
-			parContainer.Add.Label("PAR");
-			parLabel = parContainer.Add.Label("0");
+			parContainer.Add.Label("PAR", "first" );
+			parLabel = parContainer.Add.Label("0", "last");
 
 			var strokeContainer = Add.Panel("stroke");
-			strokeContainer.Add.Label("STROKE");
-			strokeLabel = strokeContainer.Add.Label("0");
+			strokeContainer.Add.Label("STROKE", "first");
+			strokeLabel = strokeContainer.Add.Label("0", "last");
 		}
 
 		public override void Tick()

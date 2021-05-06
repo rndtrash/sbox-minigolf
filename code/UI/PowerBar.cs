@@ -35,6 +35,13 @@ namespace Minigolf
 				length.Value = player.ShotPower;
 				length.Unit = LengthUnit.Percentage;
 
+				var normalizedShotPower = player.ShotPower / 100;
+				var squared = normalizedShotPower * normalizedShotPower;
+
+				var color = ColorConvert.HSLToRGB( 120 - (int)(squared * 120), 1.0f, 0.5f );
+				// var color = new Color(normalizedShotPower, 1 - normalizedShotPower, 0);
+
+				bar.Style.BackgroundColor = color;
 				bar.Style.Width = length;
 				bar.Style.Dirty();
 
