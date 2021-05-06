@@ -19,9 +19,8 @@ namespace Minigolf
 
 		// Clientside only
 		public BallQuad Quad { get; set; }
+		public PowerArrow PowerArrow { get; set; }
 		public Particles Trail { get; set; }
-		public Particles PowerArrows { get; set; }
-
 
 		public override void Spawn()
 		{
@@ -50,7 +49,8 @@ namespace Minigolf
 				Quad = new();
 			}
 
-			Trail = Particles.Create("particles/ball_trail.vpcf");
+			if (Trail == null)
+				Trail = Particles.Create("particles/ball_trail.vpcf");
 		}
 
 		[Event("server.tick")]
@@ -123,13 +123,14 @@ namespace Minigolf
 
 			clientVelocity = WorldPos - prevWorldPos;
 
+			if ( Trail == null )
+				return;
+
 			Trail.SetPos( 0, WorldPos );
 			Trail.SetPos( 1, prevWorldPos );
 
 			var clientVelocityLength = clientVelocity.Length;
 			Trail.SetPos( 2, new Vector3(clientVelocityLength) );
-
-			// DebugOverlay.Text( WorldPos, $"Client Velocity: {clientVelocityLength * 100}" );
 
 			prevWorldPos = WorldPos;
 		}
@@ -162,27 +163,15 @@ namespace Minigolf
 			var power = player.ShotPower;
 			var powerS = power / 100.0f; // 0-1
 
-			var yawRadians = player.BallCamera.Angles.yaw * (MathF.PI / 180);
+			if ( !PowerArrow.IsValid() )
+				PowerArrow = new();
 
-			if (power <= 0)
-			{
-				if (PowerArrows == null)
-					return;
+			var direction = Angles.AngleVector( new Angles( 0, player.BallCamera.Angles.yaw, 0 ) );
 
-				PowerArrows.Destroy(true);
-				PowerArrows = null;
-
-				return;
-			}
-
-			if (PowerArrows == null)
-				PowerArrows = Particles.Create("particles/power_arrow.vpcf");
-
-			var moveDir = Angles.AngleVector(new Angles(0, player.BallCamera.Angles.yaw, 0)) * (0.1f + powerS);
-
-			PowerArrows.SetPos(0, WorldPos - Vector3.Up * 3.5f);
-			PowerArrows.SetPos(1, new Vector3(powerS, 0, yawRadians));
-			PowerArrows.SetPos(2, moveDir);
+			// TODO: hardcoded size
+			PowerArrow.WorldPos = WorldPos + Vector3.Down * 3.99f + direction * 5.0f;
+			PowerArrow.Direction = direction;
+			PowerArrow.Power = powerS;
 		}
 
 		/// <summary>
@@ -195,7 +184,7 @@ namespace Minigolf
 			if (eventData.Entity.IsWorld)
 				return;
 
-			if (eventData.Speed < 50)
+			if (eventData.Speed < 10)
 				return;
 
 			// var reflecta = Vector3.Reflect(eventData.PreVelocity.Normal, eventData.Normal.Normal).Normal;
