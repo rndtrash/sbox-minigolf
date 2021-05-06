@@ -32,9 +32,6 @@ namespace Minigolf
 	{
 		Dictionary<Player, BaseNameTag> ActiveTags = new Dictionary<Player, BaseNameTag>();
 
-		public float MaxDrawDistance = 400;
-		public int MaxTagsToShow = 5;
-
 		public NameTags()
 		{
 			StyleSheet.Load("/ui/NameTags.scss");
@@ -47,18 +44,10 @@ namespace Minigolf
 			var deleteList = new List<Player>();
 			deleteList.AddRange(ActiveTags.Keys);
 
-			int count = 0;
 			foreach (var player in Player.All.OrderBy(x => Vector3.DistanceBetween(x.EyePos, Camera.LastPos)))
 			{
-				// Log.Info($"NameTags.Tick Player {player.Name}");
 				if (UpdateNameTag(player))
-				{
 					deleteList.Remove(player);
-					count++;
-				}
-
-				if (count >= MaxTagsToShow)
-					break;
 			}
 
 			foreach (var player in deleteList)
@@ -87,25 +76,15 @@ namespace Minigolf
 
 			var labelPos = ball.WorldPos + Vector3.Up * 16;
 
-			// Are we too far away?
-			float dist = labelPos.Distance(Camera.LastPos);
-			if (dist > MaxDrawDistance)
-				return false;
-
 			// Are we looking in this direction?
 			var lookDir = (labelPos - Camera.LastPos).Normal;
 			if (Camera.LastRot.Forward.Dot(lookDir) < 0.5)
 				return false;
 
-			MaxDrawDistance = 400;
+			float dist = labelPos.Distance( Camera.LastPos );
+			var objectSize = 0.05f / dist / (2.0f * MathF.Tan((Camera.LastFieldOfView / 2.0f).DegreeToRadian())) * 3000.0f;
 
-
-			var alpha = dist.LerpInverse(MaxDrawDistance, MaxDrawDistance * 0.1f, true);
-
-			// If I understood this I'd make it proper function
-			var objectSize = 0.05f / dist / (2.0f * MathF.Tan((Camera.LastFieldOfView / 2.0f).DegreeToRadian())) * 1500.0f;
-
-			objectSize = objectSize.Clamp(0.05f, 1.0f);
+			objectSize = objectSize.Clamp(0.25f, 0.5f);
 
 			if (!ActiveTags.TryGetValue(player, out var tag))
 			{
@@ -119,7 +98,7 @@ namespace Minigolf
 
 			tag.Style.Left = Length.Fraction(screenPos.x);
 			tag.Style.Top = Length.Fraction(screenPos.y);
-			tag.Style.Opacity = alpha;
+			tag.Style.Opacity = 1;
 
 			var transform = new PanelTransform();
 			transform.AddTranslateY(Length.Fraction(-1.0f));
