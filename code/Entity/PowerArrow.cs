@@ -46,6 +46,10 @@ namespace Minigolf
 			vertexBuffer.Add( g );
 			vertexBuffer.AddTriangleIndex( 1, 2, 3 );
 
+			var color = ColorConvert.HSLToRGB( 120 - (int)(Power * Power * 120), 1.0f, 0.5f );
+
+			Render.Set( "color", color );
+
 			vertexBuffer.Draw( Material );
 		}
 	}
