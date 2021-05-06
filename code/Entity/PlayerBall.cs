@@ -18,7 +18,7 @@ namespace Minigolf
 		static readonly SoundEvent BounceSound = new("sounds/minigolf.ball_bounce1.vsnd");
 
 		// Clientside only
-		public ModelEntity Quad { get; set; }
+		public BallQuad Quad { get; set; }
 		public Particles Trail { get; set; }
 		public Particles PowerArrows { get; set; }
 
@@ -45,8 +45,10 @@ namespace Minigolf
 			if (Host.IsServer)
 				return;
 
-			Quad = new ModelEntity();
-			Quad.SetModel("models/minigolf.ball_quad.vmdl");
+			if ( !Quad.IsValid() )
+			{
+				Quad = new();
+			}
 
 			Trail = Particles.Create("particles/ball_trail.vpcf");
 		}
@@ -144,13 +146,13 @@ namespace Minigolf
 			// only do stuff with your own ball
 			if (Owner != player)
             {
-				Quad.RenderAlpha = 0.0f;
+				Quad.ShouldDraw = false;
 				return;
 			}
 
 			// keep the quad under the ball
-			Quad.WorldPos = WorldPos - (Vector3.Up * 3.99f);
-			Quad.RenderAlpha = IsMoving ? 0.0f : 1.0f;
+			Quad.WorldPos = WorldPos + (Vector3.Down * 3.99f);
+			Quad.ShouldDraw = !IsMoving;
 
 			var camera = player.BallCamera;
 			if (camera == null) return;
