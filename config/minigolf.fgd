@@ -15,6 +15,23 @@
     hole_number(integer): "Hole Number" : 1 : "Which hole these boundries are."
 ]
 
+@PointClass base(Parentname, Targetname) frustum( FOV, ZNear, ZFar ) editormodel("models/editor/camera.vmdl") = minigolf_start_camera : "Minigolf Start Camera"
+[
+	FOV(float) : "FOV" : 90 : "Field of view in degrees"
+	ZNear(float) : "ZNear" : 4 : "Distance to the near plane"
+	ZFar(float) : "ZFar" : 10000 : "Distance to the far plane"
+]
+
+@PointClass base(Parentname, Targetname) frustum( FOV, ZNear, ZFar ) editormodel("models/editor/camera.vmdl") = minigolf_hole_camera : "Minigolf Hole Camera"
+[
+    hole_number(integer): "Hole Number" : 1 : "Which hole this camera is for"
+
+	FOV(float) : "FOV" : 90 : "Field of view in degrees"
+	ZNear(float) : "ZNear" : 4 : "Distance to the near plane"
+	ZFar(float) : "ZFar" : 10000 : "Distance to the far plane"
+]
+
+
 @SolidClass base(Door) drawangles( movedir, movedir_islocal ) = func_moving_obstacle : 
 	"A brush entity for an automatic moving obstacle."
 [
