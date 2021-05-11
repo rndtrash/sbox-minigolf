@@ -71,9 +71,19 @@ namespace Minigolf
 				BallOutOfBounds(ball, OutOfBoundsType.Normal);
 		}
 
-		public void BallOutOfBounds(PlayerBall ball)
+		public enum OutOfBoundsType
+		{
+			Normal,
+			Water,
+			Fire
+		}
+
+		public void BallOutOfBounds(PlayerBall ball, OutOfBoundsType type)
         {
-			ResetBall(ball);
+			if ( IsClient )
+				return;
+
+			ResetBall( ball );
 
 			// Tell the ball owner his balls are out of bounds
 			ClientBallOutOfBounds( ball.Player, ball );
@@ -133,7 +143,7 @@ namespace Minigolf
 
 			// Don't let a player hit an already moving ball or one in the hole
 			if (!UnlimitedWhacks && (player.Ball.IsMoving || player.Ball.InHole))
-				return;
+			 	return;
 
 			// Clamp the power, should be 0-100
 			power = Math.Clamp(power, 0, 100);

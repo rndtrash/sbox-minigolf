@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System;
 using System.Collections.Generic;
 
 namespace Minigolf
@@ -63,6 +64,23 @@ namespace Minigolf
 			base.StartTouch( other );
 
 			WaterController.StartTouch( other );
+
+			Action task = async () =>
+			{
+				await Task.DelaySeconds( 2 );
+
+				if ( !other.IsValid() )
+					return;
+
+				// TODO: check if other is still in water
+
+				using ( Prediction.Off() )
+				{
+					if ( other is PlayerBall )
+						(Game.Current as GolfGame).BallOutOfBounds( other as PlayerBall, GolfGame.OutOfBoundsType.Water );
+				}
+			};
+			task.Invoke();
 		}
 	}
 }
