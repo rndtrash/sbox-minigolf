@@ -15,6 +15,11 @@
     hole_number(integer): "Hole Number" : 1 : "Which hole these boundries are."
 ]
 
+@PointClass editormodel("models/golf_flag.vmdl") = minigolf_flag_base : "Minigolf Flag Base"
+[
+	hole_number(integer): "Hole Number" : 1 : "Which hole this flag is on."
+]
+
 @PointClass base(Parentname, Targetname) frustum( FOV, ZNear, ZFar ) editormodel("models/editor/camera.vmdl") = minigolf_start_camera : "Minigolf Start Camera"
 [
 	FOV(float) : "FOV" : 90 : "Field of view in degrees"
