@@ -47,9 +47,18 @@ namespace Minigolf
             }
         }
 
+		// TODO: SHIT CODE
         public void AdvancedHole()
         {
-            currentHole = currentHole == 1 ? 2 : 1;
+			// Next hole is
+			var nextHoleKey = Holes.Where( x => x.Key > currentHole ).OrderBy( x => x.Key ).FirstOrDefault();
+
+			// No more holes, just loop around for now.
+			if ( nextHoleKey.Value == null )
+				currentHole = 1;
+
+			// Advanced to next hole, TODO: ClientRpc
+			currentHole = nextHoleKey.Key;
         }
 
         public override bool NetWrite(NetWrite write)
