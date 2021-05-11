@@ -4,6 +4,9 @@ Layer0
 {
 	shader "complex.vfx"
 
+	//---- Translucent ----
+	F_TRANSLUCENT 1
+
 	//---- Ambient Occlusion ----
 	g_flAmbientOcclusionDirectDiffuse "0.000"
 	g_flAmbientOcclusionDirectSpecular "0.000"
@@ -11,8 +14,8 @@ Layer0
 
 	//---- Color ----
 	g_flModelTintAmount "1.000"
-	g_vColorTint "[1.000000 1.000000 1.000000 0.000000]"
-	TextureColor "materials/maps/minigolf.grass_color.png"
+	g_vColorTint "[1.000000 1.000000 1.000000 1.000000]"
+	TextureColor "[0.000000 0.631373 0.647059 1.000000]"
 
 	//---- Fade ----
 	g_flFadeExponent "1.000"
@@ -28,10 +31,10 @@ Layer0
 	g_flMetalness "0.000"
 
 	//---- Normal ----
-	TextureNormal "materials/maps/minigolf.grass_normal.png"
+	TextureNormal "materials/default/default_normal.tga"
 
 	//---- Roughness ----
-	TextureRoughness "[1.000000 1.000000 1.000000 0.000000]"
+	TextureRoughness "materials/default/default_rough.tga"
 
 	//---- Texture Coordinates ----
 	g_nScaleTexCoordUByModelScaleAxis "0"
@@ -39,4 +42,8 @@ Layer0
 	g_vTexCoordOffset "[0.000 0.000]"
 	g_vTexCoordScale "[1.000 1.000]"
 	g_vTexCoordScrollSpeed "[0.000 0.000]"
+
+	//---- Translucent ----
+	g_flOpacityScale "0.900"
+	TextureTranslucency "materials/default/default_trans.tga"
 }
