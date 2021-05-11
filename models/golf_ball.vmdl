@@ -12,9 +12,9 @@
 					{
 						_class = "PhysicsShapeSphere"
 						parent_bone = ""
-						surface_prop = "golfball"
+						surface_prop = "minigolf.ball"
 						collision_prop = "default"
-						radius = 4.0
+						radius = 3.0
 						center = [ 0.0, 0.0, 0.0 ]
 					},
 				]
@@ -32,7 +32,7 @@
 						angles = [ 0.0, 0.0, 0.0 ]
 						max_u = 1.0
 						max_v = 1.0
-						radius = 4.0
+						radius = 3.0
 						segments_u = 32
 						segments_v = 32
 					},
@@ -44,7 +44,7 @@
 				[
 					{
 						_class = "PhysicsBodyMarkup"
-						target_body = "undefined"
+						target_body = ""
 						mass_override = 1.0
 						inertia_scale = 1.0
 						linear_damping = 0.05
@@ -64,7 +64,7 @@
 						game_keys = 
 						{
 							bonename = ""
-							radius = 4.0
+							radius = 3.0
 							point0 = [ 0.0, 0.0, 0.0 ]
 							point1 = [ 0.0, 0.0, 0.0 ]
 						}
