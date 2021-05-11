@@ -55,8 +55,11 @@ namespace Minigolf
 			// Reset all velocity
 			ball.PhysicsBody.Velocity = Vector3.Zero;
 			ball.PhysicsBody.AngularVelocity = Vector3.Zero;
+			ball.PhysicsBody.ClearForces();
 
 			ball.WorldPos = Course.CurrentHole.SpawnPosition;
+			ball.PhysicsBody.Pos = Course.CurrentHole.SpawnPosition;
+			ball.ResetInterpolation();
 
 			ball.IsMoving = false;
 			ball.InHole = false;
