@@ -91,6 +91,18 @@ namespace Minigolf
 				PhysicsBody.LinearDamping = DefaultLinearDamping;
 				PhysicsBody.AngularDamping = DefaultAngularDamping;
 
+				if (traceResult.Surface.Name == "minigolf.ice")
+				{
+					PhysicsBody.LinearDamping = 0.25f;
+					PhysicsBody.AngularDamping = 0.00f;
+				}
+
+				if ( traceResult.Surface.Name == "minigolf.sand" )
+				{
+					PhysicsBody.LinearDamping = 2.5f;
+					PhysicsBody.AngularDamping = 2.5f;
+				}
+
 				return;
 			}
 
