@@ -12,6 +12,12 @@ namespace Minigolf
 	[Library("minigolf_ball")]
 	public partial class PlayerBall : ModelEntity, IPlayerControllable
 	{
+		[ServerVar( "minigolf_ball_linear_damping" )]
+		public static float DefaultLinearDamping { get; set; } = 0.05f;
+
+		[ServerVar( "minigolf_ball_angular_damping" )]
+		public static float DefaultAngularDamping { get; set; } = 4.00f;
+
 		[Net] public bool IsMoving { get; set; }
 		public bool InHole { get; set; }
 
@@ -79,8 +85,12 @@ namespace Minigolf
 			// Flat surface
 			if (normalDot.AlmostEqual(1))
             {
-				PhysicsBody.LinearDamping = 0.05f;
-				PhysicsBody.AngularDamping = 4.00f;
+				// PhysicsBody.LinearDamping = 0.05f;
+				// PhysicsBody.AngularDamping = 4.00f;
+
+				PhysicsBody.LinearDamping = DefaultLinearDamping;
+				PhysicsBody.AngularDamping = DefaultAngularDamping;
+
 				return;
 			}
 
