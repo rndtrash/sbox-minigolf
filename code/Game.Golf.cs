@@ -14,6 +14,9 @@ namespace Minigolf
 		[ServerVar("minigolf_unlimited_whacks")]
 		public static bool UnlimitedWhacks { get; set; } = false;
 
+		[ServerVar( "minigolf_check_bounds" )]
+		public static bool CheckBounds { get; set; } = true;
+
 		public StaticCamera MapCamera = new StaticCamera();
 
         static readonly SoundEvent SoundHoleInOne = new SoundEvent("sounds/minigolf.crowd_ovation.vsnd");
@@ -61,8 +64,8 @@ namespace Minigolf
 
 		public void OnBallStoppedMoving(PlayerBall ball)
 		{
-			if (!ball.InHole && !Course.CurrentHole.InBounds(ball))
-				BallOutOfBounds(ball);
+			if ( CheckBounds && !ball.InHole && !Course.CurrentHole.InBounds(ball) )
+				BallOutOfBounds(ball, OutOfBoundsType.Normal);
 		}
 
 		public void BallOutOfBounds(PlayerBall ball)
