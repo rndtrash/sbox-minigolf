@@ -11,6 +11,9 @@ namespace Minigolf
 		[ServerVar("minigolf_power_multiplier")]
 		public static float PowerMultiplier { get; set; } = 15.0f;
 
+		[ServerVar("minigolf_unlimited_whacks")]
+		public static bool UnlimitedWhacks { get; set; } = false;
+
 		public StaticCamera MapCamera = new StaticCamera();
 
         static readonly SoundEvent SoundHoleInOne = new SoundEvent("sounds/minigolf.crowd_ovation.vsnd");
@@ -123,7 +126,7 @@ namespace Minigolf
 			var player = owner as GolfPlayer;
 
 			// Don't let a player hit an already moving ball or one in the hole
-			if (player.Ball.IsMoving || player.Ball.InHole)
+			if (!UnlimitedWhacks && (player.Ball.IsMoving || player.Ball.InHole))
 				return;
 
 			// Clamp the power, should be 0-100
