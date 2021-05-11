@@ -7,15 +7,15 @@ namespace Minigolf
 	/// <summary>
 	/// Create an utter barebones Player, we don't want any actual player!
 	/// </summary>
-	partial class GolfPlayer : Sandbox.Player
+	public partial class GolfPlayer : Sandbox.Player
 	{
 		[NetPredicted]
 		public Camera DevCamera { get; set; }
 
-		[NetPredicted] public EntityHandle<PlayerBall> BallHandle { get; set; }
+		// [NetPredicted] public EntityHandle<PlayerBall> BallHandle { get; set; }
 
 		// Lazy accessor
-		public PlayerBall Ball { get => BallHandle.Entity; }
+		public PlayerBall Ball { get => ActiveChild as PlayerBall; }
 
 		[Net] public int Strokes { get; set; } = 0;
 
@@ -27,13 +27,33 @@ namespace Minigolf
 				BallCamera = new FollowBallCamera();
 		}
 
+		protected override void OnDestroy()
+		{
+			if ( IsServer && ActiveChild.IsValid() )
+			{
+				ActiveChild.Delete();
+				ActiveChild = null;
+			}
+
+			base.OnDestroy();
+		}
+
 		public override void Respawn()
 		{
-			if (!BallHandle.IsValid)
-				BallHandle = new PlayerBall();
-			Ball.Owner = this;
+			if (!ActiveChild.IsValid())
+			{
+				var ball = new PlayerBall();
+				ball.Player = this;
+				ActiveChild = ball;
 
-			(Game.Current as GolfGame).ResetBall(Ball);
+				Pvs.Add( ball );
+			}
+
+			// assert that the activechild is the ball
+			if ( ActiveChild is not PlayerBall )
+				return;
+
+			(Game.Current as GolfGame).ResetBall(ActiveChild as PlayerBall);
 
 			// Setup our dud controller and animator
 			SetupControllerAndAnimator();
@@ -103,7 +123,10 @@ namespace Minigolf
 
 		protected override void Tick()
 		{
-
+			if ( ActiveChild is IPlayerControllable playerController )
+			{
+				playerController.OnPlayerControlTick( this );
+			}
 		}
 	}
 }

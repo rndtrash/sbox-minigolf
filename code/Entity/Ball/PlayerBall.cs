@@ -10,7 +10,7 @@ namespace Minigolf
 	/// Player golf ball
 	/// </summary>
 	[Library("minigolf_ball")]
-	public partial class PlayerBall : ModelEntity
+	public partial class PlayerBall : ModelEntity, IPlayerControllable
 	{
 		[Net] public bool IsMoving { get; set; }
 		public bool InHole { get; set; }
@@ -21,6 +21,8 @@ namespace Minigolf
 		public BallQuad Quad { get; set; }
 		public PowerArrow PowerArrow { get; set; }
 		public Particles Trail { get; set; }
+
+		[Net] public GolfPlayer Player { get; set; }
 
 		public override void Spawn()
 		{
@@ -44,33 +46,20 @@ namespace Minigolf
 			if (Host.IsServer)
 				return;
 
-			if ( !Quad.IsValid() )
+			/*if ( !Quad.IsValid() )
 			{
 				Quad = new();
-			}
+			}*/
 
 			if (Trail == null)
 				Trail = Particles.Create("particles/ball_trail.vpcf");
 		}
 
-		[Event("server.tick")]
-		public void FixBall()
-        {
-			// DebugOverlay.Text( WorldPos + Vector3.Up * 8f, $"Server Velocity: {Velocity.Length}" );
-
-			// Delete ball if the owner has disconnected
-			if (!Owner.IsValid())
-            {
-				Delete();
-				return;
-            }
-
+		public void OnPlayerControlTick( Player owner )
+		{
 			// If the ball is in the hole, do nothing
 			if (InHole)
 				return;
-
-			// DebugOverlay.Text(WorldPos + Vector3.Up * 4.0f, $"LinearDamping: {PhysicsBody.LinearDamping}");
-			// DebugOverlay.Text(WorldPos, $"AngularDamping: {PhysicsBody.AngularDamping}");
 
 			// TODO: Check if the ball is determined ready to hit again
 			// TODO: Do out of bounds check here instead
@@ -138,14 +127,20 @@ namespace Minigolf
 		[Event( "frame" )]
 		public void OnFrame()
         {
-			if (Quad == null)
-				return;
+			// if (Quad == null)
+			// 	return;
 
-			var player = Player.Local as GolfPlayer;
+			var player = Sandbox.Player.Local as GolfPlayer;
 			if (player == null) return;
 
+			if ( Player != player ) return;
+
+			var camera = player.BallCamera;
+			if ( camera == null ) return;
+
+			/*
 			// only do stuff with your own ball
-			if (Owner != player)
+			if (Player != player)
             {
 				Quad.ShouldDraw = false;
 				return;
@@ -153,12 +148,9 @@ namespace Minigolf
 
 			// keep the quad under the ball
 			Quad.WorldPos = WorldPos + (Vector3.Down * 3.99f);
-			Quad.ShouldDraw = !IsMoving;
+			Quad.ShouldDraw = !IsMoving;*/
 
-			var camera = player.BallCamera;
-			if (camera == null) return;
-
-			Quad.WorldRot = Rotation.FromYaw(player.BallCamera.Angles.yaw + 180);
+			// Quad.WorldRot = Rotation.FromYaw(player.BallCamera.Angles.yaw + 180);
 
 			var power = player.ShotPower;
 			var powerS = power / 100.0f; // 0-1
@@ -169,7 +161,7 @@ namespace Minigolf
 			var direction = Angles.AngleVector( new Angles( 0, player.BallCamera.Angles.yaw, 0 ) );
 
 			// TODO: hardcoded size
-			PowerArrow.WorldPos = WorldPos + Vector3.Down * 3.99f + direction * 5.0f;
+			PowerArrow.WorldPos = WorldPos + Vector3.Down * 2.99f + direction * 5.0f;
 			PowerArrow.Direction = direction;
 			PowerArrow.Power = powerS;
 		}

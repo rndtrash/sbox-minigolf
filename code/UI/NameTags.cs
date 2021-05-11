@@ -70,7 +70,7 @@ namespace Minigolf
 			if (player.IsLocalPlayer)
 				return false;
 
-			var ball = (player as GolfPlayer).Ball;
+			var ball = player.ActiveChild;
 			if (ball == null)
 				return false;
 

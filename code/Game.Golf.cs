@@ -76,7 +76,7 @@ namespace Minigolf
 			ResetBall(ball);
 
 			// Tell the ball owner his balls are out of bounds
-			ClientBallOutOfBounds(ball.Owner, ball);
+			ClientBallOutOfBounds( ball.Player, ball );
 		}
 
 		[ClientRpc]
@@ -87,7 +87,7 @@ namespace Minigolf
 
 		public void OnBallInHole(PlayerBall ball, int hole)
         {
-			var player = ball.Owner as GolfPlayer;
+			var player = ball.Player;
 
 			ball.InHole = true;
 			ball.PlaySound(InHoleSound.Name);
@@ -151,14 +151,15 @@ namespace Minigolf
 			else
 				modifier = "hard";
 
-			// Smack that ball
-			var velocity = player.Ball.PhysicsBody.Velocity += Angles.AngleVector(new Angles(0, yaw, 0)) * (float)power * PowerMultiplier;
+			var ball = player.ActiveChild as PlayerBall;
+
+			var velocity = ball.PhysicsBody.Velocity += Angles.AngleVector( new Angles( 0, yaw, 0 ) ) * (float)power * PowerMultiplier;
 			velocity.z = 0;
-			player.Ball.PhysicsBody.Velocity = velocity;
-			player.Ball.PhysicsBody.AngularVelocity = Vector3.Zero;
+			ball.PhysicsBody.Velocity = velocity;
+			ball.PhysicsBody.AngularVelocity = Vector3.Zero;
 
 			// Play the sound from where the ball was, the sound shouldn't follow the ball
-			Sound.FromWorld($"minigolf.swing_{modifier}_0{Rand.Int(1, 3)}", player.Ball.WorldPos);
+			Sound.FromWorld( $"minigolf.swing_{modifier}_0{Rand.Int( 1, 3 )}", ball.WorldPos );
 
 			// var sound = SwingSounds[(int)MathF.Ceiling(power / 25)][Rand.Int(0, 2)];
 			// Sound.FromWorld(sound.Name, player.Ball.WorldPos);
