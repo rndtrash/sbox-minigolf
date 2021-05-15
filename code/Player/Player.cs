@@ -12,10 +12,7 @@ namespace Minigolf
 		[NetPredicted]
 		public Camera DevCamera { get; set; }
 
-		// [NetPredicted] public EntityHandle<PlayerBall> BallHandle { get; set; }
-
-		// Lazy accessor
-		public PlayerBall Ball { get => ActiveChild as PlayerBall; }
+		public GolfBall Ball { get => ActiveChild as GolfBall; }
 
 		[Net] public int Strokes { get; set; } = 0;
 
@@ -40,21 +37,6 @@ namespace Minigolf
 
 		public override void Respawn()
 		{
-			if (!ActiveChild.IsValid())
-			{
-				var ball = new PlayerBall();
-				ball.Player = this;
-				ActiveChild = ball;
-
-				Pvs.Add( ball );
-			}
-
-			// assert that the activechild is the ball
-			if ( ActiveChild is not PlayerBall )
-				return;
-
-			(Game.Current as GolfGame).ResetBall(ActiveChild as PlayerBall);
-
 			// Setup our dud controller and animator
 			SetupControllerAndAnimator();
 
@@ -67,12 +49,28 @@ namespace Minigolf
 
 			Transmit = TransmitType.Always;
 
+			SetupGolfBall();
+
 			// needed?
 			UpdatePhysicsHull();
 			ResetInterpolation();
 
 			// do i even wanna do this
 			GameBase.Current?.PlayerRespawn(this);
+		}
+
+		public void SetupGolfBall()
+		{
+			if ( ActiveChild.IsValid() )
+				return;
+		
+			var ball = new GolfBall();
+			ball.Player = this;
+			ActiveChild = ball;
+
+			Pvs.Add( ball );
+
+			ball.ResetPosition( Vector3.Zero );
 		}
 
 		// CLIENTSIDE todo: move to controller

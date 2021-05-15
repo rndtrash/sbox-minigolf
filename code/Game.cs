@@ -56,13 +56,13 @@ namespace Minigolf
 			if (Time.Now > StartTime)
 				WaitingToStart = false;
 
-			var balls = Entity.All.OfType<PlayerBall>();
+			var balls = Entity.All.OfType<GolfBall>();
 			foreach(var ball in balls)
             {
-				var wasMoving = ball.IsMoving;
-				ball.IsMoving = !ball.Velocity.IsNearlyZero();
+				var wasMoving = ball.Moving;
+				ball.Moving = !ball.Velocity.IsNearlyZero();
 
-				if (ball.IsMoving == false && wasMoving == true)
+				if (ball.Moving == false && wasMoving == true)
 					OnBallStoppedMoving(ball);
 			}
 		}

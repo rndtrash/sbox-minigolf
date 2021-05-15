@@ -22,7 +22,7 @@ namespace Minigolf
 			bar = Add.Panel("bar").Add.Panel();
 		}
 
-        public override void Tick()
+		public override void Tick()
         {
 			var player = Player.Local as GolfPlayer;
 			if (player == null) return;

@@ -22,8 +22,8 @@ namespace Minigolf
 
 		public override void StartTouch(Entity other)
 		{
-			if (other is PlayerBall)
-				(Game.Current as GolfGame).OnBallInHole(other as PlayerBall, Hole);
+			if (other is GolfBall ball)
+				(Game.Current as GolfGame).OnBallInHole(ball, Hole);
 		}
 	}
 }

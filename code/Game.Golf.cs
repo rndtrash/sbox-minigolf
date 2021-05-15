@@ -8,12 +8,6 @@ namespace Minigolf
 {
 	partial class GolfGame
 	{
-		[ServerVar("minigolf_power_multiplier")]
-		public static float PowerMultiplier { get; set; } = 15.0f;
-
-		[ServerVar("minigolf_unlimited_whacks")]
-		public static bool UnlimitedWhacks { get; set; } = false;
-
 		[ServerVar( "minigolf_check_bounds" )]
 		public static bool CheckBounds { get; set; } = true;
 
@@ -23,51 +17,9 @@ namespace Minigolf
 		static readonly SoundEvent SoundBelowPar = new SoundEvent("sounds/minigolf.fart.vsnd");
 		static readonly SoundEvent InHoleSound = new SoundEvent("sounds/minigolf.ball_inhole.vsnd");
 
-		static readonly SoundEvent[][] SwingSounds = new SoundEvent[][] {
-			new SoundEvent[] {
-				new("sounds/minigolf.swing_supersoft_01.vsnd"),
-				new("sounds/minigolf.swing_supersoft_02.vsnd"),
-				new("sounds/minigolf.swing_supersoft_03.vsnd"),
-			},
-			new SoundEvent[] {
-				new("sounds/minigolf.swing_soft_01.vsnd"),
-				new("sounds/minigolf.swing_soft_02.vsnd"),
-				new("sounds/minigolf.swing_soft_03.vsnd"),
-			},
-			new SoundEvent[] {
-				new("sounds/minigolf.swing_medium_01.vsnd"),
-				new("sounds/minigolf.swing_medium_02.vsnd"),
-				new("sounds/minigolf.swing_medium_03.vsnd"),
-			},
-			new SoundEvent[] {
-				new("sounds/minigolf.swing_hard_01.vsnd"),
-				new("sounds/minigolf.swing_hard_02.vsnd"),
-				new("sounds/minigolf.swing_hard_03.vsnd"),
-			},
-		};
-
-		/// <summary>
-		/// Reset's the ball to the spawn point of the current hole.
-		/// </summary>
-		/// <param name="ball"></param>
-		public void ResetBall(PlayerBall ball)
-        {
-			// Reset all velocity
-			ball.PhysicsBody.Velocity = Vector3.Zero;
-			ball.PhysicsBody.AngularVelocity = Vector3.Zero;
-			ball.PhysicsBody.ClearForces();
-
-			ball.WorldPos = Course.CurrentHole.SpawnPosition;
-			ball.PhysicsBody.Pos = Course.CurrentHole.SpawnPosition;
-			ball.ResetInterpolation();
-
-			ball.IsMoving = false;
-			ball.InHole = false;
-		}
-
-		public void OnBallStoppedMoving(PlayerBall ball)
+		public void OnBallStoppedMoving(GolfBall ball)
 		{
-			if ( CheckBounds && !ball.InHole && !Course.CurrentHole.InBounds(ball) )
+			if ( CheckBounds && !ball.Cupped && !Course.CurrentHole.InBounds(ball) )
 				BallOutOfBounds(ball, OutOfBoundsType.Normal);
 		}
 
@@ -78,7 +30,7 @@ namespace Minigolf
 			Fire
 		}
 
-		public void BallOutOfBounds(PlayerBall ball, OutOfBoundsType type)
+		public void BallOutOfBounds(GolfBall ball, OutOfBoundsType type)
         {
 			if ( IsClient )
 				return;
@@ -90,21 +42,21 @@ namespace Minigolf
 		}
 
 		[ClientRpc]
-		public void ClientBallOutOfBounds(PlayerBall ball)
+		public void ClientBallOutOfBounds(GolfBall ball)
 		{
 			_ = OutOfBounds.Current.Show();
 		}
 
-		public void OnBallInHole(PlayerBall ball, int hole)
+		public void OnBallInHole(GolfBall ball, int hole)
         {
 			var player = ball.Player;
 
-			ball.InHole = true;
+			ball.Cupped = true;
 			ball.PlaySound(InHoleSound.Name);
 
 			// Announce to all players
 			Sandbox.UI.ChatBox.AddInformation(Player.All, $"{player.Name} scored on hole {hole}!", $"avatar:{player.SteamId}");
-			PlayerBallInHole(ball, player.Strokes);
+			GolfBallInHole(ball, player.Strokes);
 
 			Action task = async () =>
 			{
@@ -120,7 +72,7 @@ namespace Minigolf
 		}
 
 		[ClientRpc]
-		protected void PlayerBallInHole(PlayerBall ball, int strokes)
+		protected void GolfBallInHole(GolfBall ball, int strokes)
         {
 			// nice job bro, hole in one!
 			if (strokes == 1)
@@ -131,8 +83,13 @@ namespace Minigolf
 			_ = EndScore.Current.ShowScore(Course.CurrentHole.Number, Course.CurrentHole.Par, strokes);
 		}
 
+		protected void ResetBall(GolfBall ball)
+		{
+			ball.ResetPosition( Course.CurrentHole.SpawnPosition );
+		}
+
 		[ServerCmd("minigolf_stroke")]
-		public static void PlayerBallStroke(float yaw, int power)
+		public static void GolfBallStroke(float yaw, int power)
 		{
 			var owner = ConsoleSystem.Caller;
 
@@ -140,41 +97,10 @@ namespace Minigolf
 				return;
 
 			var player = owner as GolfPlayer;
+			var ball = player.ActiveChild as GolfBall;
 
-			// Don't let a player hit an already moving ball or one in the hole
-			if (!UnlimitedWhacks && (player.Ball.IsMoving || player.Ball.InHole))
-			 	return;
-
-			// Clamp the power, should be 0-100
-			power = Math.Clamp(power, 0, 100);
-
-			// Turn it into a gradient
-
-			// remove when SoundEvents aren't fucked
-			string modifier;
-			if (power < 25)
-				modifier = "supersoft";
-			else if (power < 50)
-				modifier = "soft";
-			else if (power < 75)
-				modifier = "medium";
-			else
-				modifier = "hard";
-
-			var ball = player.ActiveChild as PlayerBall;
-
-			var velocity = ball.PhysicsBody.Velocity += Angles.AngleVector( new Angles( 0, yaw, 0 ) ) * (float)power * PowerMultiplier;
-			velocity.z = 0;
-			ball.PhysicsBody.Velocity = velocity;
-			ball.PhysicsBody.AngularVelocity = Vector3.Zero;
-
-			// Play the sound from where the ball was, the sound shouldn't follow the ball
-			Sound.FromWorld( $"minigolf.swing_{modifier}_0{Rand.Int( 1, 3 )}", ball.WorldPos );
-
-			// var sound = SwingSounds[(int)MathF.Ceiling(power / 25)][Rand.Int(0, 2)];
-			// Sound.FromWorld(sound.Name, player.Ball.WorldPos);
-
-			player.Strokes++;
+			if (ball.Stroke( Angles.AngleVector( new Angles( 0, yaw, 0 ) ), power ))
+				player.Strokes++;
 		}
 	}
 }

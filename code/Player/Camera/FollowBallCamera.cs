@@ -26,7 +26,7 @@ namespace Minigolf
 			var player = Player.Local as GolfPlayer;
 			if (player == null) return;
 
-			var ball = player.ActiveChild as PlayerBall;
+			var ball = player.ActiveChild as GolfBall;
 			if (ball == null) return;
 
 			Pos = ball.WorldPos;
