@@ -25,8 +25,6 @@ namespace Minigolf
 
 			if ( Trail == null )
 				Trail = Particles.Create( "particles/ball_trail.vpcf" );
-
-			Trail.Destroy( false );
 		}
 
 		[Event( "frame" )]

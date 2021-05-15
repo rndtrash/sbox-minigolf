@@ -89,7 +89,7 @@ namespace Minigolf
 		}
 
 		[ServerCmd("minigolf_stroke")]
-		public static void GolfBallStroke(float yaw, int power)
+		public static void GolfBallStroke(float yaw, float power)
 		{
 			var owner = ConsoleSystem.Caller;
 

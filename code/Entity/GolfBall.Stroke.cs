@@ -61,7 +61,7 @@ namespace Minigolf
 			var sound = SwingSounds[(int)MathF.Ceiling(power / 25)][Rand.Int(0, 2)];
 			Sound.FromWorld(sound, WorldPos);
 
-			PhysicsBody.Velocity = direction * power;
+			PhysicsBody.Velocity = direction * power * 100 * PowerMultiplier;
 			PhysicsBody.AngularVelocity = 0;
 			PhysicsBody.Wake();
 
