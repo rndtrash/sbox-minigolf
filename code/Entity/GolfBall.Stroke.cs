@@ -55,11 +55,14 @@ namespace Minigolf
 			if ( Cupped || (!UnlimitedWhacks && Moving) )
 				return false;
 
-			direction /= direction.Length; // Normalize our direction vector
+			direction = direction.Normal;
 			power = Math.Clamp( power, 0, 1 );
 
 			var sound = SwingSounds[(int)MathF.Ceiling(power / 25)][Rand.Int(0, 2)];
 			Sound.FromWorld(sound, WorldPos);
+
+			// Make sure we don't jump up at all.
+			direction.z = 0;
 
 			PhysicsBody.Velocity = direction * power * 100 * PowerMultiplier;
 			PhysicsBody.AngularVelocity = 0;

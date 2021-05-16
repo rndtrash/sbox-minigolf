@@ -70,7 +70,7 @@ namespace Minigolf
 
 			Pvs.Add( ball );
 
-			ball.ResetPosition( Vector3.Zero );
+			ball.ResetPosition( (Game.Current as GolfGame).Course.CurrentHole.SpawnPosition );
 		}
 
 		// CLIENTSIDE todo: move to controller

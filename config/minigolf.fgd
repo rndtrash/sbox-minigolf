@@ -43,3 +43,26 @@
 	movedir(angle) : "Move Direction (Pitch Yaw Roll)" : "0 0 0" : "The direction the brushes will move, when told to."
 	movedir_islocal(boolean) : "Move Direction is Expressed in Local Space" : "1" : "If checked, the movement direction angle is in local space and should be rotated by the entity's angles after spawning."
 ]
+
+@SolidClass base(PhysicsTypeOverride_Mesh, Targetname, RenderFields, Shadow) = minigolf_wall : 
+	"An brush built entity with various features." 
+[
+	vrad_brush_cast_shadows(boolean) : "Shadows" : 1 : "Set this if this brush casts lightmap shadows."
+
+	surface_property_override(surface_properties) : "Surface Property Override" : "" : "Overrides the default surface property."
+
+	Reflect(boolean) : "Reflect" : "1" : "If checked, the ball will bounce off this surface at the defined multiplier."
+	ReflectMultiplier(float) : "Reflect multiplier" : 1 : "How much the wall will reflect"
+]
+
+@SolidClass base(PhysicsTypeOverride_Mesh, Targetname, RenderFields, Shadow) drawangles( movedir, movedir_islocal ) = minigolf_speed_boost : 
+	"An brush built entity that will boost balls." 
+[
+	vrad_brush_cast_shadows(boolean) : "Shadows" : 1 : "Set this if this brush casts lightmap shadows."
+
+	movedir(angle) : "Move Direction (Pitch Yaw Roll)" : "0 0 0" : "The direction the ball will move, when told to."
+	movedir_islocal(boolean) : "Move Direction is Expressed in Local Space" : "1" : "If checked, the movement direction angle is in local space and should be rotated by the entity's angles after spawning."
+
+	SpeedMultiplier(float) : "Speed Multiplier" : 1 : "How much the ball will accelerate"
+	MaxSpeed(float) : "Max Speed" : 1000 : "Max speed the ball can be accelerated to from this booster."
+]

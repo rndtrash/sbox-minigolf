@@ -475,7 +475,7 @@
 			{
 				m_nType = "PF_TYPE_LITERAL"
 				m_nMapType = "PF_MAP_TYPE_DIRECT"
-				m_flLiteralValue = 0.1
+				m_flLiteralValue = 0.3
 				m_nControlPoint = 0
 				m_nScalarAttribute = 3
 				m_nVectorAttribute = 6
@@ -1033,6 +1033,8 @@
 			}
 			m_bAdditive = true
 			m_bOnlyRenderInEffectsBloomPass = true
+			m_nColorBlendType = "PARTICLE_COLOR_BLEND_ADD"
+			m_bAdditiveAlpha = true
 		},
 	]
 }

@@ -5,8 +5,8 @@ namespace Minigolf
 {
 	public partial class GolfBall
 	{
-		[ServerVar( "minigolf_ball_reflect_multiplier" )]
-		public static float ReflectMultiplier { get; set; } = 0.75f;
+		// [ServerVar( "minigolf_ball_reflect_multiplier" )]
+		// public static float ReflectMultiplier { get; set; } = 0.75f;
 		[ServerVar( "minigolf_ball_linear_damping" )]
 		public static float DefaultLinearDamping { get; set; } = 0.05f;
 		[ServerVar( "minigolf_ball_angular_damping" )]
@@ -18,44 +18,7 @@ namespace Minigolf
 			if ( Cupped )
 				return;
 
-			// TODO: Check if the ball is determined ready to hit again
-			// TODO: Do out of bounds check here instead
-
-			// Do physics to change dampening
-			var trace = Trace.Ray( WorldPos, WorldPos + Vector3.Down * 8 );
-			trace.HitLayer( CollisionLayer.Debris );
-			trace.Ignore( this );
-			var traceResult = trace.Run();
-
-			if ( !traceResult.Hit )
-				return;
-
-			var normalDot = traceResult.Normal.Dot( Vector3.Up );
-			// DebugOverlay.Text(WorldPos + Vector3.Up * 8.0f, $"N.Dot: {normalDot}");
-
-			// Flat surface
-			if ( normalDot.AlmostEqual( 1 ) )
-			{
-				// PhysicsBody.LinearDamping = 0.05f;
-				// PhysicsBody.AngularDamping = 4.00f;
-
-				PhysicsBody.LinearDamping = DefaultLinearDamping;
-				PhysicsBody.AngularDamping = DefaultAngularDamping;
-
-				if ( traceResult.Surface.Name == "minigolf.ice" )
-				{
-					PhysicsBody.LinearDamping = 0.25f;
-					PhysicsBody.AngularDamping = 0.00f;
-				}
-
-				if ( traceResult.Surface.Name == "minigolf.sand" )
-				{
-					PhysicsBody.LinearDamping = 2.5f;
-					PhysicsBody.AngularDamping = 2.5f;
-				}
-
-				return;
-			}
+			AdjustDamping();
 		}
 
 		/// <summary>
@@ -70,7 +33,12 @@ namespace Minigolf
 			var downTraceResult = downTrace.Run();
 
 			if ( Debug )
+			{
 				DebugOverlay.Line( downTraceResult.StartPos, downTraceResult.EndPos );
+
+				// if ( downTraceResult.Entity.IsValid() )
+				// 	DebugOverlay.Text( downTraceResult.StartPos, $"e: {downTraceResult.Entity.EngineEntityName}" );
+			}
 
 			// We are in the air, do nothing? (Maybe we could adjust something to make ball airtime feel nicer?)
 			if ( !downTraceResult.Hit )
@@ -93,6 +61,17 @@ namespace Minigolf
 						PhysicsBody.LinearDamping = DefaultLinearDamping;
 						PhysicsBody.AngularDamping = DefaultAngularDamping;
 						break;
+				}
+
+				if ( downTraceResult.Entity is SpeedBoost speedBoost )
+				{
+					// TODO: Multiply by delta time
+					var velocity = PhysicsBody.Velocity;
+					velocity += Angles.AngleVector( speedBoost.MoveDir ) * 100; // speedBoost.SpeedMultiplier;
+
+
+					PhysicsBody.Velocity = velocity;
+					// PhysicsBody.Velocity *= 2;
 				}
 
 				return;
@@ -121,6 +100,7 @@ namespace Minigolf
 		/// <summary>
 		/// Velocity is currently null on the client, let's figure it out here.
 		/// </summary>
+		[Event( "client.tick" )]
 		protected void ClientVelocityWorkaround()
 		{
 			clientVelocity = WorldPos - prevWorldPos;
@@ -147,23 +127,25 @@ namespace Minigolf
 			if ( eventData.Entity.IsWorld )
 				return;
 
-			if ( eventData.Speed < 10 )
+			// if ( eventData.PreVelocity.Length < 10 )
+			// 	return;
+
+			// Hard code collisions with the wall for now.
+			if ( eventData.Entity is not Wall wall )
 				return;
 
-			// Ball randomly bounces off the ground, this should stop it.
-			// if (Vector3.Up.Dot(eventData.Normal) < -0.35)
-			// 	return;
+			PhysicsBody.Velocity = PhysicsBody.Velocity.WithZ( 0 );
+
+			if ( !wall.Reflect )
+				return;
 
 			var reflect = Vector3.Reflect( eventData.PreVelocity.Normal, eventData.Normal.Normal ).Normal;
 
-			if ( Debug )
-			{
-				DebugOverlay.Text( eventData.Pos, $"{eventData.Speed}", 5f );
-				DebugOverlay.Line( eventData.Pos, eventData.Pos - (eventData.PreVelocity.Normal * 64.0f), 5f );
-				DebugOverlay.Line( eventData.Pos, eventData.Pos + (reflect * 64.0f), 5f );
-			}
+			var normalDot = eventData.PreVelocity.Normal.Dot( eventData.Normal );
 
-			// TODO: DETECT CURVES
+			// Don't do any reflection if we hit it at such an angle
+			if ( normalDot <= 0.10 )
+				return;
 
 			// Collision sound happens at this point, not entity
 			var sound = Sound.FromWorld( BounceSound.Name, eventData.Pos );
@@ -175,12 +157,25 @@ namespace Minigolf
 			particle.Destroy( false );
 
 			var newSpeed = Math.Max( eventData.PreVelocity.Length, eventData.Speed );
+			newSpeed *= wall.ReflectMultiplier;
 
-			var newVelocity = reflect * newSpeed * ReflectMultiplier;
-			// newVelocity.z = 0;
+			// Adjust the speed depending on the hit normal, slight hit = more speed
+			newSpeed *= (1 - normalDot / 2);
+
+			var newVelocity = reflect * newSpeed;
+			newVelocity.z = 0;
 
 			PhysicsBody.Velocity = newVelocity;
 			PhysicsBody.AngularVelocity = Vector3.Zero;
+
+			if ( Debug )
+			{
+				DebugOverlay.Text( eventData.Pos, $"V {eventData.PreVelocity.Length} -> {newSpeed}", 5f );
+				DebugOverlay.Text( eventData.Pos + Vector3.Up * 8, $"N. {normalDot}", 5f );
+				DebugOverlay.Line( eventData.Pos, eventData.Pos - (eventData.PreVelocity.Normal * 64.0f), 5f );
+				DebugOverlay.Line( eventData.Pos, eventData.Pos + (reflect * 64.0f), 5f );
+			}
+
 		}
 	}
 }

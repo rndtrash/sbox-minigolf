@@ -4,6 +4,9 @@ Layer0
 {
 	shader "complex.vfx"
 
+	//---- Detail Texture ----
+	F_DETAIL_TEXTURE 3 // Normals
+
 	//---- PBR ----
 	F_SPECULAR 1
 
@@ -14,8 +17,18 @@ Layer0
 
 	//---- Color ----
 	g_flModelTintAmount "1.000"
-	g_vColorTint "[0.807843 0.698039 0.486275 1.000000]"
-	TextureColor "[1.000000 1.000000 1.000000 1.000000]"
+	g_vColorTint "[1.000000 1.000000 1.000000 1.000000]"
+	TextureColor "[0.807843 0.698039 0.486275 1.000000]"
+
+	//---- Detail Texture ----
+	g_flDetailBlendFactor "1.000"
+	g_flDetailBlendToFull "0.000"
+	g_flDetailNormalStrength "1.000"
+	g_flDetailTexCoordRotation "0.000"
+	g_vDetailTexCoordOffset "[0.000 0.000]"
+	g_vDetailTexCoordScale "[1.000 1.000]"
+	TextureDetailMask "[1.000000 1.000000 1.000000 0.000000]"
+	TextureNormalDetail "C:/Program Files (x86)/Steam/steamapps/common/sbox/addons/minigolf/materials/minigolf.sand_normal.jpg"
 
 	//---- Fade ----
 	g_flFadeExponent "1.000"
@@ -31,10 +44,10 @@ Layer0
 	g_flMetalness "0.000"
 
 	//---- Normal ----
-	TextureNormal "materials/default/default_normal.tga"
+	TextureNormal "C:/Program Files (x86)/Steam/steamapps/common/sbox/addons/minigolf/materials/minigolf.sand_normal.jpg"
 
 	//---- Roughness ----
-	TextureRoughness "[1.000000 1.000000 1.000000 0.000000]"
+	TextureRoughness "[1.000000 1.000000 1.000000 1.000000]"
 
 	//---- Texture Coordinates ----
 	g_nScaleTexCoordUByModelScaleAxis "0"

@@ -33,12 +33,12 @@ namespace Minigolf
 			// if (Quad == null)
 			// 	return;
 
-			var player = Sandbox.Player.Local as GolfPlayer;
-			if ( player == null ) return;
+			var localPlayer = Sandbox.Player.Local as GolfPlayer;
+			if ( localPlayer == null ) return;
 
-			if ( Player != player ) return;
+			if ( Player != localPlayer ) return;
 
-			var camera = player.BallCamera;
+			var camera = localPlayer.BallCamera;
 			if ( camera == null ) return;
 
 			/*
@@ -55,13 +55,13 @@ namespace Minigolf
 
 			// Quad.WorldRot = Rotation.FromYaw(player.BallCamera.Angles.yaw + 180);
 
-			var power = player.ShotPower;
+			var power = localPlayer.ShotPower;
 			var powerS = power / 100.0f; // 0-1
 
 			if ( !PowerArrow.IsValid() )
 				PowerArrow = new();
 
-			var direction = Angles.AngleVector( new Angles( 0, player.BallCamera.Angles.yaw, 0 ) );
+			var direction = Angles.AngleVector( new Angles( 0, localPlayer.BallCamera.Angles.yaw, 0 ) );
 
 			// TODO: hardcoded size
 			PowerArrow.WorldPos = WorldPos + Vector3.Down * 2.99f + direction * 5.0f;
