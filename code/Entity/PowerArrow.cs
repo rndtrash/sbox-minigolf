@@ -9,24 +9,15 @@ namespace Minigolf
 		public Vector3 Direction = Vector3.Zero;
 		public float Power = 0.0f;
 
-		public override void DoRender( SceneObject obj )
+		protected void DrawArrow( SceneObject obj, Vector3 startPos, Vector3 endPos, Vector3 direction, Vector3 size, Color color, bool drawTip )
 		{
-			if ( Power == 0.0f )
-				return;
-
-			Render.SetLighting( obj );
-
-			var vertexBuffer = Render.GetDynamicVB(true);
-
-			var startPos = WorldPos;
-			var endPos = WorldPos += Direction * Power * 100;
-			var offset = Vector3.Cross( Direction, Vector3.Up ) * (1 + 2 * Power);
+			var vertexBuffer = Render.GetDynamicVB( true );
 
 			// Line
-			Vertex a = new( startPos - offset, Vector3.Up, Vector3.Right, new Vector4( 0, 1, 0, 0 ) );
-			Vertex b = new( startPos + offset, Vector3.Up, Vector3.Right, new Vector4( 1, 1, 0, 0 ) );
-			Vertex c = new( endPos + offset, Vector3.Up, Vector3.Right, new Vector4( 1, 0, 0, 0 ) );
-			Vertex d = new( endPos - offset, Vector3.Up, Vector3.Right, new Vector4( 0, 0, 0, 0 ) );
+			Vertex a = new( startPos - size, Vector3.Up, Vector3.Right, new Vector4( 0, 1, 0, 0 ) );
+			Vertex b = new( startPos + size, Vector3.Up, Vector3.Right, new Vector4( 1, 1, 0, 0 ) );
+			Vertex c = new( endPos + size, Vector3.Up, Vector3.Right, new Vector4( 1, 0, 0, 0 ) );
+			Vertex d = new( endPos - size, Vector3.Up, Vector3.Right, new Vector4( 0, 0, 0, 0 ) );
 
 			vertexBuffer.Add( a );
 			vertexBuffer.Add( b );
@@ -36,21 +27,59 @@ namespace Minigolf
 			vertexBuffer.AddTriangleIndex( 4, 3, 2 );
 			vertexBuffer.AddTriangleIndex( 2, 1, 4 );
 
-			// Add the arrow tip
-			Vertex e = new( endPos + offset * 2, Vector3.Up, Vector3.Right, new Vector4( 1, 0, 0, 0 ) );
-			Vertex f = new( endPos - offset * 2, Vector3.Up, Vector3.Right, new Vector4( 0, 0, 0, 0 ) );
-			Vertex g = new( endPos + Direction * 16 * Power, Vector3.Up, Vector3.Right, new Vector4( 1, 0, 0, 0 ) );
+			if (drawTip)
+			{
+				// Add the arrow tip
+				Vertex e = new( endPos + size * 2, Vector3.Up, Vector3.Right, new Vector4( 1, 0, 0, 0 ) );
+				Vertex f = new( endPos - size * 2, Vector3.Up, Vector3.Right, new Vector4( 0, 0, 0, 0 ) );
+				Vertex g = new( endPos + direction * 16 * Power, Vector3.Up, Vector3.Right, new Vector4( 1, 0, 0, 0 ) );
 
-			vertexBuffer.Add( e );
-			vertexBuffer.Add( f );
-			vertexBuffer.Add( g );
-			vertexBuffer.AddTriangleIndex( 1, 2, 3 );
-
-			var color = ColorConvert.HSLToRGB( 120 - (int)(Power * Power * 120), 1.0f, 0.5f );
+				vertexBuffer.Add( e );
+				vertexBuffer.Add( f );
+				vertexBuffer.Add( g );
+				vertexBuffer.AddTriangleIndex( 1, 2, 3 );
+			}
 
 			Render.Set( "color", color );
 
 			vertexBuffer.Draw( Material );
+		}
+
+		public override void DoRender( SceneObject obj )
+		{
+			if ( Power == 0.0f )
+				return;
+
+			Render.SetLighting( obj );
+
+			var startPos = WorldPos;
+			var endPos = WorldPos += Direction * Power * 100;
+			var offset = Vector3.Cross( Direction, Vector3.Up ) * (1 + 2 * Power);
+
+			var trace = Trace.Ray( startPos, endPos );
+			var result = trace.Run();
+
+			var remainingLength = (result.EndPos - endPos).Length;
+
+			// Draw single arrow if no trace
+			if ( remainingLength.AlmostEqual(0.0f) )
+			{
+				var color = ColorConvert.HSLToRGB( 120 - (int)(Power * Power * 120), 1.0f, 0.5f );
+				DrawArrow( obj, startPos, endPos, Direction, offset, color, true );
+				return;
+			}
+
+			// Draw two arrows
+			var color2 = ColorConvert.HSLToRGB( 120 - (int)(Power * Power * 120), 1.0f, 0.5f );
+			DrawArrow( obj, startPos, result.EndPos, Direction, offset, color2, false );
+
+			var direction2 = Vector3.Reflect( Direction, result.Normal );
+
+			var endPos2 = result.EndPos + direction2 * remainingLength;
+			var offset2 = Vector3.Cross( direction2, Vector3.Up ) * (1 + 2 * Power);
+			DrawArrow( obj, result.EndPos, endPos2, direction2, offset2, color2, true );
+
+			DebugOverlay.Line( result.EndPos, endPos2 );
 		}
 	}
 }
