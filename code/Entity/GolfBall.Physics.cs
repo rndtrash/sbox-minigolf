@@ -67,11 +67,9 @@ namespace Minigolf
 				{
 					// TODO: Multiply by delta time
 					var velocity = PhysicsBody.Velocity;
-					velocity += Angles.AngleVector( speedBoost.MoveDir ) * 100; // speedBoost.SpeedMultiplier;
-
+					velocity += Angles.AngleVector( speedBoost.MoveDir ) * speedBoost.SpeedMultiplier;
 
 					PhysicsBody.Velocity = velocity;
-					// PhysicsBody.Velocity *= 2;
 				}
 
 				return;
@@ -149,7 +147,7 @@ namespace Minigolf
 
 			// Collision sound happens at this point, not entity
 			var sound = Sound.FromWorld( BounceSound.Name, eventData.Pos );
-			sound.SetVolume( 0.8f );
+			sound.SetVolume( 0.2f + Math.Clamp( eventData.Speed / 1250.0f, 0.0f, 0.8f ) );
 			sound.SetPitch( 0.5f + Math.Clamp( eventData.Speed / 1250.0f, 0.0f, 0.5f ) );
 
 			var particle = Particles.Create( "particles/ball_hit.vpcf", eventData.Pos );

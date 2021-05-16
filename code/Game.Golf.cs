@@ -76,7 +76,7 @@ namespace Minigolf
         {
 			// nice job bro, hole in one!
 			if (strokes == 1)
-				Sound.FromScreen(SoundHoleInOne.Name).SetVolume(1.5f);
+				Sound.FromScreen(SoundHoleInOne.Name).SetVolume(0.8f);
 			else if (strokes - Course.CurrentHole.Par > 0)
 				Sound.FromScreen(SoundBelowPar.Name);
 
