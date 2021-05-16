@@ -85,7 +85,7 @@ namespace Minigolf
 
 		protected void ResetBall(GolfBall ball)
 		{
-			ball.ResetPosition( Course.CurrentHole.SpawnPosition );
+			ball.ResetPosition( Course.CurrentHole.SpawnPosition, Course.CurrentHole.SpawnAngles );
 		}
 
 		[ServerCmd("minigolf_stroke")]

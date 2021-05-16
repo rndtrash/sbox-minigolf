@@ -1,5 +1,5 @@
 ﻿using Sandbox;
-using System;
+using System.Linq;
 
 namespace Minigolf
 {
@@ -14,7 +14,11 @@ namespace Minigolf
 
         public override void Update()
         {
+			var cam = Entity.All.OfType<StartCamera>().FirstOrDefault();
+			if ( cam == null ) return;
 
+			Pos = cam.Pos;
+			Rot = cam.Rot;
         }
     }
 }

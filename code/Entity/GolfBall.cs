@@ -33,5 +33,34 @@ namespace Minigolf
 
 			Transmit = TransmitType.Always;
 		}
+
+		public void ResetPosition( Vector3 position, Angles direction )
+		{
+			// Reset all velocity
+			PhysicsBody.Velocity = Vector3.Zero;
+			PhysicsBody.AngularVelocity = Vector3.Zero;
+			PhysicsBody.ClearForces();
+			PhysicsBody.ClearTorques();
+
+			WorldPos = position;
+			PhysicsBody.Pos = position;
+			ResetInterpolation();
+
+			Moving = false;
+			Cupped = false;
+
+			// Tell the player we reset the ball
+			PlayerResetPosition( Player, position, direction );
+		}
+
+		[ClientRpc]
+		protected void PlayerResetPosition( Vector3 position, Angles angles )
+		{
+			var player = Sandbox.Player.Local as GolfPlayer;
+			if ( player == null ) return;
+
+			var camera = player.BallCamera;
+			camera.Angles = angles;
+		}
 	}
 }

@@ -41,7 +41,8 @@ namespace Minigolf
                     Name = hole.Name,
                     Par = hole.Par,
                     SpawnPosition = hole.WorldPos,
-                    GoalPosition = goal.WorldPos,
+                    SpawnAngles = hole.WorldAng,
+					GoalPosition = goal.WorldPos,
                     Bounds = Entity.All.OfType<HoleBounds>().Where(x => x.Hole == hole.Number).ToList()
                 };
             }
@@ -104,7 +105,8 @@ namespace Minigolf
         public string Name { get; set; }
         public int Par { get; set; }
         public Vector3 SpawnPosition { get; set; } = Vector3.Zero;
-        public Vector3 GoalPosition { get; set; } = Vector3.Zero;
+        public Angles SpawnAngles { get; set; } = Angles.Zero;
+		public Vector3 GoalPosition { get; set; } = Vector3.Zero;
         public List<HoleBounds> Bounds { get; set; } = new List<HoleBounds>();
 
         public bool InBounds(Entity other)
@@ -121,6 +123,7 @@ namespace Minigolf
             write.WriteUtf8(Name);
             write.Write(Par);
             write.Write(SpawnPosition);
+            write.Write( SpawnAngles );
             write.Write(GoalPosition);
 
             return true;
@@ -133,7 +136,8 @@ namespace Minigolf
             Name = read.ReadUtf8();
             Par = read.Read<int>();
             SpawnPosition = read.Read<Vector3>();
-            GoalPosition = read.Read<Vector3>();
+			SpawnAngles = read.Read<Angles>();
+			GoalPosition = read.Read<Vector3>();
             
             return true;
         }

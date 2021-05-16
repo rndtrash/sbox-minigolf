@@ -34,22 +34,6 @@ namespace Minigolf
 			},
 		};
 
-		public void ResetPosition( Vector3 position )
-		{
-			// Reset all velocity
-			PhysicsBody.Velocity = Vector3.Zero;
-			PhysicsBody.AngularVelocity = Vector3.Zero;
-			PhysicsBody.ClearForces();
-			PhysicsBody.ClearTorques();
-
-			WorldPos = position;
-			PhysicsBody.Pos = position;
-			ResetInterpolation();
-
-			Moving = false;
-			Cupped = false;
-		}
-
 		public bool Stroke( Vector3 direction, float power )
 		{
 			if ( Cupped || (!UnlimitedWhacks && Moving) )

@@ -1,4 +1,4 @@
-@PointClass editormodel("models/golf_ball.vmdl") = minigolf_hole_spawn : "Minigolf Ball Spawn"
+@PointClass editormodel("models/golf_ball.vmdl") drawangles() = minigolf_hole_spawn : "Minigolf Ball Spawn"
 [
     hole_number(integer): "Hole Number" : 1 : "Which hole this spawnpoint is on."
     hole_name(string): "Hole Name" : "wanker" : "cool"
