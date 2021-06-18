@@ -1,68 +1,137 @@
-@PointClass editormodel("models/golf_ball.vmdl") drawangles() = minigolf_hole_spawn : "Minigolf Ball Spawn"
+// 
+// Minigolf.FlagBase : Sandbox.ModelEntity 
+// 
+@PointClass  editormodel( "models/golf_flag.vmdl" ) 
+metadata
+{
+}
+= minigolf_flag_base : "Minigolf Flag Base"
 [
-    hole_number(integer): "Hole Number" : 1 : "Which hole this spawnpoint is on."
-    hole_name(string): "Hole Name" : "wanker" : "cool"
-    hole_par(integer): "Hole Par" : 3 : "How many strokes should this hole be done in."
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 ]
 
-@SolidClass = minigolf_hole_goal : "Minigolf Hole"
+// 
+// Minigolf.FuncMovingObstacle : Sandbox.KeyframeEntity 
+// 
+@PointClass = func_moving_obstacle : ""
 [
-    hole_number(integer): "Hole Number" : 1 : "Which hole this hole is on."
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	movedir(angle) : "movedir" :  : ""
+	movedir_islocal(boolean) : "movedir_islocal" :  : ""
+	spawnpos(boolean) : "spawnpos" :  : ""
+	lip(float) : "lip" :  : ""
+	speed(float) : "speed" :  : ""
+	wait(float) : "wait" :  : ""
+
 ]
 
+// 
+// Minigolf.SpeedBoost : Sandbox.ModelEntity 
+// 
+@PointClass  drawangles( "movedir", "movedir_is_local" ) 
+metadata
+{
+}
+= minigolf_speed_boost : "An brush built entity that will boost balls."
+[
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	speedmultiplier(float) : "Speed Multiplier" :  : "How much the ball will accelerate"
+	maxspeed(float) : "Max Speed" :  : "Max speed the ball can be accelerated to from this booster."
+	movedir(angle) : "Move Direction (Pitch Yaw Roll)" :  : "The direction the ball will move, when told to."
+	movedir_islocal(boolean) : "Move Direction is Expressed in Local Space" :  : "If checked, the movement direction angle is in local space and should be rotated by the entity's angles after spawning."
+
+]
+
+// 
+// Minigolf.Wall : Sandbox.ModelEntity 
+// 
+@SolidClass  base( PhysicsTypeOverride_Mesh )  base( RenderFields ) 
+metadata
+{
+}
+= minigolf_wall : "Wall stuff"
+[
+	vrad_brush_cast_shadows( boolean )[ group="Render Properties" ] : "Shadows" : 0 : "Set this if this brush casts lightmap shadows."
+	disableshadows( boolean )[group = "Render Properties"] : "Disable shadows" : 0
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	reflect(boolean) : "Reflect" :  : "If checked, the ball will bounce off this surface at the defined multiplier."
+	reflectmultiplier(float) : "Reflect multiplier" :  : "How much the wall will reflect"
+
+]
+
+// 
+// Minigolf.Water : Sandbox.AnimEntity 
+// 
+@PointClass = minigolf_water : ""
+[
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+]
+
+// 
+// Minigolf.HoleBounds : Sandbox.ModelEntity 
+// 
 @SolidClass = minigolf_hole_bounds : "Minigolf Bounds of a Hole"
 [
-    hole_number(integer): "Hole Number" : 1 : "Which hole these boundries are."
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	hole_number(integer) : "Hole Number" : "1" : "Which hole this hole is on."
+
 ]
 
-@PointClass editormodel("models/golf_flag.vmdl") = minigolf_flag_base : "Minigolf Flag Base"
+// 
+// Minigolf.HoleCamera : Sandbox.Entity 
+// 
+@PointClass  editormodel( "models/editor/camera.vmdl" ) 
+metadata
+{
+}
+= minigolf_hole_camera : "Minigolf Hole Camera"
 [
-	hole_number(integer): "Hole Number" : 1 : "Which hole this flag is on."
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	hole_number(integer) : "Hole Number" :  : "Which hole this camera is for"
+	fov(float) : "FOV" :  : "Field of view in degrees"
+	znear(float) : "ZNear" :  : "Distance to the near plane"
+	zfar(float) : "ZFar" :  : "Distance to the far plane"
+
 ]
 
-@PointClass base(Parentname, Targetname) frustum( FOV, ZNear, ZFar ) editormodel("models/editor/camera.vmdl") = minigolf_start_camera : "Minigolf Start Camera"
+// 
+// Minigolf.StartCamera : Sandbox.Entity 
+// 
+@PointClass  editormodel( "models/editor/camera.vmdl" ) 
+metadata
+{
+}
+= minigolf_start_camera : "Minigolf Start Camera"
 [
-	FOV(float) : "FOV" : 90 : "Field of view in degrees"
-	ZNear(float) : "ZNear" : 4 : "Distance to the near plane"
-	ZFar(float) : "ZFar" : 10000 : "Distance to the far plane"
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	znear(float) : "ZNear" :  : "Distance to the near plane"
+	zfar(float) : "ZFar" :  : "Distance to the far plane"
+
 ]
 
-@PointClass base(Parentname, Targetname) frustum( FOV, ZNear, ZFar ) editormodel("models/editor/camera.vmdl") = minigolf_hole_camera : "Minigolf Hole Camera"
+// 
+// Minigolf.HoleGoal : Sandbox.ModelEntity 
+// 
+@SolidClass = minigolf_hole_goal : "Minigolf Hole"
 [
-    hole_number(integer): "Hole Number" : 1 : "Which hole this camera is for"
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	hole_number(integer) : "Hole Number" : "1" : "Which hole this hole is on."
 
-	FOV(float) : "FOV" : 90 : "Field of view in degrees"
-	ZNear(float) : "ZNear" : 4 : "Distance to the near plane"
-	ZFar(float) : "ZFar" : 10000 : "Distance to the far plane"
 ]
 
-
-@SolidClass base(Door) drawangles( movedir, movedir_islocal ) = func_moving_obstacle : 
-	"A brush entity for an automatic moving obstacle."
+// 
+// Minigolf.HoleSpawn : Sandbox.Entity 
+// 
+@PointClass  editormodel( "models/golf_ball.vmdl" )  drawangles(  ) 
+metadata
+{
+}
+= minigolf_hole_spawn : "Minigolf Ball Spawn"
 [
-	movedir(angle) : "Move Direction (Pitch Yaw Roll)" : "0 0 0" : "The direction the brushes will move, when told to."
-	movedir_islocal(boolean) : "Move Direction is Expressed in Local Space" : "1" : "If checked, the movement direction angle is in local space and should be rotated by the entity's angles after spawning."
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	hole_number(integer) : "Hole Number" : "1" : "Which hole this spawnpoint is on."
+	hole_name(string) : "Hole Name" : "wanker" : "cool name"
+	hole_par(integer) : "Hole Par" : "3" : "How many strokes should this hole be done in."
+
 ]
 
-@SolidClass base(PhysicsTypeOverride_Mesh, Targetname, RenderFields, Shadow) = minigolf_wall : 
-	"An brush built entity with various features." 
-[
-	vrad_brush_cast_shadows(boolean) : "Shadows" : 1 : "Set this if this brush casts lightmap shadows."
-
-	surface_property_override(surface_properties) : "Surface Property Override" : "" : "Overrides the default surface property."
-
-	Reflect(boolean) : "Reflect" : "1" : "If checked, the ball will bounce off this surface at the defined multiplier."
-	ReflectMultiplier(float) : "Reflect multiplier" : 1 : "How much the wall will reflect"
-]
-
-@SolidClass base(PhysicsTypeOverride_Mesh, Targetname, RenderFields, Shadow) drawangles( movedir, movedir_islocal ) = minigolf_speed_boost : 
-	"An brush built entity that will boost balls." 
-[
-	vrad_brush_cast_shadows(boolean) : "Shadows" : 1 : "Set this if this brush casts lightmap shadows."
-
-	movedir(angle) : "Move Direction (Pitch Yaw Roll)" : "0 0 0" : "The direction the ball will move, when told to."
-	movedir_islocal(boolean) : "Move Direction is Expressed in Local Space" : "1" : "If checked, the movement direction angle is in local space and should be rotated by the entity's angles after spawning."
-
-	SpeedMultiplier(float) : "Speed Multiplier" : 1 : "How much the ball will accelerate"
-	MaxSpeed(float) : "Max Speed" : 1000 : "Max speed the ball can be accelerated to from this booster."
-]

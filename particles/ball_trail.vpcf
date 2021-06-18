@@ -128,20 +128,20 @@
 						{
 							x = 0.601625
 							y = 0.0
-							m_flSlopeIncoming = 317.626709
-							m_flSlopeOutgoing = 317.626709
+							m_flSlopeIncoming = 794.068726
+							m_flSlopeOutgoing = 794.068726
 						},
 						{
 							x = 0.820397
-							y = 69.487999
-							m_flSlopeIncoming = 12.785893
-							m_flSlopeOutgoing = 12.785893
+							y = 173.720001
+							m_flSlopeIncoming = 31.964737
+							m_flSlopeOutgoing = 31.964737
 						},
 						{
 							x = 8.422744
-							y = 100.0
-							m_flSlopeIncoming = 4.013498
-							m_flSlopeOutgoing = 4.013498
+							y = 250.0
+							m_flSlopeIncoming = 10.033744
+							m_flSlopeOutgoing = 10.033744
 						},
 					]
 					m_tangents = 
@@ -160,7 +160,7 @@
 						},
 					]
 					m_vDomainMins = [ 0.0, 0.0 ]
-					m_vDomainMaxs = [ 15.0, 100.0 ]
+					m_vDomainMaxs = [ 15.0, 250.0 ]
 				}
 			}
 		},

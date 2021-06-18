@@ -6,7 +6,8 @@ using System.Linq;
 
 namespace Minigolf
 {
-	[Library( "minigolf_flag_base" )]
+	[Library( "minigolf_flag_base", Description = "Minigolf Flag Base" )]
+	[Hammer.EditorModel( "models/golf_flag.vmdl" )]
 	public partial class FlagBase : ModelEntity
 	{
 		public override void Spawn()

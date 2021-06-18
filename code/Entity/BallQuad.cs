@@ -18,7 +18,7 @@ namespace Minigolf
 
 			var vertexBuffer = Render.GetDynamicVB( true );
 
-			vertexBuffer.AddQuad( new Ray( WorldPos, Vector3.Up ), Vector3.Forward * 8, Vector3.Left * 8 );
+			vertexBuffer.AddQuad( new Ray( Position, Vector3.Up ), Vector3.Forward * 8, Vector3.Left * 8 );
 
 			vertexBuffer.Draw( Material );
 		}

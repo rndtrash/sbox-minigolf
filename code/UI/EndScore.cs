@@ -47,12 +47,12 @@ namespace Minigolf
 
 			holeLabel.Text = $"Hole {hole}".ToUpper();
 
-			(GolfHUD.Current as GolfHUD).Fade = true;
+			// (GolfHUD.Current as GolfHUD).Fade = true;
 			AddClass("show");
 
 			await Task.DelaySeconds(5);
 
-			(GolfHUD.Current as GolfHUD).Fade = false;
+			// (GolfHUD.Current as GolfHUD).Fade = false;
 			RemoveClass("show");
         }
 	}

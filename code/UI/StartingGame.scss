@@ -9,24 +9,114 @@
     align-items: center;
     flex-direction: column;
     opacity: 1;
-    background-color: rgba( #000, 0.8 );
+    background-color: rgba( #000, 0.90 );
     transition: opacity 0.6s ease-out;
-
-    label {
+    pointer-events: all;
+    z-index: 9999;
+    /*label {
         color: rgba(255, 255, 255, 255);
         font-family: No Virus;
         font-weight: bold;
-        font-size: 64px;
+        font-size: 24px;
         text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6);
 
         &.big {
-            font-size: 104px;
+            font-size: 32px;
             text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8);
             margin-bottom: 12px;
         }
+    }*/
+
+    .logo {
+        top: 64px;
+        position: absolute;
+        width: 420px;
+        height: 300px;
     }
+
+    .players {
+        margin-top: 64px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 656px; // 8 players per row
+        background-color: rgba(0, 0, 0, 0.25);
+        border-radius: 8px;
+        padding: 8px;
+
+        panel {
+            flex-direction: column;
+            align-items: center;
+            padding: 8px;
+
+            image {
+                width: 64px;
+                height: 64px;
+                border-radius: 4px;
+            }
+
+            label {
+                margin-top: 8px;
+                font-family: Poppins;
+                font-weight: 500;
+                color: white;
+                font-size: 16px;
+                text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6);
+            }
+        }
+    }
+
+    .buttons {
+        flex-direction: row;
+        justify-content: space-between;
+
+        button {
+            margin: 48px 8px;
+            background-color: rgba(28, 164, 65, 1);
+            background-image: linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+
+            label {
+                font-size: 24px;
+                font-family: Poppins;
+                font-weight: 700;
+                color: white;
+                text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+            }
+
+            &:hover {
+                box-shadow: 0px 0px 16px 4px rgba(0, 0, 0, 0.8);
+            }
+
+            &:active {
+                transform: scale(0.95, 0.95);
+            }
+
+            &.settings {
+                background-color: rgba(0, 0, 0, 0.8);
+            }
+        }
+    }
+
+    .tip {
+        position: absolute;
+        bottom: 32px;
+        width: 50%;
+        height: 42px;
+        font-size: 16px;
+        color: white;
+        background-color: rgba(0, 0, 0, 0.4);
+        border-radius: 4px;
+        text-align: center;
+        align-items: center;
+    }
+
 
     &.hide {
         opacity: 0;
+        pointer-events: none;
     }
 }

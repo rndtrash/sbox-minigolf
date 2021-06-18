@@ -38,15 +38,12 @@ namespace Minigolf
 			var game = Game.Current as GolfGame;
 			if (game == null) return;
 
-			var player = Player.Local as GolfPlayer;
-			if (player == null) return;
-
 			var hole = game.Course.CurrentHole;
 			if (hole == null) return;
 
 			holeLabel.Text = $"{hole.Number}";
 			parLabel.Text = $"{hole.Par}";
-			strokeLabel.Text = $"{player.Strokes}";
+			// strokeLabel.Text = $"{player.Strokes}";
 		}
 	}
 

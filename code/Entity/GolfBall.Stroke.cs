@@ -6,7 +6,7 @@ namespace Minigolf
 	public partial class GolfBall
 	{
 		[ServerVar( "minigolf_power_multiplier" )]
-		public static float PowerMultiplier { get; set; } = 15.0f;
+		public static float PowerMultiplier { get; set; } = 1500.0f;
 
 		[ServerVar( "minigolf_unlimited_whacks" )]
 		public static bool UnlimitedWhacks { get; set; } = false;
@@ -43,16 +43,25 @@ namespace Minigolf
 			power = Math.Clamp( power, 0, 1 );
 
 			var sound = SwingSounds[(int)MathF.Ceiling(power / 25)][Rand.Int(0, 2)];
-			Sound.FromWorld(sound, WorldPos);
+			Sound.FromWorld(sound, Position);
 
 			// Make sure we don't jump up at all.
 			direction.z = 0;
 
-			PhysicsBody.Velocity = direction * power * 100 * PowerMultiplier;
+			PhysicsBody.Velocity = direction * power * PowerMultiplier;
 			PhysicsBody.AngularVelocity = 0;
 			PhysicsBody.Wake();
 
 			return true;
+		}
+
+		[ServerCmd( "minigolf_stroke" )]
+		public static void GolfBallStroke( float yaw, float power )
+		{
+			if ( ConsoleSystem.Caller.Pawn is not GolfBall ball )
+				return;
+
+			ball.Stroke( Angles.AngleVector( new Angles( 0, yaw, 0 ) ), power );
 		}
 	}
 }

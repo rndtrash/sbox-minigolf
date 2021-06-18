@@ -34,12 +34,12 @@ namespace Minigolf
 		{
 			messageLabel.Text = Messages.OrderBy(x => Guid.NewGuid()).First().ToUpper();
 
-			(GolfHUD.Current as GolfHUD).Fade = true;
+			// (GolfHUD.Current as GolfHUD).Fade = true;
 			AddClass("show");
 
 			await Task.DelaySeconds(3);
 
-			(GolfHUD.Current as GolfHUD).Fade = false;
+			// (GolfHUD.Current as GolfHUD).Fade = false;
 			RemoveClass("show");
 		}
 	}

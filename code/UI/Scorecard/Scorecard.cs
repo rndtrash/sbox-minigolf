@@ -39,7 +39,7 @@ namespace Minigolf
 		{
 			base.Tick();
 
-			SetClass("open", Player.Local?.Input.Down(InputButton.Score) ?? false);
+			// SetClass("open", Player.Local?.Input.Down(InputButton.Score) ?? false);
 		}
 
 

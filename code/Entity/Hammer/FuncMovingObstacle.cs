@@ -35,22 +35,22 @@ namespace Minigolf
 			Closing
 		}
 
-		[HammerProp("movedir")]
+		[Property("movedir")]
 		public Angles MoveDir { get; set; }
 
-		[HammerProp("movedir_islocal")]
+		[Property( "movedir_islocal")]
 		public bool MoveDirIsLocal { get; set; }
 
-		[HammerProp("spawnpos")]
+		[Property( "spawnpos")]
 		public bool SpawnOpen { get; set; }
 
-		[HammerProp("lip")]
+		[Property( "lip")]
 		public float Lip { get; set; }
 
-		[HammerProp("speed")]
+		[Property( "speed")]
 		public float Speed { get; set; }
 
-		[HammerProp("wait")]
+		[Property( "wait")]
 		public float TimeBeforeReset { get; set; }
 
 		Vector3 PositionA;
@@ -64,7 +64,7 @@ namespace Minigolf
 
 			SetupPhysicsFromModel(PhysicsMotionType.Keyframed);
 
-			PositionA = WorldPos;
+			PositionA = Position;
 
 			// Get the direction we want to move
 			var dir = Rotation.From(MoveDir).Forward;
@@ -73,13 +73,13 @@ namespace Minigolf
 			// Open position is the size of the bbox in the direction minus the lip size
 			var boundSize = OOBBox.Size;
 
-			PositionB = WorldPos + dir * (MathF.Abs(boundSize.Dot(dir)) - Lip);
+			PositionB = Position + dir * (MathF.Abs(boundSize.Dot(dir)) - Lip);
 
 			State = DoorState.Closed;
 
 			if (SpawnOpen)
 			{
-				WorldPos = PositionB;
+				Position = PositionB;
 				State = DoorState.Open;
 			}
 
@@ -104,12 +104,12 @@ namespace Minigolf
 		{
 			var tx = Transform;
 
-			var distance = Vector3.DistanceBetween(tx.Pos, position);
+			var distance = Vector3.DistanceBetween( tx.Position, position );
 			var timeToTake = distance / Speed;
 
-			tx.Pos = position;
+			tx.Position = position;
 
-			_ = await KeyframeTo(tx, timeToTake, null);
+			_ = await KeyframeTo( tx, timeToTake, null );
 		}
 	}
 }

@@ -5,7 +5,7 @@ using Sandbox.UI.Construct;
 namespace Minigolf
 {
 	[Library]
-	public partial class GolfHUD : Hud
+	public partial class GolfHUD : HudEntity<RootPanel>
 	{
 		private bool _fade;
 		public bool Fade {
@@ -22,21 +22,18 @@ namespace Minigolf
 
 		public GolfHUD()
 		{
-			if (!IsClient) return;
+			if ( !IsClient ) return;
 
 			RootPanel.StyleSheet.Load("/ui/GolfHUD.scss");
 
 			RootPanel.AddChild<Sandbox.UI.ChatBox>();
 			RootPanel.AddChild<Scorecard>();
-			RootPanel.AddChild<PowerBar>();
 			RootPanel.AddChild<HoleScore>();
 			RootPanel.AddChild<EndScore>();
 			RootPanel.AddChild<OutOfBounds>();
 			RootPanel.AddChild<StartingGame>();
 
 			RootPanel.AddChild<NameTags>();
-
-			RootPanel.Add.Label("Work In Progress", "wip");
 		}
 	}
 }

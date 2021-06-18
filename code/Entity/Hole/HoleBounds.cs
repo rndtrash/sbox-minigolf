@@ -1,14 +1,17 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using Sandbox;
+using Sandbox.Internal;
 
 namespace Minigolf
 {
-	[Library("minigolf_hole_bounds")]
-	public partial class HoleBounds : BaseTrigger
+	[Library("minigolf_hole_bounds", Description = "Minigolf Bounds of a Hole" )]
+	[Hammer.Solid]
+	public partial class HoleBounds : ModelEntity
 	{
-		[HammerProp("hole_number")]
-		public int Hole { get; set; }
+		[Property( Name = "hole_number", Title = "Hole Number", Help = "Which hole this hole is on." )]
+		[DefaultValue( 1 )]
+		public int Hole { get; set; } = 1;
 
 		public IEnumerable<GolfBall> TouchingBalls => touchingBalls;
 		private readonly List<GolfBall> touchingBalls = new();

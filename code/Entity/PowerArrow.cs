@@ -52,8 +52,8 @@ namespace Minigolf
 
 			Render.SetLighting( obj );
 
-			var startPos = WorldPos;
-			var endPos = WorldPos += Direction * Power * 100;
+			var startPos = Position;
+			var endPos = Position += Direction * Power * 100;
 			var offset = Vector3.Cross( Direction, Vector3.Up ) * (1 + 2 * Power);
 
 			var trace = Trace.Ray( startPos, endPos );

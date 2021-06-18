@@ -35,7 +35,7 @@ namespace Minigolf
 		void CreatePhysics()
 		{
 			var PhysGroup = SetupPhysicsFromModel( PhysicsMotionType.Static );
-			PhysGroup.SetSurface( "water" );
+			PhysGroup?.SetSurface( "water" );
 
 			ClearCollisionLayers();
 			AddCollisionLayer( CollisionLayer.Water );
@@ -49,7 +49,7 @@ namespace Minigolf
 		{
 			base.Touch( other );
 
-			WaterController.Touch( other );
+			// WaterController.Touch( other );
 		}
 
 		public override void EndTouch( Entity other )

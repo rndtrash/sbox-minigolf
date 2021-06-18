@@ -1,12 +1,15 @@
 ﻿using Sandbox;
+using Sandbox.Internal;
 
 namespace Minigolf
 {
-	[Library("minigolf_hole_goal")]
+	[Library("minigolf_hole_goal", Description = "Minigolf Hole" )]
+	[Hammer.Solid]
 	public partial class HoleGoal : ModelEntity
 	{
-		[HammerProp("hole_number")]
-		public int Hole { get; set; }
+		[Property( "hole_number", "Hole Number", "Which hole this hole is on." )]
+		[DefaultValue( 1 )]
+		public int Hole { get; set; } = 1;
 
 		public override void Spawn()
 		{
@@ -16,14 +19,14 @@ namespace Minigolf
 			CollisionGroup = CollisionGroup.Trigger;
 			EnableSolidCollisions = false;
 			EnableTouch = true;
-
-			Transmit = TransmitType.Never;
 		}
 
-		public override void StartTouch(Entity other)
+		public override void StartTouch( Entity other )
 		{
-			if (other is GolfBall ball)
-				(Game.Current as GolfGame).OnBallInHole(ball, Hole);
+			if ( other is not GolfBall ball )
+				return;
+
+			(Game.Current as GolfGame).CupBall( ball, Hole );
 		}
 	}
 }

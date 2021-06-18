@@ -1,24 +1,23 @@
 ﻿using Sandbox;
+using Sandbox.Internal;
 
 namespace Minigolf
 {
-	[Library("minigolf_hole_spawn")]
-	public partial class HoleSpawn : ModelEntity
+	[Library("minigolf_hole_spawn", Description = "Minigolf Ball Spawn" )]
+	[Hammer.EditorModel( "models/golf_ball.vmdl" )]
+	[Hammer.DrawAngles]
+	public partial class HoleSpawn : Entity
 	{
-		[HammerProp( "hole_number" )]
-		public int Number { get; set; }
+		[Property( "hole_number", "Hole Number", "Which hole this spawnpoint is on." )]
+		[DefaultValue(1)]
+		public int Number { get; set; } = 1;
 
-		[HammerProp( "hole_name" )]
-		public string Name { get; set; }
+		[Property( "hole_name", "Hole Name", "cool name" )]
+		[DefaultValue( "wanker" )]
+		public string Name { get; set; } = "wanker";
 
-		[HammerProp( "hole_par" )]
-		public int Par { get; set; }
-
-		public override void Spawn()
-		{
-			base.Spawn();
-
-			Transmit = TransmitType.Never;
-		}
+		[Property( "hole_par", "Hole Par", "How many strokes should this hole be done in." )]
+		[DefaultValue( 3 )]
+		public int Par { get; set; } = 3;
 	}
 }

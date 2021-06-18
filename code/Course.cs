@@ -40,9 +40,9 @@ namespace Minigolf
                     Number = hole.Number,
                     Name = hole.Name,
                     Par = hole.Par,
-                    SpawnPosition = hole.WorldPos,
+                    SpawnPosition = hole.Position,
                     SpawnAngles = hole.WorldAng,
-					GoalPosition = goal.WorldPos,
+					GoalPosition = goal.Position,
                     Bounds = Entity.All.OfType<HoleBounds>().Where(x => x.Hole == hole.Number).ToList()
                 };
             }
@@ -61,42 +61,6 @@ namespace Minigolf
 			// Advanced to next hole, TODO: ClientRpc
 			currentHole = nextHoleKey.Key;
         }
-
-        public override bool NetWrite(NetWrite write)
-        {
-            write.WriteUtf8(Name);
-            write.WriteUtf8(Description);
-
-            write.Write(Holes.Count);
-            foreach (var hole in Holes)
-            {
-                write.Write(hole.Key);
-                write.Write(hole.Value);
-            }
-
-            write.Write(currentHole);
-
-            return true;
-        }
-
-        public override bool NetRead(NetRead read)
-        {
-            Name = read.ReadUtf8();
-            Description = read.ReadUtf8();
-
-            var count = read.Read<int>();
-
-            Holes = new();
-            for (int i = 0; i < count; i++)
-            {
-                var k = read.Read<int>();
-                Holes[k] = read.ReadClass<HoleInfo>(new HoleInfo());
-            }
-
-            currentHole = read.Read<int>();
-
-            return true;
-        }
     }
 
     class HoleInfo : NetworkClass
@@ -113,35 +77,6 @@ namespace Minigolf
         {
             return Bounds.Where(x => x.TouchingBalls.Contains(other)).Any();
         }
-
-        #region Networking
-        // Run our own NetRead/Write, it gets really confused with List<HoleBounds>.
-
-        public override bool NetWrite(NetWrite write)
-        {
-            write.Write(Number);
-            write.WriteUtf8(Name);
-            write.Write(Par);
-            write.Write(SpawnPosition);
-            write.Write( SpawnAngles );
-            write.Write(GoalPosition);
-
-            return true;
-        }
-
-
-        public override bool NetRead(NetRead read)
-        {
-            Number = read.Read<int>();
-            Name = read.ReadUtf8();
-            Par = read.Read<int>();
-            SpawnPosition = read.Read<Vector3>();
-			SpawnAngles = read.Read<Angles>();
-			GoalPosition = read.Read<Vector3>();
-            
-            return true;
-        }
-        #endregion
     }
 
 }

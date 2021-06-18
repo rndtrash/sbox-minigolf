@@ -28,7 +28,7 @@ namespace Minigolf
 
 			PlayerName.Text = entry.GetString( "name" );
 
-			SetClass( "me", Player.Local != null && entry.Get<ulong>( "steamid", 0 ) == Player.Local.SteamId );
+			SetClass( "me", Local.Client != null && entry.Get<ulong>( "steamid", 0 ) == Local.Client.SteamId );
 		}
 	}
 }

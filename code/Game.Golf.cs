@@ -38,25 +38,37 @@ namespace Minigolf
 			ResetBall( ball );
 
 			// Tell the ball owner his balls are out of bounds
-			ClientBallOutOfBounds( ball.Player, ball );
+			ClientBallOutOfBounds( To.Single(ball) );
 		}
 
 		[ClientRpc]
-		public void ClientBallOutOfBounds(GolfBall ball)
+		public void ClientBallOutOfBounds()
 		{
 			_ = OutOfBounds.Current.Show();
 		}
 
-		public void OnBallInHole(GolfBall ball, int hole)
+		/// <summary>
+		/// Called from the HoleGoal entity 
+		/// </summary>
+		/// <param name="ball"></param>
+		/// <param name="hole"></param>
+		public void CupBall( GolfBall ball, int hole )
         {
-			var player = ball.Player;
+			// Make sure the hole they cupped in is the current one...
+			if ( hole != Course.CurrentHole.Number )
+			{
+				// Do a custom reset if you cup it in the wrong hole
+				ResetBall( ball );
 
-			ball.Cupped = true;
-			ball.PlaySound(InHoleSound.Name);
+				return;
+			}
 
-			// Announce to all players
-			Sandbox.UI.ChatBox.AddInformation(Player.All, $"{player.Name} scored on hole {hole}!", $"avatar:{player.SteamId}");
-			GolfBallInHole(ball, player.Strokes);
+			// Cup the ball entity, this does fx and stops motion.
+			ball.Cup( false );
+
+			// Let all players know the ball has been cupped.
+			// CuppedBall( To.Everyone, ball, player.Strokes );
+			CuppedBall( To.Everyone, ball );
 
 			Action task = async () =>
 			{
@@ -65,42 +77,32 @@ namespace Minigolf
 				Course.AdvancedHole();
 
 				// Reset for now
-				player.Strokes = 0;
+				// player.Strokes = 0;
 				ResetBall(ball);
 			};
 			task.Invoke();
 		}
 
 		[ClientRpc]
-		protected void GolfBallInHole(GolfBall ball, int strokes)
-        {
-			// nice job bro, hole in one!
-			if (strokes == 1)
-				Sound.FromScreen(SoundHoleInOne.Name).SetVolume(0.8f);
-			else if (strokes - Course.CurrentHole.Par > 0)
-				Sound.FromScreen(SoundBelowPar.Name);
+		protected void CuppedBall( GolfBall ball )
+		{
+			// Add to UI
+			// Sandbox.UI.ChatBox.AddInformation(Player.All, $"{player.Name} scored on hole {hole}!", $"avatar:{player.SteamId}");
 
-			_ = EndScore.Current.ShowScore(Course.CurrentHole.Number, Course.CurrentHole.Par, strokes);
+			if ( Local.Pawn != ball ) return;
+
+			// nice job bro, hole in one!
+			/* if ( strokes == 1 )
+				Sound.FromScreen( SoundHoleInOne.Name ).SetVolume( 0.8f );
+			else if ( strokes - Course.CurrentHole.Par > 0 )
+				Sound.FromScreen( SoundBelowPar.Name ); */
+
+			_ = EndScore.Current.ShowScore( Course.CurrentHole.Number, Course.CurrentHole.Par, 3 );
 		}
 
 		protected void ResetBall(GolfBall ball)
 		{
 			ball.ResetPosition( Course.CurrentHole.SpawnPosition, Course.CurrentHole.SpawnAngles );
-		}
-
-		[ServerCmd("minigolf_stroke")]
-		public static void GolfBallStroke(float yaw, float power)
-		{
-			var owner = ConsoleSystem.Caller;
-
-			if (owner == null && owner is GolfPlayer)
-				return;
-
-			var player = owner as GolfPlayer;
-			var ball = player.ActiveChild as GolfBall;
-
-			if (ball.Stroke( Angles.AngleVector( new Angles( 0, yaw, 0 ) ), power ))
-				player.Strokes++;
 		}
 	}
 }

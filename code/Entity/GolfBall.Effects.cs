@@ -27,19 +27,13 @@ namespace Minigolf
 				Trail = Particles.Create( "particles/ball_trail.vpcf" );
 		}
 
-		[Event( "frame" )]
-		public void OnFrame()
+		public override void FrameSimulate( Client cl )
 		{
-			// if (Quad == null)
-			// 	return;
+			base.FrameSimulate( cl );
 
-			var localPlayer = Sandbox.Player.Local as GolfPlayer;
-			if ( localPlayer == null ) return;
+			if ( cl != Local.Client ) return;
 
-			if ( Player != localPlayer ) return;
-
-			var camera = localPlayer.BallCamera;
-			if ( camera == null ) return;
+			RenderColor = ColorConvert.HSLToRGB( 100 + (int)(Math.Sin(Time.Now) * 100), 1.0f, 0.5f ).ToColor32();
 
 			/*
 			// only do stuff with your own ball
@@ -55,18 +49,18 @@ namespace Minigolf
 
 			// Quad.WorldRot = Rotation.FromYaw(player.BallCamera.Angles.yaw + 180);
 
-			var power = localPlayer.ShotPower;
-			var powerS = power / 100.0f; // 0-1
+			if ( Camera is not FollowBallCamera camera )
+				return;
 
 			if ( !PowerArrow.IsValid() )
 				PowerArrow = new();
 
-			var direction = Angles.AngleVector( new Angles( 0, localPlayer.BallCamera.Angles.yaw, 0 ) );
+			var direction = Angles.AngleVector( new Angles( 0, camera.Angles.yaw, 0 ) );
 
 			// TODO: hardcoded size
-			PowerArrow.WorldPos = WorldPos + Vector3.Down * 2.99f + direction * 5.0f;
+			PowerArrow.Position = Position + Vector3.Down * 2.99f + direction * 5.0f;
 			PowerArrow.Direction = direction;
-			PowerArrow.Power = powerS;
+			PowerArrow.Power = ShotPower / 100.0f;
 		}
 	}
 }

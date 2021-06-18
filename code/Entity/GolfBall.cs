@@ -4,20 +4,21 @@ using System;
 namespace Minigolf
 {
 	[Library("minigolf_ball")]
-	public partial class GolfBall : ModelEntity, IPlayerControllable
+	[Hammer.Skip]
+	public partial class GolfBall : ModelEntity
 	{
-		[Net] public GolfPlayer Player { get; set; }
-
 		[ServerVar( "minigolf_ball_debug" )]
 		public static bool Debug { get; set; } = false;
 
 		[Net] public bool Moving { get; set; } = false;
 		[Net] public bool Cupped { get; set; } = false;
 
-		/*public GolfBall( GolfPlayer player )
+		static readonly SoundEvent CuppedSound = new SoundEvent( "sounds/minigolf.ball_inhole.vsnd" );
+
+		public GolfBall()
 		{
-			Player = player;
-		}*/
+			Camera = new FollowBallCamera( this );
+		}
 
 		public override void Spawn()
 		{
@@ -34,6 +35,22 @@ namespace Minigolf
 			Transmit = TransmitType.Always;
 		}
 
+		public void Cup( bool holeInOne )
+		{
+			if ( Cupped ) return;
+
+			// TODO: Launch the ball on a hole in one
+
+			// Emit cupped sound
+			var sound = PlaySound( CuppedSound.Name );
+			sound.SetVolume( 1.0f );
+			sound.SetPitch( Rand.Float(0.75f, 1.25f) );
+
+			Particles.Create( "particles/ball_trail.vpcf", Position + Vector3.Up * 8 );
+
+			Cupped = true;
+		}
+
 		public void ResetPosition( Vector3 position, Angles direction )
 		{
 			// Reset all velocity
@@ -42,25 +59,21 @@ namespace Minigolf
 			PhysicsBody.ClearForces();
 			PhysicsBody.ClearTorques();
 
-			WorldPos = position;
-			PhysicsBody.Pos = position;
+			Position = position;
+			PhysicsBody.Position = position;
 			ResetInterpolation();
 
 			Moving = false;
 			Cupped = false;
 
 			// Tell the player we reset the ball
-			PlayerResetPosition( Player, position, direction );
+			PlayerResetPosition( To.Single(this), position, direction );
 		}
 
 		[ClientRpc]
 		protected void PlayerResetPosition( Vector3 position, Angles angles )
 		{
-			var player = Sandbox.Player.Local as GolfPlayer;
-			if ( player == null ) return;
-
-			var camera = player.BallCamera;
-			camera.Angles = angles;
+			(Camera as FollowBallCamera).Angles = angles;
 		}
 	}
 }

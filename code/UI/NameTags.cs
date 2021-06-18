@@ -12,17 +12,19 @@ namespace Minigolf
 		public Label NameLabel;
 		public Image Avatar;
 
-		Player player;
+		Entity entity;
 
-		public BaseNameTag(Player player)
+		public BaseNameTag( Entity entity )
 		{
-			this.player = player;
+			this.entity = entity;
 
-			NameLabel = Add.Label(player.Name);
-			Avatar = Add.Image($"avatar:{player.SteamId}");
+			var client = entity.GetClientOwner();
+
+			NameLabel = Add.Label( $"{client.Name}" );
+			Avatar = Add.Image( $"avatar:{client.SteamId}" );
 		}
 
-		public virtual void UpdateFromPlayer(Player player)
+		public virtual void UpdateFromPlayer( Entity entity )
 		{
 			// Nothing to do unless we're showing health and shit
 		}
@@ -30,7 +32,7 @@ namespace Minigolf
 
 	public class NameTags : Panel
 	{
-		Dictionary<Player, BaseNameTag> ActiveTags = new Dictionary<Player, BaseNameTag>();
+		Dictionary<Entity, BaseNameTag> ActiveTags = new Dictionary<Entity, BaseNameTag>();
 
 		public NameTags()
 		{
@@ -41,13 +43,13 @@ namespace Minigolf
 		{
 			base.Tick();
 
-			var deleteList = new List<Player>();
+			var deleteList = new List<Entity>();
 			deleteList.AddRange(ActiveTags.Keys);
 
-			foreach (var player in Player.All.OrderBy(x => Vector3.DistanceBetween(x.EyePos, Camera.LastPos)))
+			foreach (var entity in Entity.All.OfType<GolfBall>().OrderBy(x => Vector3.DistanceBetween(x.EyePos, CurrentView.Position ) ))
 			{
-				if (UpdateNameTag(player))
-					deleteList.Remove(player);
+				if (UpdateNameTag(entity))
+					deleteList.Remove(entity);
 			}
 
 			foreach (var player in deleteList)
@@ -57,42 +59,42 @@ namespace Minigolf
 			}
 		}
 
-		public virtual BaseNameTag CreateNameTag(Player player)
+		public virtual BaseNameTag CreateNameTag( Entity entity )
 		{
-			var tag = new BaseNameTag(player);
+			var tag = new BaseNameTag(entity);
 			tag.Parent = this;
 			return tag;
 		}
 
-		public bool UpdateNameTag(Player player)
+		public bool UpdateNameTag( Entity entity )
 		{
 			// Don't draw local player
-			if (player.IsLocalPlayer)
+			if ( entity == Local.Pawn )
 				return false;
 
-			var ball = player.ActiveChild;
+			var ball = entity.ActiveChild;
 			if (ball == null)
 				return false;
 
-			var labelPos = ball.WorldPos + Vector3.Up * 16;
+			var labelPos = ball.Position + Vector3.Up * 16;
 
 			// Are we looking in this direction?
-			var lookDir = (labelPos - Camera.LastPos).Normal;
-			if (Camera.LastRot.Forward.Dot(lookDir) < 0.5)
+			var lookDir = (labelPos - CurrentView.Position).Normal;
+			if (CurrentView.Rotation.Forward.Dot(lookDir) < 0.5)
 				return false;
 
-			float dist = labelPos.Distance( Camera.LastPos );
-			var objectSize = 0.05f / dist / (2.0f * MathF.Tan((Camera.LastFieldOfView / 2.0f).DegreeToRadian())) * 3000.0f;
+			float dist = labelPos.Distance( CurrentView.Position );
+			var objectSize = 0.05f / dist / (2.0f * MathF.Tan((CurrentView.FieldOfView / 2.0f).DegreeToRadian())) * 3000.0f;
 
 			objectSize = objectSize.Clamp(0.25f, 0.5f);
 
-			if (!ActiveTags.TryGetValue(player, out var tag))
+			if (!ActiveTags.TryGetValue(entity, out var tag))
 			{
-				tag = CreateNameTag(player);
-				ActiveTags[player] = tag;
+				tag = CreateNameTag(entity);
+				ActiveTags[entity] = tag;
 			}
 
-			tag.UpdateFromPlayer(player);
+			tag.UpdateFromPlayer(entity);
 
 			var screenPos = labelPos.ToScreen();
 

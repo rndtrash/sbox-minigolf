@@ -2,35 +2,30 @@
 
 namespace Minigolf
 {
-	[Library( "minigolf_hole_camera" )]
-	public partial class HoleCamera : ModelEntity
+	[Library( "minigolf_hole_camera", Description = "Minigolf Hole Camera" )]
+	[Hammer.EditorModel( "models/editor/camera.vmdl" )]
+	public partial class HoleCamera : Entity
 	{
-		[HammerProp( "hole_number" )]
-		public int Hole { get; set; }
-		[HammerProp( "FOV" )]
-		public float FOV { get; set; }
-		[HammerProp( "ZNear" )]
-		public float ZNear { get; set; }
-		[HammerProp( "ZFar" )]
-		public float ZFar { get; set; }
+		[Property( "hole_number", "Hole Number", "Which hole this camera is for" )]
+		public int Hole { get; set; } = 1;
 
-		public override void Spawn()
-		{
-			base.Spawn();
-
-			Transmit = TransmitType.Never;
-		}
+		[Property( "FOV", "Field of view in degrees" )]
+		public float FOV { get; set; } = 90.0f;
+		[Property( "ZNear", "Distance to the near plane" )]
+		public float ZNear { get; set; } = 4.0f;
+		[Property( "ZFar", "Distance to the far plane" )]
+		public float ZFar { get; set; } = 10000.0f;
 	}
 
-	[Library( "minigolf_start_camera" )]
-	public partial class StartCamera : ModelEntity
+	[Library( "minigolf_start_camera", Description = "Minigolf Start Camera" )]
+	[Hammer.EditorModel( "models/editor/camera.vmdl" )]
+	public partial class StartCamera : Entity
 	{
-		[HammerProp( "FOV" )]
-		public float FOV { get; set; }
-		[HammerProp( "ZNear" )]
-		public float ZNear { get; set; }
-		[HammerProp( "ZFar" )]
-		public float ZFar { get; set; }
+		public float FOV { get; set; } = 90.0f;
+		[Property( "ZNear", "Distance to the near plane" )]
+		public float ZNear { get; set; } = 4.0f;
+		[Property( "ZFar", "Distance to the far plane" )]
+		public float ZFar { get; set; } = 10000.0f;
 
 		public override void Spawn()
 		{

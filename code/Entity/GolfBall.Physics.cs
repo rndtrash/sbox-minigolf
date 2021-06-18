@@ -12,13 +12,16 @@ namespace Minigolf
 		[ServerVar( "minigolf_ball_angular_damping" )]
 		public static float DefaultAngularDamping { get; set; } = 4.00f;
 
-		public void OnPlayerControlTick( Player owner )
+		public override void Simulate( Client cl )
 		{
 			// If the ball is in the hole, do nothing
 			if ( Cupped )
 				return;
 
 			AdjustDamping();
+
+			// debug info
+			DebugOverlay.Text( Position, $"AD: {PhysicsBody.AngularDamping}" );
 		}
 
 		/// <summary>
@@ -27,7 +30,7 @@ namespace Minigolf
 		/// </summary>
 		protected void AdjustDamping()
 		{
-			var downTrace = Trace.Ray( WorldPos, WorldPos + Vector3.Down * OOBBox.Size.z );
+			var downTrace = Trace.Ray( Position, Position + Vector3.Down * OOBBox.Size.z );
 			downTrace.HitLayer( CollisionLayer.Solid );
 			downTrace.Ignore( this );
 			var downTraceResult = downTrace.Run();
@@ -76,7 +79,7 @@ namespace Minigolf
 			}
 
 			// We must be on a hill, we can detect if it's up hill or down hill by doing a forward trace
-			var trace = Trace.Ray( WorldPos, WorldPos + PhysicsBody.Velocity.WithZ( 0 ) );
+			var trace = Trace.Ray( Position, Position + PhysicsBody.Velocity.WithZ( 0 ) );
 			trace.HitLayer( CollisionLayer.Debris );
 			trace.Ignore( this );
 			var traceResult = trace.Run();
@@ -101,18 +104,18 @@ namespace Minigolf
 		[Event( "client.tick" )]
 		protected void ClientVelocityWorkaround()
 		{
-			clientVelocity = WorldPos - prevWorldPos;
+			clientVelocity = Position - prevWorldPos;
 
 			if ( Trail == null )
 				return;
 
-			Trail.SetPos( 0, WorldPos );
+			Trail.SetPos( 0, Position );
 			Trail.SetPos( 1, prevWorldPos );
 
 			var clientVelocityLength = clientVelocity.Length;
 			Trail.SetPos( 2, new Vector3( clientVelocityLength ) );
 
-			prevWorldPos = WorldPos;
+			prevWorldPos = Position;
 		}
 
 		/// <summary>

@@ -13,14 +13,16 @@ rootpanel {
 
     .wip {
         position: absolute;
-        right: 0;
-        top: 0;
+        right: -96px;
+        top: 0px;
 
-        padding: 16px;
+        padding: 4px 128px;
         color: white;
-        font-size: 24px;
-        font-family: No Virus;
-        font-weight: bold;
-        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+        font-size: 16px;
+        font-family: Poppins;
+        font-weight: 500;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        transform: rotate(20deg);
+        background-color: rgba(255, 0, 0, 0.8);
     }
 }
