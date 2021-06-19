@@ -8,6 +8,7 @@ metadata
 = minigolf_flag_base : "Minigolf Flag Base"
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 ]
 
 // 
@@ -16,6 +17,7 @@ metadata
 @PointClass = func_moving_obstacle : ""
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	movedir(angle) : "movedir" :  : ""
 	movedir_islocal(boolean) : "movedir_islocal" :  : ""
 	spawnpos(boolean) : "spawnpos" :  : ""
@@ -28,17 +30,19 @@ metadata
 // 
 // Minigolf.SpeedBoost : Sandbox.ModelEntity 
 // 
-@PointClass  drawangles( "movedir", "movedir_is_local" ) 
+@SolidClass  drawangles( "movedir" )  base( RenderFields )  base( PhysicsTypeOverride_Mesh ) 
 metadata
 {
 }
 = minigolf_speed_boost : "An brush built entity that will boost balls."
 [
+	vrad_brush_cast_shadows( boolean )[ group="Render Properties" ] : "Shadows" : 0 : "Set this if this brush casts lightmap shadows."
+	disableshadows( boolean )[group = "Render Properties"] : "Disable shadows" : 0
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
-	speedmultiplier(float) : "Speed Multiplier" :  : "How much the ball will accelerate"
-	maxspeed(float) : "Max Speed" :  : "Max speed the ball can be accelerated to from this booster."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
+	speedmultiplier(float) : "Speed Multiplier" : "2" : "How much the ball will accelerate"
+	maxspeed(float) : "Max Speed" : "1000" : "Max speed the ball can be accelerated to from this booster."
 	movedir(angle) : "Move Direction (Pitch Yaw Roll)" :  : "The direction the ball will move, when told to."
-	movedir_islocal(boolean) : "Move Direction is Expressed in Local Space" :  : "If checked, the movement direction angle is in local space and should be rotated by the entity's angles after spawning."
 
 ]
 
@@ -54,8 +58,9 @@ metadata
 	vrad_brush_cast_shadows( boolean )[ group="Render Properties" ] : "Shadows" : 0 : "Set this if this brush casts lightmap shadows."
 	disableshadows( boolean )[group = "Render Properties"] : "Disable shadows" : 0
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
-	reflect(boolean) : "Reflect" :  : "If checked, the ball will bounce off this surface at the defined multiplier."
-	reflectmultiplier(float) : "Reflect multiplier" :  : "How much the wall will reflect"
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
+	reflect(boolean) : "Reflect" : "True" : "If checked, the ball will bounce off this surface at the defined multiplier."
+	reflectmultiplier(float) : "Reflect multiplier" : "1" : "How much the wall will reflect"
 
 ]
 
@@ -65,6 +70,7 @@ metadata
 @PointClass = minigolf_water : ""
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 ]
 
 // 
@@ -73,6 +79,7 @@ metadata
 @SolidClass = minigolf_hole_bounds : "Minigolf Bounds of a Hole"
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	hole_number(integer) : "Hole Number" : "1" : "Which hole this hole is on."
 
 ]
@@ -87,6 +94,7 @@ metadata
 = minigolf_hole_camera : "Minigolf Hole Camera"
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	hole_number(integer) : "Hole Number" :  : "Which hole this camera is for"
 	fov(float) : "FOV" :  : "Field of view in degrees"
 	znear(float) : "ZNear" :  : "Distance to the near plane"
@@ -104,6 +112,7 @@ metadata
 = minigolf_start_camera : "Minigolf Start Camera"
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	znear(float) : "ZNear" :  : "Distance to the near plane"
 	zfar(float) : "ZFar" :  : "Distance to the far plane"
 
@@ -115,6 +124,7 @@ metadata
 @SolidClass = minigolf_hole_goal : "Minigolf Hole"
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	hole_number(integer) : "Hole Number" : "1" : "Which hole this hole is on."
 
 ]
@@ -129,6 +139,7 @@ metadata
 = minigolf_hole_spawn : "Minigolf Ball Spawn"
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	hole_number(integer) : "Hole Number" : "1" : "Which hole this spawnpoint is on."
 	hole_name(string) : "Hole Name" : "wanker" : "cool name"
 	hole_par(integer) : "Hole Par" : "3" : "How many strokes should this hole be done in."

@@ -1,6 +1,5 @@
 ﻿using Sandbox;
-using System;
-using System.Threading.Tasks;
+using Sandbox.Internal;
 
 namespace Minigolf
 {
@@ -11,9 +10,11 @@ namespace Minigolf
 	public partial class Wall : ModelEntity
 	{
 		[Property( "Reflect", "If checked, the ball will bounce off this surface at the defined multiplier." )]
+		[DefaultValue( true )]
 		public bool Reflect { get; set; } = true;
 
 		[Property( "ReflectMultiplier", "Reflect multiplier", "How much the wall will reflect" )]
+		[DefaultValue( 1 )]
 		public float ReflectMultiplier { get; set; } = 1;
 
 		//  surface_property_override(surface_properties) : "Surface Property Override" : "" : "Overrides the default surface property."
