@@ -68,5 +68,16 @@ namespace Minigolf
 			Course = new Course();
 			Course.LoadFromMap();
 		}
+
+		public override ICamera FindActiveCamera()
+		{
+			if (WaitingToStart)
+			{
+				StaticCamera camera = new StaticCamera( new Vector3( -303.42f, 191.58f, 175.11f ), new Angles( 10.31f, -37.59f, 0 ) );
+				return camera;
+			}
+
+			return base.FindActiveCamera();
+		}
 	}
 }

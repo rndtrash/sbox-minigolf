@@ -11,8 +11,6 @@ namespace Minigolf
 		[ServerVar( "minigolf_check_bounds" )]
 		public static bool CheckBounds { get; set; } = true;
 
-		public StaticCamera MapCamera = new StaticCamera();
-
         static readonly SoundEvent SoundHoleInOne = new SoundEvent("sounds/minigolf.crowd_ovation.vsnd");
 		static readonly SoundEvent SoundBelowPar = new SoundEvent("sounds/minigolf.fart.vsnd");
 		static readonly SoundEvent InHoleSound = new SoundEvent("sounds/minigolf.ball_inhole.vsnd");

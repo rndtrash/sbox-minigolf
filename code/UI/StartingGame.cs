@@ -32,7 +32,7 @@ namespace Minigolf
 			readyButton = btns.Add.Button( "Start Game", "ready", () => { ConsoleSystem.Run( "minigolf_start" ); } );
 			btns.Add.Button( "Settings", "settings" );
 
-			Add.Label( "This is a tip to help you play the game.", "tip" );
+			Add.Label( "This is a slow work in progress of when I have free time, don't expect it to be fun or functional for a while yet.", "tip" );
 		}
 
 		protected void AddClient( Client client )

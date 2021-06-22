@@ -9,10 +9,10 @@ namespace Minigolf
 		public Rotation Rotation;
 		public float FieldOfView;
 
-        public StaticCamera()
+        public StaticCamera( Vector3 position, Angles angles )
         {
-            Position = new Vector3(-1910, 744, 616);
-            Rotation = Rotation.From(19, -60, 0);
+            Position = new Vector3(position);
+            Rotation = Rotation.From(angles);
             FieldOfView = 90;
         }
 
