@@ -5,8 +5,6 @@ namespace Minigolf
 {
 	public partial class GolfBall
 	{
-		// [ServerVar( "minigolf_ball_reflect_multiplier" )]
-		// public static float ReflectMultiplier { get; set; } = 0.75f;
 		[ServerVar( "minigolf_ball_linear_damping" )]
 		public static float DefaultLinearDamping { get; set; } = 0.05f;
 		[ServerVar( "minigolf_ball_angular_damping" )]
@@ -19,9 +17,6 @@ namespace Minigolf
 				return;
 
 			AdjustDamping();
-
-			// debug info
-			DebugOverlay.Text( Position, $"AD: {PhysicsBody.AngularDamping}" );
 		}
 
 		/// <summary>

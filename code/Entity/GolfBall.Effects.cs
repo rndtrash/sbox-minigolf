@@ -33,7 +33,7 @@ namespace Minigolf
 
 			if ( cl != Local.Client ) return;
 
-			RenderColor = ColorConvert.HSLToRGB( 100 + (int)(Math.Sin(Time.Now) * 100), 1.0f, 0.5f ).ToColor32();
+			// RenderColor = ColorConvert.HSLToRGB( 100 + (int)(Math.Sin(Time.Now) * 100), 1.0f, 0.5f ).ToColor32();
 
 			/*
 			// only do stuff with your own ball
