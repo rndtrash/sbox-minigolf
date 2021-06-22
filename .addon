@@ -1,19 +1,4 @@
 {
-    "name": "minigolf",
-    "version": "1.0",
     "sharedassets": "*.*",
-    
-    "depends": 
-    [
-      "base"
-    ],
-
-    "gamemodes":
-    [
-      {
-        "name": "minigolf",
-        "title": "Minigolf",
-        "description": "hit your balls"
-      }
-    ]
+    "ident": "masterminds.minigolf"
 }
