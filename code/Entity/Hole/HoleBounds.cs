@@ -7,6 +7,7 @@ namespace Minigolf
 {
 	[Library("minigolf_hole_bounds", Description = "Minigolf Bounds of a Hole" )]
 	[Hammer.Solid]
+	[Hammer.AutoApplyMaterial]
 	public partial class HoleBounds : ModelEntity
 	{
 		[Property( Name = "hole_number", Title = "Hole Number", Help = "Which hole this hole is on." )]
