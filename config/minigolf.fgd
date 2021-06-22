@@ -28,6 +28,30 @@ metadata
 ]
 
 // 
+// Minigolf.SimpleRotating : Sandbox.ModelEntity 
+// 
+@SolidClass  base( RenderFields )  drawangles( "AxisDirection", "AxisIsLocal" ) 
+metadata
+{
+}
+= simple_rotating : "A rotating mesh entity."
+[
+	vrad_brush_cast_shadows( boolean )[ group="Render Properties" ] : "Shadows" : 0 : "Set this if this brush casts lightmap shadows."
+	disableshadows( boolean )[group = "Render Properties"] : "Disable shadows" : 0
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
+	enabled(boolean) : "Enabled" : "True" : ""
+	speed(float) : "Speed" : "100" : "The rotation speed of the entity in degrees per second.     Negative speed can be used to change direction."
+	axisdirection(angle) : "Axis Direction (Pitch Yaw Roll)" :  : "The direction of the axis the mesh will rotate on.     If AxisIsLocal is defined this is relative to the entitiy's current rotation."
+	axisislocal(boolean) : "Axis Direction Is Local" : "True" : "Is the axis local to the entity's current rotation?     This can be useful for more specific behaviour in nested entities."
+	solid(boolean) : "Solid" : "True" : "Whether this entity has collisions."
+
+	input Start(void) : "Start the rotator rotating."
+	input Stop(void) : "Stop the rotator from rotating."
+	input Toggle(void) : "Toggle the rotator between rotating and not rotating."
+]
+
+// 
 // Minigolf.SpeedBoost : Sandbox.ModelEntity 
 // 
 @SolidClass  drawangles( "movedir" )  base( RenderFields )  base( PhysicsTypeOverride_Mesh ) 
@@ -76,7 +100,12 @@ metadata
 // 
 // Minigolf.HoleBounds : Sandbox.ModelEntity 
 // 
-@SolidClass = minigolf_hole_bounds : "Minigolf Bounds of a Hole"
+@SolidClass 
+metadata
+{
+	auto_apply_material = "materials/tools/toolstrigger.vmat"
+}
+= minigolf_hole_bounds : "Minigolf Bounds of a Hole"
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
@@ -143,6 +172,22 @@ metadata
 	hole_number(integer) : "Hole Number" : "1" : "Which hole this spawnpoint is on."
 	hole_name(string) : "Hole Name" : "wanker" : "cool name"
 	hole_par(integer) : "Hole Par" : "3" : "How many strokes should this hole be done in."
+
+]
+
+// 
+// Minigolf.OutOfBoundsArea : Sandbox.ModelEntity 
+// 
+@SolidClass 
+metadata
+{
+	auto_apply_material = "materials/tools/toolstrigger.vmat"
+}
+= minigolf_out_of_bounds : "Out of bounds"
+[
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
+	forgivetime(integer) : "Forgiveness Time" :  : "When the ball enters this out of bounds area, how much time until we declare out of bounds?"
 
 ]
 
