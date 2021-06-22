@@ -1,6 +1,16 @@
-﻿minigolf bro!!
+﻿<br/>
+<h1 align="center">
+  <img width="50%" src="https://raw.githubusercontent.com/handsomematt/sbox-minigolf/master/ui/logo_golf.png">
+</h1>
 
-### Note on making maps
+<h3 align="center">
+	Multiplayer Minigolf for [Sandbox](https://sbox.facepunch.com/news)
+</h3>
+<br/>
+
+# Making Maps
+
+Anybody is welcome to create maps and upload them freely to the sbox devsite. Here's a quick rundown of the requirements for a map:
 
 * A course consists of holes, each hole needs the following entities:
   * `minigolf_hole_spawn` - a point entity where the ball spawns on the hole, the hole name and par
@@ -8,17 +18,10 @@
   * `minigolf_hole_bounds` - a brush entity that contains the bounds
 * Use the provided prefabs for holes.
 * A ball is 6x6x6 (3 radius).
-* **Sides have to be a func_brush** to do collisions properly, use the following properties:
-  * Solidity: Always Solid
-  * Render to Cubemaps: Yes
-  * Lightmap Static: Yes
+* Use `minigolf_wall` for walls on a course.
 
-### TODO
+# License
 
-Not inclusive of everything, just so I don't forget.
+All Rights Reserved
 
-* [ ] Power arrows bounce
-* [ ] Power multiplier linear gradient
-* [ ] Repurpose the standard kill feed to include when other players scoring.
-* [ ] Spectating: for players not playing and players who hve finished their current hole.
-* [ ] Map voting at the end of a course.
+Copyright (c) 2022 Matthew Stevens
