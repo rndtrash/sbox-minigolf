@@ -12,7 +12,7 @@ namespace Minigolf
 		private float distanceTarget;
 
 		public float MinDistance => 50.0f;
-		public float MaxDistance => 400.0f;
+		public float MaxDistance => 200.0f;
 		public float DistanceStep => 50.0f;
 
 		public GolfBall Ball;
