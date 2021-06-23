@@ -123,18 +123,34 @@ namespace Minigolf
 			if ( eventData.Entity.IsWorld )
 				return;
 
+			// Let the engine handle the low velocity collisions
 			// if ( eventData.PreVelocity.Length < 10 )
 			// 	return;
 
 			// Hard code collisions with the wall for now.
-			if ( eventData.Entity is not Wall wall )
+			if ( eventData.Entity is Wall wall )
+			{
+				if ( !wall.Reflect )
+				{
+					// Most likely a curve, reset z to avoid weirdness
+					PhysicsBody.Velocity = PhysicsBody.Velocity.WithZ( 0 );
+					return;
+				}
+
+				ReflectBall( eventData, wall.ReflectMultiplier );
 				return;
+			}
 
-			PhysicsBody.Velocity = PhysicsBody.Velocity.WithZ( 0 );
-
-			if ( !wall.Reflect )
+			if ( eventData.Entity is SimpleRotating )
+			{
+				// todo: get better results by looking at the rotating speed?
+				ReflectBall( eventData, 1.0f );
 				return;
+			}
+		}
 
+		protected void ReflectBall( CollisionEventData eventData, float multiplier )
+		{
 			var reflect = Vector3.Reflect( eventData.PreVelocity.Normal, eventData.Normal.Normal ).Normal;
 
 			var normalDot = eventData.PreVelocity.Normal.Dot( eventData.Normal );
@@ -153,12 +169,14 @@ namespace Minigolf
 			particle.Destroy( false );
 
 			var newSpeed = Math.Max( eventData.PreVelocity.Length, eventData.Speed );
-			newSpeed *= wall.ReflectMultiplier;
+			newSpeed *= multiplier;
 
 			// Adjust the speed depending on the hit normal, slight hit = more speed
 			newSpeed *= (1 - normalDot / 2);
 
 			var newVelocity = reflect * newSpeed;
+
+			// TODO: not a fan of this, should determine by the dot normal
 			newVelocity.z = 0;
 
 			PhysicsBody.Velocity = newVelocity;
@@ -171,7 +189,6 @@ namespace Minigolf
 				DebugOverlay.Line( eventData.Pos, eventData.Pos - (eventData.PreVelocity.Normal * 64.0f), 5f );
 				DebugOverlay.Line( eventData.Pos, eventData.Pos + (reflect * 64.0f), 5f );
 			}
-
 		}
 	}
 }
