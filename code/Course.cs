@@ -4,23 +4,37 @@ using System.Linq;
 
 namespace Minigolf
 {
-    partial class Course : NetworkClass
-    {
+	// TODO: This is an Entity for no reason other then NetworkComponent struggles with Lists
+    partial class Course : Entity
+	{
+		[Net]
         public string Name { get; set; } = "Default";
+		[Net]
         public string Description { get; set; } = "Default Description";
-        public string CameraPath { get; set; } // Placeholder
-        public Dictionary<int, HoleInfo> Holes { get; set; } = new Dictionary<int, HoleInfo>();
+		[Net]
+		public List<HoleInfo> Holes { get; set; }
+		[Net]
+		private int _currentHole { get; set; } = 1;
 
-        protected int currentHole = 1;
+		// todo: make this more sane.. maybe even nullable?
         public HoleInfo CurrentHole {
-            get => Holes.GetValueOrDefault(currentHole);
-            set => currentHole = value.Number;
+			get
+			{
+				// Bit shit I'm iterating here, but who cares
+				return Holes.Where( ( x ) => x.Number == _currentHole ).FirstOrDefault();
+			}
         }
 
-        /// <summary>
-        /// Load the course info from the current map.
-        /// </summary>
-        public void LoadFromMap()
+		public override void Spawn()
+		{
+			base.Spawn();
+			Transmit = TransmitType.Always;
+		}
+
+		/// <summary>
+		/// Load the course info from the current map.
+		/// </summary>
+		public void LoadFromMap()
         {
             Host.AssertServer();
 
@@ -35,16 +49,20 @@ namespace Minigolf
                     continue;
                 }
 
-                Holes[hole.Number] = new HoleInfo()
+				Log.Info( $"Hole ({hole.Number}) - {hole.Name}" );
+
+				// todo: sort this list
+
+				Holes.Add(new HoleInfo()
                 {
                     Number = hole.Number,
-                    Name = hole.Name,
+                    // Name = hole.Name,
                     Par = hole.Par,
                     SpawnPosition = hole.Position,
                     SpawnAngles = hole.WorldAng,
-					GoalPosition = goal.Position,
-                    Bounds = Entity.All.OfType<HoleBounds>().Where(x => x.Hole == hole.Number).ToList()
-                };
+					// GoalPosition = goal.Position,
+                    // Bounds = Entity.All.OfType<HoleBounds>().Where(x => x.Hole == hole.Number).ToList()
+                });
             }
         }
 
@@ -52,31 +70,24 @@ namespace Minigolf
         public void AdvancedHole()
         {
 			// Next hole is
-			var nextHoleKey = Holes.Where( x => x.Key > currentHole ).OrderBy( x => x.Key ).FirstOrDefault();
+			// var nextHoleKey = Holes.Where( x => x.Key > currentHole ).OrderBy( x => x.Key ).First();
 
 			// No more holes, just loop around for now.
-			if ( nextHoleKey.Value == null )
-				currentHole = 1;
+			// if ( nextHoleKey.Value == null )
+			// 	currentHole = 1;
 
 			// Advanced to next hole, TODO: ClientRpc
-			currentHole = nextHoleKey.Key;
+			// currentHole = nextHoleKey.Key;
         }
     }
 
-    class HoleInfo : NetworkClass
+    public struct HoleInfo
     {
-        public int Number { get; set; }
-        public string Name { get; set; }
-        public int Par { get; set; }
-        public Vector3 SpawnPosition { get; set; } = Vector3.Zero;
-        public Angles SpawnAngles { get; set; } = Angles.Zero;
-		public Vector3 GoalPosition { get; set; } = Vector3.Zero;
-        public List<HoleBounds> Bounds { get; set; } = new List<HoleBounds>();
-
-        public bool InBounds(Entity other)
-        {
-            return Bounds.Where(x => x.TouchingBalls.Contains(other)).Any();
-        }
+		public int Number;
+		// fuck me why can't i network a string
+		// public string Name;
+		public int Par;
+		public Vector3 SpawnPosition;
+		public Angles SpawnAngles;
     }
-
 }

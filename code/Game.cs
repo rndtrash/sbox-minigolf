@@ -10,7 +10,8 @@ namespace Minigolf
 		[Net] public bool WaitingToStart { get; set; } = true;
 		[Net] public float StartTime { get; set; }
 
-		[Net] public Course Course { get; set; }
+		[Net]
+		public Course Course { get; set; }
 
 		public bool GameStarted { get; set; }
 
@@ -23,8 +24,26 @@ namespace Minigolf
 			if (IsServer)
             {
 				_ = new GolfHUD();
-				Course = new();
+				Course = new Course();
 			}
+		}
+
+		[ServerCmd("minigolf_debug_print_sv")]
+		static void PrintCourse()
+		{
+			var game = Current as GolfGame;
+			Log.Info( $"Coruse: {game.Course}, {game.Course.CurrentHole}, {game.Course.Holes}" );
+			Log.Info( $"{game.Course.Holes.Count} holes" );
+			foreach(var hole in game.Course.Holes)
+			{
+				Log.Info( $"\t[{hole.Number}] par = {hole.Par}" );
+			}
+		}
+
+		[ClientCmd( "minigolf_debug_print_cl" )]
+		static void PrintCourseCl()
+		{
+			PrintCourse();
 		}
 
 		public override void ClientJoined( Client cl )
@@ -65,8 +84,8 @@ namespace Minigolf
 			WaitingToStart = true;
 			StartTime = (float)Math.Floor(Time.Now + 5.0f);
 
-			Course = new Course();
-			Course.LoadFromMap();
+			if ( IsServer )
+				Course.LoadFromMap();
 		}
 
 		public override ICamera FindActiveCamera()

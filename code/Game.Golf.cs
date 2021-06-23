@@ -17,8 +17,8 @@ namespace Minigolf
 
 		public void OnBallStoppedMoving(GolfBall ball)
 		{
-			if ( CheckBounds && !ball.Cupped && !Course.CurrentHole.InBounds(ball) )
-				BallOutOfBounds(ball, OutOfBoundsType.Normal);
+			// if ( CheckBounds && !ball.Cupped && !Course.CurrentHole.InBounds(ball) )
+			// 	BallOutOfBounds(ball, OutOfBoundsType.Normal);
 		}
 
 		public enum OutOfBoundsType
