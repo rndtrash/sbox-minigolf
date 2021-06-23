@@ -8,7 +8,6 @@ namespace Minigolf
 	public partial class HoleGoal : ModelEntity
 	{
 		[Property( "hole_number", "Hole Number", "Which hole this hole is on." )]
-		[DefaultValue( 1 )]
 		public int Hole { get; set; } = 1;
 
 		public override void Spawn()

@@ -18,12 +18,12 @@ metadata
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
-	movedir(angle) : "movedir" :  : ""
-	movedir_islocal(boolean) : "movedir_islocal" :  : ""
-	spawnpos(boolean) : "spawnpos" :  : ""
-	lip(float) : "lip" :  : ""
-	speed(float) : "speed" :  : ""
-	wait(float) : "wait" :  : ""
+	movedir(angle) : "Movedir" :  : ""
+	movedir_islocal(boolean) : "Movedir islocal" : 0 : ""
+	spawnpos(boolean) : "Spawnpos" : 0 : ""
+	lip(float) : "Lip" :  : ""
+	speed(float) : "Speed" :  : ""
+	wait(float) : "Wait" :  : ""
 
 ]
 
@@ -40,11 +40,11 @@ metadata
 	disableshadows( boolean )[group = "Render Properties"] : "Disable shadows" : 0
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
-	enabled(boolean) : "Enabled" : "True" : ""
+	enabled(boolean) : "Enabled" : 1 : ""
 	speed(float) : "Speed" : "100" : "The rotation speed of the entity in degrees per second.     Negative speed can be used to change direction."
 	axisdirection(angle) : "Axis Direction (Pitch Yaw Roll)" :  : "The direction of the axis the mesh will rotate on.     If AxisIsLocal is defined this is relative to the entitiy's current rotation."
-	axisislocal(boolean) : "Axis Direction Is Local" : "True" : "Is the axis local to the entity's current rotation?     This can be useful for more specific behaviour in nested entities."
-	solid(boolean) : "Solid" : "True" : "Whether this entity has collisions."
+	axisislocal(boolean) : "Axis Direction Is Local" : 1 : "Is the axis local to the entity's current rotation?     This can be useful for more specific behaviour in nested entities."
+	solid(boolean) : "Solid" : 0 : "Whether this entity has collisions."
 
 	input Start(void) : "Start the rotator rotating."
 	input Stop(void) : "Stop the rotator from rotating."
@@ -73,17 +73,15 @@ metadata
 // 
 // Minigolf.Wall : Sandbox.ModelEntity 
 // 
-@SolidClass  base( PhysicsTypeOverride_Mesh )  base( RenderFields ) 
+@SolidClass  base( PhysicsTypeOverride_Mesh ) 
 metadata
 {
 }
 = minigolf_wall : "Wall stuff"
 [
-	vrad_brush_cast_shadows( boolean )[ group="Render Properties" ] : "Shadows" : 0 : "Set this if this brush casts lightmap shadows."
-	disableshadows( boolean )[group = "Render Properties"] : "Disable shadows" : 0
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
-	reflect(boolean) : "Reflect" : "True" : "If checked, the ball will bounce off this surface at the defined multiplier."
+	reflect(boolean) : "Reflect" : 1 : "If checked, the ball will bounce off this surface at the defined multiplier."
 	reflectmultiplier(float) : "Reflect multiplier" : "1" : "How much the wall will reflect"
 
 ]
@@ -124,10 +122,10 @@ metadata
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
-	hole_number(integer) : "Hole Number" :  : "Which hole this camera is for"
-	fov(float) : "FOV" :  : "Field of view in degrees"
-	znear(float) : "ZNear" :  : "Distance to the near plane"
-	zfar(float) : "ZFar" :  : "Distance to the far plane"
+	hole_number(integer) : "Hole Number" : "1" : "Which hole this camera is for"
+	fov(float) : "FOV" : "90" : "Field of view in degrees"
+	znear(float) : "ZNear" : "4" : "Distance to the near plane"
+	zfar(float) : "ZFar" : "10000" : "Distance to the far plane"
 
 ]
 
@@ -142,8 +140,8 @@ metadata
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
-	znear(float) : "ZNear" :  : "Distance to the near plane"
-	zfar(float) : "ZFar" :  : "Distance to the far plane"
+	znear(float) : "ZNear" : "4" : "Distance to the near plane"
+	zfar(float) : "ZFar" : "10000" : "Distance to the far plane"
 
 ]
 
@@ -187,7 +185,7 @@ metadata
 [
 	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
-	forgivetime(integer) : "Forgiveness Time" :  : "When the ball enters this out of bounds area, how much time until we declare out of bounds?"
+	forgivetime(integer) : "Forgiveness Time" : "3" : "When the ball enters this out of bounds area, how much time until we declare out of bounds?"
 
 ]
 

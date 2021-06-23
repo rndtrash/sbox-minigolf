@@ -10,7 +10,6 @@ namespace Minigolf
 	public partial class SimpleRotating : ModelEntity
 	{
 		[Property]
-		[DefaultValue( true )]
 		public bool Enabled { get; set; } = true;
 
 		/// <summary>
@@ -18,7 +17,6 @@ namespace Minigolf
 		/// Negative speed can be used to change direction.
 		/// </summary>
 		[Property]
-		[DefaultValue( 100.0f )]
 		public float Speed { get; set; } = 100.0f;
 
 		/// <summary>
@@ -37,7 +35,6 @@ namespace Minigolf
 		/// This can be useful for more specific behaviour in nested entities.
 		/// </summary>
 		[Property( Title = "Axis Direction Is Local" )]
-		[DefaultValue( true )]
 		public bool AxisIsLocal { get; set; } = true;
 
 		protected bool _solid;
@@ -46,7 +43,6 @@ namespace Minigolf
 		/// Whether this entity has collisions.
 		/// </summary>
 		[Property]
-		[DefaultValue( true )]
 		public bool Solid
 		{
 			get => _solid;

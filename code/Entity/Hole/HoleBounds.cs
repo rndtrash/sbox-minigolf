@@ -10,8 +10,10 @@ namespace Minigolf
 	[Hammer.AutoApplyMaterial]
 	public partial class HoleBounds : ModelEntity
 	{
-		[Property( Name = "hole_number", Title = "Hole Number", Help = "Which hole this hole is on." )]
-		[DefaultValue( 1 )]
+		/// <summary>
+		/// Which hole this hole is on.
+		/// </summary>
+		[Property( Name = "hole_number", Title = "Hole Number" )]
 		public int Hole { get; set; } = 1;
 
 		public IEnumerable<GolfBall> TouchingBalls => touchingBalls;

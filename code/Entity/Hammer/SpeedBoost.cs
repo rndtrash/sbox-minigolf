@@ -11,11 +11,9 @@ namespace Minigolf
 	public partial class SpeedBoost : ModelEntity
 	{
 		[Property( "SpeedMultiplier", "Speed Multiplier", "How much the ball will accelerate" )]
-		[DefaultValue( 2.0f )]
 		public float SpeedMultiplier { get; set; } = 2.0f;
 
 		[Property( "MaxSpeed", "Max Speed", "Max speed the ball can be accelerated to from this booster." )]
-		[DefaultValue( 1000.0f )]
 		public float MaxSpeed { get; set; } = 1000.0f;
 
 		[Property( "movedir", "Move Direction (Pitch Yaw Roll)", "The direction the ball will move, when told to." )]
