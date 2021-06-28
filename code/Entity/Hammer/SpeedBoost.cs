@@ -6,7 +6,6 @@ namespace Minigolf
 	[Library( "minigolf_speed_boost", Description = "An brush built entity that will boost balls." )]
 	[Hammer.Solid]
 	[Hammer.DrawAngles( "movedir" )]
-	[Hammer.RenderProperties]
 	[Hammer.PhysicsTypeOverride(Hammer.PhysicsTypeOverrideAttribute.PhysicsTypeOverride.Mesh)]
 	public partial class SpeedBoost : ModelEntity
 	{

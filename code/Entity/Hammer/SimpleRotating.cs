@@ -5,7 +5,6 @@ namespace Minigolf
 {
 	[Library( "simple_rotating", Description = "A rotating mesh entity." )]
 	[Hammer.Solid]
-	[Hammer.RenderProperties]
 	[Hammer.DrawAngles( nameof( AxisDirection ), nameof( AxisIsLocal ) )]
 	public partial class SimpleRotating : ModelEntity
 	{

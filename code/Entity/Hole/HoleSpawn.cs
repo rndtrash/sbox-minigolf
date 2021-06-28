@@ -5,7 +5,7 @@ namespace Minigolf
 {
 	[Library("minigolf_hole_spawn", Description = "Minigolf Ball Spawn" )]
 	[Hammer.EditorModel( "models/golf_ball.vmdl" )]
-	[Hammer.DrawAngles]
+	[Hammer.DrawAngles("")]
 	public partial class HoleSpawn : Entity
 	{
 		[Property( "hole_number", "Hole Number", "Which hole this spawnpoint is on." )]
