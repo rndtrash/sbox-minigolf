@@ -1,16 +1,8 @@
 ﻿# Sandbox
-code/accesslist.txt
-Properties
+code/*.csproj
+code/obj
+code/Properties/launchSettings.json
 .intermediate
+_bakeresourcecache
 tools_asset_info.bin
-*.csproj
-
-# User-specific files
-*.rsuser
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
-
-# Build results
-[Oo]bj/
+tools_thumbnail_cache.bin
