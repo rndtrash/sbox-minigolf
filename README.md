@@ -10,15 +10,32 @@
 
 # Making Maps
 
-Anybody is welcome to create maps and upload them freely to the sbox devsite. Here's a quick rundown of the requirements for a map:
+Anybody is welcome and encouraged to create maps and upload them to sbox.
 
-* A course consists of holes, each hole needs the following entities:
-  * `minigolf_hole_spawn` - a point entity where the ball spawns on the hole, the hole name and par
-  * `minigolf_hole_goal` - a brush entity that triggers goal on a hole
-  * `minigolf_hole_bounds` - a brush entity that contains the bounds
-* Use the provided prefabs for holes.
-* A ball is 6x6x6 (3 radius).
-* Use `minigolf_wall` for walls on a course.
+Sets of prefabs and tilesets are avaliable to quickly build your maps.
+
+
+## Tileset
+
+video of tileset
+
+## Prefabs
+
+
+
+## Entities
+
+These should be in the prefabs for you already, but a quick rundown of the entities required in maps:
+
+* `minigolf_hole_spawn` - a point entity where the ball spawns on the hole, the hole name and par
+* `minigolf_hole_goal` - a brush entity that triggers goal on a hole
+* `minigolf_hole_bounds` - a brush entity that contains the bounds
+
+Other entities:
+
+* `minigolf_wall` - walls are reflected, you should make these nodraw and use world geo blah blah
+
+* `simple_rotating` - rotating lol
 
 # License
 

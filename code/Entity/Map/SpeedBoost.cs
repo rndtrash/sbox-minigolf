@@ -1,21 +1,32 @@
 ﻿using Sandbox;
-using Sandbox.Internal;
 
 namespace Minigolf
 {
-	[Library( "minigolf_speed_boost", Description = "An brush built entity that will boost balls." )]
+	/// <summary>
+	/// An brush built entity that will boost balls.
+	/// </summary>
+	[Library( "minigolf_speed_boost" )]
 	[Hammer.Solid]
-	[Hammer.DrawAngles( "movedir" )]
+	[Hammer.DrawAngles( nameof(MoveDir) )]
 	[Hammer.PhysicsTypeOverride(Hammer.PhysicsTypeOverrideAttribute.PhysicsTypeOverride.Mesh)]
 	public partial class SpeedBoost : ModelEntity
 	{
-		[Property( "SpeedMultiplier", "Speed Multiplier", "How much the ball will accelerate" )]
+		/// <summary>
+		/// How much the ball will accelerate.
+		/// </summary>
+		[Property]
 		public float SpeedMultiplier { get; set; } = 2.0f;
 
-		[Property( "MaxSpeed", "Max Speed", "Max speed the ball can be accelerated to from this booster." )]
+		/// <summary>
+		/// Max speed the ball can be accelerated to from this booster.
+		/// </summary>
+		[Property]
 		public float MaxSpeed { get; set; } = 1000.0f;
 
-		[Property( "movedir", "Move Direction (Pitch Yaw Roll)", "The direction the ball will move, when told to." )]
+		/// <summary>
+		/// The direction the ball will move, when told to.
+		/// </summary>
+		[Property( Title = "Move Direction (Pitch Yaw Roll)" )]
 		public Angles MoveDir { get; set; }
 
 		public override void Spawn()

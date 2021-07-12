@@ -1,17 +1,25 @@
-using Sandbox;
-using Sandbox.Internal;
+﻿using Sandbox;
 
 namespace Minigolf
 {
-	[Library("minigolf_wall", Description = "Wall stuff")]
+	/// <summary>
+	/// A generic brush/mesh that has customizable reflectivity.
+	/// </summary>
+	[Library( "minigolf_wall" )]
 	[Hammer.Solid]
 	[Hammer.PhysicsTypeOverride( Hammer.PhysicsTypeOverrideAttribute.PhysicsTypeOverride.Mesh )]
 	public partial class Wall : ModelEntity
 	{
-		[Property( "Reflect", "If checked, the ball will bounce off this surface at the defined multiplier." )]
+		/// <summary>
+		/// If checked, the ball will bounce off this surface at the defined multiplier.
+		/// </summary>
+		[Property]
 		public bool Reflect { get; set; } = true;
 
-		[Property( "ReflectMultiplier", "Reflect multiplier", "How much the wall will reflect" )]
+		/// <summary>
+		/// How much the wall will reflect
+		/// </summary>
+		[Property]
 		public float ReflectMultiplier { get; set; } = 1;
 
 		//  surface_property_override(surface_properties) : "Surface Property Override" : "" : "Overrides the default surface property."
@@ -20,9 +28,10 @@ namespace Minigolf
 		{
 			base.Spawn();
 
-			EnableDrawing = true;
-
 			SetupPhysicsFromModel( PhysicsMotionType.Static );
+
+			// TODO: Property this
+			EnableDrawing = false;
 
 			// Custom surface property with 0 friction, 0 elasticity.
 			PhysicsGroup.SetSurface( "minigolf.side" );

@@ -39,25 +39,25 @@ namespace Minigolf
             Host.AssertServer();
 
             Holes.Clear();
-            foreach (var hole in Entity.All.OfType<HoleSpawn>())
+            foreach (var hole in Entity.All.OfType<BallSpawnpoint>())
             {
-                var goal = Entity.All.OfType<HoleGoal>().Where(x => x.Hole == hole.Number).First();
+                var goal = Entity.All.OfType<HoleGoal>().Where(x => x.HoleNumber == hole.HoleNumber).First();
 
                 if (goal == null)
                 {
-                    Log.Error($"No ball goal found for [Hole {hole.Number}]");
+                    Log.Error($"No ball goal found for [Hole {hole.HoleNumber}]");
                     continue;
                 }
 
-				Log.Info( $"Hole ({hole.Number}) - {hole.Name}" );
+				Log.Info( $"Hole ({hole.HoleNumber}) - {hole.HoleName}" );
 
 				// todo: sort this list
 
 				Holes.Add(new HoleInfo()
                 {
-                    Number = hole.Number,
+                    Number = hole.HoleNumber,
                     // Name = hole.Name,
-                    Par = hole.Par,
+                    Par = hole.HolePar,
                     SpawnPosition = hole.Position,
                     SpawnAngles = hole.WorldAng,
 					// GoalPosition = goal.Position,

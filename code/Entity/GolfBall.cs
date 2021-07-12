@@ -1,10 +1,7 @@
 ﻿using Sandbox;
-using System;
 
 namespace Minigolf
 {
-	[Library("minigolf_ball")]
-	[Hammer.Skip]
 	public partial class GolfBall : ModelEntity
 	{
 		[ServerVar( "minigolf_ball_debug" )]

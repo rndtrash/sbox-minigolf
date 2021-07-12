@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 namespace Minigolf
 {
-	[Library("func_moving_obstacle")]
-	public partial class FuncMovingObstacle : KeyframeEntity
+	[Library("simple_moving_obstacle")]
+	public partial class SimpleMovingObstacle : KeyframeEntity
 	{
 		public enum Flags
 		{

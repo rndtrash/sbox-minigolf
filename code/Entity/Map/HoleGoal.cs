@@ -1,14 +1,21 @@
 ﻿using Sandbox;
-using Sandbox.Internal;
 
 namespace Minigolf
 {
-	[Library("minigolf_hole_goal", Description = "Minigolf Hole" )]
+	/// <summary>
+	/// Minigolf hole goal trigger
+	/// </summary>
+	[Library( "minigolf_hole_goal" )]
 	[Hammer.Solid]
+	[Hammer.AutoApplyMaterial]
+	[Hammer.EntityTool( "Hole goal", "Minigolf" )]
 	public partial class HoleGoal : ModelEntity
 	{
-		[Property( "hole_number", "Hole Number", "Which hole this hole is on." )]
-		public int Hole { get; set; } = 1;
+		/// <summary>
+		/// Which hole this hole is on.
+		/// </summary>
+		[Property]
+		public int HoleNumber { get; set; }
 
 		public override void Spawn()
 		{
@@ -25,7 +32,7 @@ namespace Minigolf
 			if ( other is not GolfBall ball )
 				return;
 
-			(Game.Current as GolfGame).CupBall( ball, Hole );
+			(Game.Current as GolfGame).CupBall( ball, HoleNumber );
 		}
 	}
 }

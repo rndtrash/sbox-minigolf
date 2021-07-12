@@ -6,7 +6,7 @@ namespace Minigolf
 	public partial class GolfBall
 	{
 		[ServerVar( "minigolf_ball_linear_damping" )]
-		public static float DefaultLinearDamping { get; set; } = 0.05f;
+		public static float DefaultLinearDamping { get; set; } = 0.1f;
 		[ServerVar( "minigolf_ball_angular_damping" )]
 		public static float DefaultAngularDamping { get; set; } = 4.00f;
 
@@ -33,6 +33,11 @@ namespace Minigolf
 			if ( Debug )
 			{
 				DebugOverlay.Line( downTraceResult.StartPos, downTraceResult.EndPos );
+
+				DebugOverlay.Text( Position, $"Sleeping: { PhysicsBody.IsSleeping() }" );
+				DebugOverlay.Text( Position + Vector3.Up * 5f, $"Velocity: { PhysicsBody.Velocity.Length }" );
+
+				DebugOverlay.ScreenText( 1, $"Tick: { Time.Tick }" );
 
 				// if ( downTraceResult.Entity.IsValid() )
 				// 	DebugOverlay.Text( downTraceResult.StartPos, $"e: {downTraceResult.Entity.EngineEntityName}" );

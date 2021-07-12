@@ -1,11 +1,12 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Sandbox;
-using Sandbox.Internal;
 
 namespace Minigolf
 {
-	[Library("minigolf_hole_bounds", Description = "Minigolf Bounds of a Hole" )]
+	/// <summary>
+	/// Bounds of a hole.
+	/// </summary>
+	[Library( "minigolf_hole_bounds" )]
 	[Hammer.Solid]
 	[Hammer.AutoApplyMaterial]
 	public partial class HoleBounds : ModelEntity
@@ -13,8 +14,8 @@ namespace Minigolf
 		/// <summary>
 		/// Which hole this hole is on.
 		/// </summary>
-		[Property( Name = "hole_number", Title = "Hole Number" )]
-		public int Hole { get; set; } = 1;
+		[Property]
+		public int HoleNumber { get; set; }
 
 		public IEnumerable<GolfBall> TouchingBalls => touchingBalls;
 		private readonly List<GolfBall> touchingBalls = new();

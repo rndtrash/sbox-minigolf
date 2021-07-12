@@ -3,7 +3,10 @@ using Sandbox.Internal;
 
 namespace Minigolf
 {
-	[Library( "simple_rotating", Description = "A rotating mesh entity." )]
+	/// <summary>
+	/// A simple rotating mesh entity.
+	/// </summary>
+	[Library( "simple_rotating" )]
 	[Hammer.Solid]
 	[Hammer.DrawAngles( nameof( AxisDirection ), nameof( AxisIsLocal ) )]
 	public partial class SimpleRotating : ModelEntity
