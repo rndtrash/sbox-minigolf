@@ -72,7 +72,8 @@ namespace Minigolf
 			{
 				await Task.DelaySeconds(5);
 
-				Course.AdvancedHole();
+				Course.NextHole();
+				// Course.AdvancedHole();
 
 				// Reset for now
 				// player.Strokes = 0;

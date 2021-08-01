@@ -38,11 +38,13 @@ namespace Minigolf
 			var game = Game.Current as GolfGame;
 			if (game == null) return;
 
-			var hole = game.Course.CurrentHole;
+			
+
+			// var hole = game.Course.CurrentHole;
 			// if (hole == null) return;
 
-			holeLabel.Text = $"{hole.Number}";
-			parLabel.Text = $"{hole.Par}";
+			// holeLabel.Text = $"{hole.Number}";
+			// parLabel.Text = $"{hole.Par}";
 			// strokeLabel.Text = $"{player.Strokes}";
 		}
 	}

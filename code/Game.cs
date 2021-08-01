@@ -7,16 +7,17 @@ namespace Minigolf
 {
 	partial class GolfGame : Game
 	{
+		public Course Course { get; set; }
+
 		[Net] public bool WaitingToStart { get; set; } = true;
 		[Net] public float StartTime { get; set; }
-
-		[Net]
-		public Course Course { get; set; }
 
 		public bool GameStarted { get; set; }
 
 		public List<Client> ReadyClients { get; set; }
 		public List<Client> PlayingClients { get; set; }
+
+		public static GolfGame Instance => Current as GolfGame;
 
 		public GolfGame()
 		{
@@ -24,31 +25,23 @@ namespace Minigolf
 			if (IsServer)
             {
 				_ = new GolfHUD();
-				Course = new Course();
 			}
-		}
 
-		[ServerCmd("minigolf_debug_print_sv")]
-		static void PrintCourse()
-		{
-			var game = Current as GolfGame;
-			Log.Info( $"Coruse: {game.Course}, {game.Course.CurrentHole}, {game.Course.Holes}" );
-			Log.Info( $"{game.Course.Holes.Count} holes" );
-			foreach(var hole in game.Course.Holes)
+			if (IsClient)
 			{
-				Log.Info( $"\t[{hole.Number}] par = {hole.Par}" );
+				Log.Info( "Game constructor Entity.All:" );
+				foreach ( var ent in Entity.All )
+					Log.Info( $"\t{ent}" );
 			}
-		}
-
-		[ClientCmd( "minigolf_debug_print_cl" )]
-		static void PrintCourseCl()
-		{
-			PrintCourse();
 		}
 
 		public override void ClientJoined( Client cl )
 		{
+			// Base game adds a client joined to chatbox
 			base.ClientJoined( cl );
+
+			// Sends the course names and junk to the client
+			Course.SendCourseInfo( To.Single( cl ) );
 		}
 
 		[ServerCmd("minigolf_start")]
@@ -81,11 +74,16 @@ namespace Minigolf
 
 		public override void PostLevelLoaded()
 		{
+			Host.AssertServer();
+
+			// Make sure we load it before setting the reference
+			var course = new Course();
+			course.LoadFromMap();
+
+			Course = course;
+
 			WaitingToStart = true;
 			StartTime = (float)Math.Floor(Time.Now + 5.0f);
-
-			if ( IsServer )
-				Course.LoadFromMap();
 		}
 
 		public override ICamera FindActiveCamera()

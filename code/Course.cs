@@ -4,32 +4,17 @@ using System.Linq;
 
 namespace Minigolf
 {
-	// TODO: This is an Entity for no reason other then NetworkComponent struggles with Lists
-    partial class Course : Entity
+	/// <summary>
+	/// Custom network synced class
+	/// </summary>
+    public partial class Course
 	{
-		[Net]
         public string Name { get; set; } = "Default";
-		[Net]
         public string Description { get; set; } = "Default Description";
-		[Net]
-		public List<HoleInfo> Holes { get; set; }
-		[Net]
+		public Dictionary<int, HoleInfo> Holes { get; set; }
+
 		private int _currentHole { get; set; } = 1;
-
-		// todo: make this more sane.. maybe even nullable?
-        public HoleInfo CurrentHole {
-			get
-			{
-				// Bit shit I'm iterating here, but who cares
-				return Holes.Where( ( x ) => x.Number == _currentHole ).FirstOrDefault();
-			}
-        }
-
-		public override void Spawn()
-		{
-			base.Spawn();
-			Transmit = TransmitType.Always;
-		}
+		public HoleInfo CurrentHole => Holes[_currentHole];
 
 		/// <summary>
 		/// Load the course info from the current map.
@@ -38,8 +23,11 @@ namespace Minigolf
         {
             Host.AssertServer();
 
-            Holes.Clear();
-            foreach (var hole in Entity.All.OfType<BallSpawnpoint>())
+			// Todo: Load Name / Description in
+
+			Holes = new Dictionary<int, HoleInfo>();
+
+            foreach (var hole in Entity.All.OfType<BallSpawnpoint>().OrderBy(ent => ent.HoleNumber))
             {
                 var goal = Entity.All.OfType<HoleGoal>().Where(x => x.HoleNumber == hole.HoleNumber).First();
 
@@ -49,43 +37,76 @@ namespace Minigolf
                     continue;
                 }
 
-				Log.Info( $"Hole ({hole.HoleNumber}) - {hole.HoleName}" );
-
-				// todo: sort this list
-
-				Holes.Add(new HoleInfo()
+				Holes.Add(hole.HoleNumber, new HoleInfo()
                 {
                     Number = hole.HoleNumber,
-                    // Name = hole.Name,
+                    Name = hole.HoleName,
                     Par = hole.HolePar,
                     SpawnPosition = hole.Position,
                     SpawnAngles = hole.WorldAng,
-					// GoalPosition = goal.Position,
-                    // Bounds = Entity.All.OfType<HoleBounds>().Where(x => x.Hole == hole.Number).ToList()
                 });
             }
         }
 
 		// TODO: SHIT CODE
-        public void AdvancedHole()
+        public void NextHole()
         {
-			// Next hole is
-			// var nextHoleKey = Holes.Where( x => x.Key > currentHole ).OrderBy( x => x.Key ).First();
+			var matchedHoles = Holes.Where( x => x.Key > _currentHole )
+				.OrderBy( x => x.Key );
 
-			// No more holes, just loop around for now.
-			// if ( nextHoleKey.Value == null )
-			// 	currentHole = 1;
+			// No more holes to advance to? Return early.
+			// This should be checked before calling this function.
+			if ( !matchedHoles.Any() )
+				return;
 
-			// Advanced to next hole, TODO: ClientRpc
-			// currentHole = nextHoleKey.Key;
+			var nextHole = matchedHoles.First();
+
+			_currentHole = nextHole.Key;
+
+			// Announce to all clients that the course has advanced.
+			clientNextHole( To.Everyone, _currentHole );
+
+			// Run an event so we can pick this up anywhere in the code base.
+			Event.Run( "minigolf.advanced_hole", _currentHole );
         }
-    }
 
-    public struct HoleInfo
+		[ClientRpc]
+		public static void clientNextHole( int newHole )
+		{
+			var course = GolfGame.Instance.Course;
+			if ( course == null )
+			{
+				Log.Error( "Tried to advance hole with no Course instance." );
+				return;
+			}
+
+			course._currentHole = newHole;
+			Event.Run( "minigolf.advanced_hole", course._currentHole );
+		}
+
+		[ServerCmd( "minigolf_debug_print_sv" )]
+		static void PrintCourse()
+		{
+			var game = Game.Current as GolfGame;
+			Log.Info( $"Coruse: {game.Course}, {game.Course.CurrentHole}, {game.Course.Holes}" );
+			Log.Info( $"{game.Course.Holes.Count} holes" );
+			foreach ( var hole in game.Course.Holes.Values )
+			{
+				Log.Info( $"\t[{hole.Number}] name = {hole.Name} par = {hole.Par}" );
+			}
+		}
+
+		[ClientCmd( "minigolf_debug_print_cl" )]
+		static void PrintCourseCl()
+		{
+			PrintCourse();
+		}
+	}
+
+	public struct HoleInfo
     {
 		public int Number;
-		// fuck me why can't i network a string
-		// public string Name;
+		public string Name;
 		public int Par;
 		public Vector3 SpawnPosition;
 		public Angles SpawnAngles;
