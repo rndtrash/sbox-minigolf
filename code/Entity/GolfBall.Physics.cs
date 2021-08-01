@@ -25,7 +25,7 @@ namespace Minigolf
 		/// </summary>
 		protected void AdjustDamping()
 		{
-			var downTrace = Trace.Ray( Position, Position + Vector3.Down * OOBBox.Size.z );
+			var downTrace = Trace.Ray( Position, Position + Vector3.Down * CollisionBounds.Size.z );
 			downTrace.HitLayer( CollisionLayer.Solid );
 			downTrace.Ignore( this );
 			var downTraceResult = downTrace.Run();
@@ -109,11 +109,11 @@ namespace Minigolf
 			if ( Trail == null )
 				return;
 
-			Trail.SetPos( 0, Position );
-			Trail.SetPos( 1, prevWorldPos );
+			Trail.SetPosition( 0, Position );
+			Trail.SetPosition( 1, prevWorldPos );
 
 			var clientVelocityLength = clientVelocity.Length;
-			Trail.SetPos( 2, new Vector3( clientVelocityLength ) );
+			Trail.SetPosition( 2, new Vector3( clientVelocityLength ) );
 
 			prevWorldPos = Position;
 		}
@@ -170,7 +170,7 @@ namespace Minigolf
 			sound.SetPitch( 0.5f + Math.Clamp( eventData.Speed / 1250.0f, 0.0f, 0.5f ) );
 
 			var particle = Particles.Create( "particles/ball_hit.vpcf", eventData.Pos );
-			particle.SetPos( 0, eventData.Pos );
+			particle.SetPosition( 0, eventData.Pos );
 			particle.Destroy( false );
 
 			var newSpeed = Math.Max( eventData.PreVelocity.Length, eventData.Speed );
