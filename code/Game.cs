@@ -52,23 +52,26 @@ namespace Minigolf
 
 		public void StartGame()
 		{
-			Log.Info( "Starting game?" );
-
 			// TODO: Only do clients marked as ready.
 			PlayingClients = new List<Client>( Client.All );
 
 			GameStarted = true;
 			WaitingToStart = false;
 
-			// Set the active course
+			// TODO: RESET?
+			// Course.Reset();
+
 			// Spawn balls for all clients
 			foreach ( var cl in PlayingClients )
 			{
-				Log.Info( $"Creating ball for {cl.Name}" );
-
 				var ball = new GolfBall();
-				cl.Pawn = ball;
 				ball.ResetPosition( Course.CurrentHole.SpawnPosition, Course.CurrentHole.SpawnAngles );
+
+				// Set the client to control the ball
+				cl.Pawn = ball;
+
+				// Fixes interpolation (https://github.com/Facepunch/sbox-issues/issues/492)
+				ball.Owner = null;
 			}
 		}
 
@@ -88,6 +91,7 @@ namespace Minigolf
 
 		public override ICamera FindActiveCamera()
 		{
+			// TODO: Set this dynamically from the map
 			if (WaitingToStart)
 			{
 				StaticCamera camera = new StaticCamera( new Vector3( -303.42f, 191.58f, 175.11f ), new Angles( 10.31f, -37.59f, 0 ) );
