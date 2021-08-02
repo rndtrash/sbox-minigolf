@@ -11,6 +11,10 @@ namespace Minigolf
 
 		protected void DrawArrow( SceneObject obj, Vector3 startPos, Vector3 endPos, Vector3 direction, Vector3 size, Color color, bool drawTip )
 		{
+			// vbos are drawn relative to world position
+			startPos -= Position;
+			endPos -= Position;
+
 			var vertexBuffer = Render.GetDynamicVB( true );
 
 			// Line
