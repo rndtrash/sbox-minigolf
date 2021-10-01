@@ -5,34 +5,44 @@ using Sandbox;
 
 namespace Minigolf
 {
-	partial class GolfGame : Game
+	public partial class Game : GameBase
 	{
-		public Course Course { get; set; }
+		public static Game Current { get; protected set; }
+		public Hud Hud { get; private set; }
 
-		[Net] public bool WaitingToStart { get; set; } = true;
-		[Net] public float StartTime { get; set; }
+		public Game()
+		{
+			Current = this;
+			Transmit = TransmitType.Always;
 
 		public bool GameStarted { get; set; }
 
-		public List<Client> ReadyClients { get; set; }
-		public List<Client> PlayingClients { get; set; }
-
-		public static GolfGame Instance => Current as GolfGame;
-
-		public GolfGame()
-		{
-			// easy way for now.. todo look into actual clientside huds?
-			if (IsServer)
-            {
-				_ = new GolfHUD();
-			}
-
-			if (IsClient)
+			if ( IsClient )
 			{
-				Log.Info( "Game constructor Entity.All:" );
-				foreach ( var ent in Entity.All )
-					Log.Info( $"\t{ent}" );
+				Hud = new Hud();
+				Local.Hud = Hud;
 			}
+		}
+
+		public override void Shutdown()
+		{
+			if ( Current == this )
+			{
+				Current = null;
+			}
+		}
+
+		protected override void OnDestroy()
+		{
+			base.OnDestroy();
+
+			if ( Local.Hud == Hud )
+			{
+				Local.Hud = null;
+			}
+
+			Hud?.Delete();
+			Hud = null;
 		}
 
 		public override void ClientJoined( Client cl )
