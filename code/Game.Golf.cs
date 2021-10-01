@@ -63,7 +63,7 @@ namespace Minigolf
 			}
 
 			// Cup the ball entity, this does fx and stops motion.
-			ball.Cup( false );
+			ball.Cup();
 
 			// Let all players know the ball has been cupped.
 			// CuppedBall( To.Everyone, ball, player.Strokes );
@@ -83,7 +83,7 @@ namespace Minigolf
 
 				// Reset for now
 				// player.Strokes = 0;
-				// ResetBall(ball);
+				ResetBall(ball);
 			};
 			task.Invoke();
 		}

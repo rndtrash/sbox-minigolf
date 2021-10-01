@@ -36,7 +36,7 @@ namespace Minigolf
 			CreateParticles();
 		}
 
-		public void Cup( bool holeInOne )
+		public void Cup( bool holeInOne = false )
 		{
 			if ( Cupped ) return;
 
