@@ -14,6 +14,8 @@ namespace Minigolf
 		public Label PlayerName { get; set; }
 		public Image PlayerAvatar { get; set; }
 		public Panel ScoresPanel { get; set; }
+		
+		Label TotalScoreLabel { get; set; }
 
 		public Client Client;
 
@@ -30,6 +32,7 @@ namespace Minigolf
 			{
 				Scores[i] = ScoresPanel.Add.Label( $"-" );
 			}
+
 		}
 
 		public override void Tick()
@@ -41,6 +44,8 @@ namespace Minigolf
 			{
 				Scores[pair.Key].Text = $"{pair.Value}";
 			}
+
+			TotalScoreLabel.Text = $"{score.Total}";
 
 			// PlayerName.Text = Client.Name;
 			// PlayerAvatar.Texture = Texture.Load( $"avatar:{Client.SteamId}" );
