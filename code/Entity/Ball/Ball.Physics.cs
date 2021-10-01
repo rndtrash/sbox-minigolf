@@ -6,20 +6,47 @@ namespace Minigolf
 	public partial class Ball
 	{
 		static float PowerMultiplier => 5000.0f;
+
+		// Damping values
 		static float DefaultLinearDamping => 0.1f;
 		static float DefaultAngularDamping => 4.00f;
+		static float UpHillLinearDamping => 0.015f;
+		static float UpHillAngularDamping => 2.00f;
+		static float DownHillLinearDamping => 0.0f;
+		static float DownHillAngularDamping => 1.0f;
+
+		[Event.Tick.Server]
+		protected void CheckInPlay()
+		{
+			// Sanity check, maybe our ball is hit by rotating blades?
+			if ( !InPlay )
+			{
+				if ( Velocity.Length >= 0.5f )
+					InPlay = true;
+			}
+
+			// Check if our ball has pretty much stopped (waiting for 0 is nasty)
+			if ( !Velocity.Length.AlmostEqual( 0.0f, 0.1f ) )
+				return;
+
+			Velocity = Vector3.Zero;
+			InPlay = false;
+
+			// Lets call something on the Game? (Maybe an RPC too?)
+			// Delete effects? (They are clientside though)
+		}
 
 		[Event.Tick.Server]
 		protected void AdjustPhysics()
 		{
-			if ( !Velocity.Length.AlmostEqual( 0.0f, 0.1f ) )
-				Moving = true;
-			else
-			{
-				if ( Moving )
-					Velocity = Vector3.Zero;
-				Moving = false;
-			}
+			DebugOverlay.ScreenText( 0, $"Mass:             {PhysicsBody.Mass:F2}" );
+			DebugOverlay.ScreenText( 1, $"Velocity:         {PhysicsBody.Velocity.Length:F2}/s" );
+			DebugOverlay.ScreenText( 2, $"Angular Velocity: {PhysicsBody.AngularVelocity.Length:F2}" );
+
+			DebugOverlay.ScreenText( 5, $"Linear Drag:     {PhysicsBody.LinearDrag:F2}" );
+			DebugOverlay.ScreenText( 6, $"Linear Damping:  {PhysicsBody.LinearDamping:F2}" );
+			DebugOverlay.ScreenText( 7, $"Angular Drag:    {PhysicsBody.AngularDrag:F2}" );
+			DebugOverlay.ScreenText( 8, $"Angular Damping: {PhysicsBody.AngularDamping:F2}" );
 
 			// If the ball is in the hole, do nothing
 			if ( Cupped )
@@ -28,44 +55,44 @@ namespace Minigolf
 			AdjustDamping();
 		}
 
+		protected void AdjustAirDamping()
+		{
+			// Just do the default values
+			PhysicsBody.LinearDamping = DefaultLinearDamping;
+			PhysicsBody.AngularDamping = DefaultAngularDamping;
+		}
+
 		/// <summary>
 		/// We adjust the ball's linear / angular damping based on the surface.
-		/// This can be done clientside for prediction.
 		/// </summary>
 		protected void AdjustDamping()
 		{
 			var downTrace = Trace.Ray( Position, Position + Vector3.Down * CollisionBounds.Size.z );
 			downTrace.HitLayer( CollisionLayer.Solid );
+			downTrace.WorldOnly();
 			downTrace.Ignore( this );
 			var downTraceResult = downTrace.Run();
 
-			if ( Debug )
-			{
-				DebugOverlay.Line( downTraceResult.StartPos, downTraceResult.EndPos );
+			DebugOverlay.Line( downTraceResult.StartPos, downTraceResult.EndPos, 0, false );
+			DebugOverlay.ScreenText( 10, $"On Ground:      {downTraceResult.Hit}" );
+			DebugOverlay.ScreenText( 11, $"Ground Surface: {downTraceResult.Surface.Name}" );
 
-				DebugOverlay.Text( Position, $"Sleeping: { PhysicsBody.IsSleeping() }" );
-				DebugOverlay.Text( Position + Vector3.Up * 5f, $"Velocity: { PhysicsBody.Velocity.Length }" );
-
-				DebugOverlay.ScreenText( 1, $"Tick: { Time.Tick }" );
-
-				// if ( downTraceResult.Entity.IsValid() )
-				// 	DebugOverlay.Text( downTraceResult.StartPos, $"e: {downTraceResult.Entity.EngineEntityName}" );
-			}
-
-			// We are in the air, do nothing? (Maybe we could adjust something to make ball airtime feel nicer?)
+			// If there is nothing below us we're in the air, handle that specifically.
 			if ( !downTraceResult.Hit )
+			{
+				AdjustAirDamping();
 				return;
+			}
 
 			// Give ourselves a shit load of damping at a low velocity, brings the ball to a faster stop in a more natural way.
-			if ( Velocity.Length < 5.0f )
+			if ( InPlay && Velocity.Length < 10.0f )
 			{
-				PhysicsBody.LinearDamping = DefaultLinearDamping * 50.0f;
-				PhysicsBody.AngularDamping = DefaultAngularDamping * 50.0f;
+				PhysicsBody.LinearDamping = DefaultLinearDamping * 10.0f;
+				PhysicsBody.AngularDamping = DefaultAngularDamping * 10.0f;
 
 				return;
 			}
-
-
+			
 			// See if we're on a flat surface by checking the dot product of the surface normal.
 			if ( downTraceResult.Normal.Dot( Vector3.Up ).AlmostEqual( 1, 0.001f ) )
 			{
@@ -98,20 +125,24 @@ namespace Minigolf
 			}
 
 			// We must be on a hill, we can detect if it's up hill or down hill by doing a forward trace
-			var trace = Trace.Ray( Position, Position + PhysicsBody.Velocity.WithZ( 0 ) );
-			trace.HitLayer( CollisionLayer.Debris );
+			// TODO: This direction is wrong, we should be using the hill normal dot with 
+			var trace = Trace.Ray( Position, Position + PhysicsBody.Velocity.WithZ( 0 ).Normal * CollisionBounds.Size.y * 2 );
+			trace.HitLayer( CollisionLayer.Solid );
 			trace.Ignore( this );
+			trace.WorldOnly();
 			var traceResult = trace.Run();
+
+			DebugOverlay.Line( traceResult.StartPos, traceResult.EndPos, 0, false );
 
 			if ( traceResult.Hit )
 			{
-				PhysicsBody.LinearDamping = 0.015f;
-				PhysicsBody.AngularDamping = 2.00f;
+				PhysicsBody.LinearDamping = UpHillLinearDamping;
+				PhysicsBody.AngularDamping = UpHillAngularDamping;
 				return;
 			}
 
-			PhysicsBody.LinearDamping = 0.0f;
-			PhysicsBody.AngularDamping = 1.0f;
+			PhysicsBody.LinearDamping = DownHillLinearDamping;
+			PhysicsBody.AngularDamping = DownHillAngularDamping;
 		}
 
 		/// <summary>
