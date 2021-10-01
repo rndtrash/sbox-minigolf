@@ -1,7 +1,22 @@
-// 
-// Minigolf.BallSpawnpoint : Sandbox.Entity 
-// 
-@PointClass drawangles() editormodel( "models/golf_ball.vmdl" ) 
+
+@BaseClass = BaseProperties_minigolf
+[
+	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
+	parentAttachmentName(parentAttachment) [ group="Hierarchy" ] : "Parent Model Bone/Attachment Name" : : "The name of the bone or attachment to attach to on the entity's parent in the movement hierarchy. Use !bonemerge to use bone-merge style attachment."
+
+	useLocalOffset(boolean) [ group="Hierarchy" ] : "Use Model Attachment offsets" : 0 : "Whether to respect the specified local offset when doing the initial hierarchical attachment to its parent."
+	local.origin(vector) [ group="Hierarchy" ] : "Model Attachment position offset" : : "Offset in the local space of the parent model's attachment/bone to use in hierarchy. Not used if you are not using parent attachment."
+	local.angles(angle) [ group="Hierarchy" ] : "Model Attachment angular offset" : : "Angular offset in the local space of the parent model's attachment/bone to use in hierarchy. Not used if you are not using parent attachment."
+	local.scales(vector) [ group="Hierarchy" ] : "Model Attachment scale" : : "Scale in the local space of the parent model's attachment/bone to use in hierarchy. Not used if you are not using parent attachment."
+
+	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
+	tags(tags) : "Tags" : "" : "A list of general purpose tags for this entity, for interactions with other entities such as triggers."
+]
+
+//
+// Minigolf.BallSpawnpoint
+//
+@PointClass base(BaseProperties_minigolf) drawangles() editormodel( "models/golf_ball.vmdl" ) 
 metadata
 {
 	entity_tool_name = "Ball spawn point"
@@ -9,74 +24,65 @@ metadata
 }
 = minigolf_ball_spawnpoint : "Where the ball spawns, also defines the hole name and par."
 [
-	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
-	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	holenumber(integer) : "Hole Number" : 0 : "What hole number this spawnpoint belongs to."
 	holename(string) : "Hole Name" : "Untitled Hole" : "The name of this hole, this is displayed in-game."
 	holepar(integer) : "Hole Par" : 3 : "How many strokes should this hole be done in."
-	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+	enable_shadows(boolean) { group = "Rendering" } : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 ]
 
-// 
-// Minigolf.HoleCamera : Sandbox.Entity 
-// 
-@PointClass editormodel( "models/editor/camera.vmdl" ) = minigolf_hole_camera : "Minigolf Hole Camera"
+//
+// Minigolf.HoleCamera
+//
+@PointClass base(BaseProperties_minigolf) editormodel( "models/editor/camera.vmdl" ) = minigolf_hole_camera : "Minigolf Hole Camera"
 [
-	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
-	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	hole_number(integer) : "Hole Number" : 1 : "Which hole this camera is for"
 	fov(float) : "FOV" : 90 : "Field of view in degrees"
 	znear(float) : "Znear" : 4 : "Distance to the near plane"
 	zfar(float) : "Zfar" : 10000 : "Distance to the far plane"
-	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+	enable_shadows(boolean) { group = "Rendering" } : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 ]
 
-// 
-// Minigolf.StartCamera : Sandbox.Entity 
-// 
-@PointClass editormodel( "models/editor/camera.vmdl" ) = minigolf_start_camera : "Minigolf Start Camera"
+//
+// Minigolf.StartCamera
+//
+@PointClass base(BaseProperties_minigolf) editormodel( "models/editor/camera.vmdl" )  frustum( FOV, ZNear, ZFar )= minigolf_start_camera : "Minigolf Start Camera"
 [
-	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
-	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
+	fov(float) : "FOV" : 90 : "Field of view"
 	znear(float) : "Znear" : 4 : "Distance to the near plane"
 	zfar(float) : "Zfar" : 10000 : "Distance to the far plane"
-	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+	enable_shadows(boolean) { group = "Rendering" } : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 ]
 
-// 
-// Minigolf.FlagBase : Sandbox.ModelEntity 
-// 
-@PointClass editormodel( "models/golf_flag.vmdl" ) = minigolf_flag_base : "Minigolf Flag Base"
+//
+// Minigolf.FlagBase
+//
+@PointClass base(BaseProperties_minigolf) editormodel( "models/minigolf_flag.vmdl" ) = minigolf_flag_base : "Minigolf Flag Base"
 [
-	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
-	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
-	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+	enable_shadows(boolean) { group = "Rendering" } : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
 	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
-// 
-// Minigolf.HoleBounds : Sandbox.ModelEntity 
-// 
-@SolidClass 
+//
+// Minigolf.HoleBounds
+//
+@SolidClass base(BaseProperties_minigolf) 
 metadata
 {
 	auto_apply_material = "materials/tools/toolstrigger.vmat"
 }
 = minigolf_hole_bounds : "Bounds of a hole."
 [
-	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
-	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	holenumber(integer) : "Hole Number" : 0 : "Which hole this hole is on."
-	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+	enable_shadows(boolean) { group = "Rendering" } : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
 	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
-// 
-// Minigolf.HoleGoal : Sandbox.ModelEntity 
-// 
-@SolidClass 
+//
+// Minigolf.HoleGoal
+//
+@SolidClass base(BaseProperties_minigolf) 
 metadata
 {
 	auto_apply_material = "materials/tools/toolstrigger.vmat"
@@ -85,107 +91,67 @@ metadata
 }
 = minigolf_hole_goal : "Minigolf hole goal trigger"
 [
-	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
-	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	holenumber(integer) : "Hole Number" : 0 : "Which hole this hole is on."
-	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+	enable_shadows(boolean) { group = "Rendering" } : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
 	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
-// 
-// Minigolf.OutOfBoundsArea : Sandbox.ModelEntity 
-// 
-@SolidClass 
+//
+// Minigolf.HoleSign
+//
+@PointClass base(BaseProperties_minigolf) drawangles() iconsprite( "editor/snd_event.vmat" ) = minigolf_hole_sign : "Minigolf Sign Pole"
+[
+	enable_shadows(boolean) { group = "Rendering" } : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+]
+
+//
+// Minigolf.OutOfBoundsArea
+//
+@SolidClass base(BaseProperties_minigolf) 
 metadata
 {
 	auto_apply_material = "materials/tools/toolstrigger.vmat"
 }
 = minigolf_out_of_bounds : "Out of bounds"
 [
-	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
-	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	forgivetime(integer) : "Forgiveness Time" : 3 : "When the ball enters this out of bounds area, how much time until we declare out of bounds?"
-	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+	enable_shadows(boolean) { group = "Rendering" } : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
 	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
-// 
-// Minigolf.SimpleMovingObstacle : Sandbox.KeyframeEntity 
-// 
-@PointClass = simple_moving_obstacle : ""
+//
+// Minigolf.SpeedBoost
+//
+@SolidClass base(BaseProperties_minigolf) drawangles( "MoveDir" )  base( PhysicsTypeOverride_Mesh ) = minigolf_speed_boost : "An brush built entity that will boost balls."
 [
-	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
-	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
-	movedir(angle) : "Movedir" :  : ""
-	movedir_islocal(boolean) : "Movedir Islocal" : 0 : ""
-	spawnpos(boolean) : "Spawnpos" : 0 : ""
-	lip(float) : "Lip" : 0 : ""
-	speed(float) : "Speed" : 0 : ""
-	wait(float) : "Wait" : 0 : ""
-	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
-
-	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
-]
-
-// 
-// Minigolf.SimpleRotating : Sandbox.ModelEntity 
-// 
-@SolidClass drawangles( AxisDirection, AxisIsLocal ) = simple_rotating : "A simple rotating mesh entity."
-[
-	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
-	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
-	enabled(boolean) : "Enabled" : 1 : ""
-	speed(float) : "Speed" : 100 : "The rotation speed of the entity in degrees per second. Negative speed can be used to change direction."
-	axisdirection(angle) : "Axis Direction (Pitch Yaw Roll)" :  : "The direction of the axis the mesh will rotate on. If AxisIsLocal is defined this is relative to the entitiy's current rotation."
-	axisislocal(boolean) : "Axis Direction Is Local" : 1 : "Is the axis local to the entity's current rotation? This can be useful for more specific behaviour in nested entities."
-	solid(boolean) : "Solid" : 0 : "Whether this entity has collisions."
-	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
-
-	input Start(void) : "Start the rotator rotating."
-	input Stop(void) : "Stop the rotator from rotating."
-	input Toggle(void) : "Toggle the rotator between rotating and not rotating."
-	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
-]
-
-// 
-// Minigolf.SpeedBoost : Sandbox.ModelEntity 
-// 
-@SolidClass drawangles( MoveDir )  base( PhysicsTypeOverride_Mesh ) = minigolf_speed_boost : "An brush built entity that will boost balls."
-[
-	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
-	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	speedmultiplier(float) : "Speed Multiplier" : 2 : "How much the ball will accelerate."
 	maxspeed(float) : "Max Speed" : 1000 : "Max speed the ball can be accelerated to from this booster."
 	movedir(angle) : "Move Direction (Pitch Yaw Roll)" :  : "The direction the ball will move, when told to."
-	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+	enable_shadows(boolean) { group = "Rendering" } : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
 	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
-// 
-// Minigolf.Wall : Sandbox.ModelEntity 
-// 
-@SolidClass  base( PhysicsTypeOverride_Mesh ) = minigolf_wall : "A generic brush/mesh that has customizable reflectivity."
+//
+// Minigolf.Wall
+//
+@SolidClass base(BaseProperties_minigolf)  base( PhysicsTypeOverride_Mesh ) = minigolf_wall : "A generic brush/mesh that has customizable reflectivity."
 [
-	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
-	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	reflect(boolean) : "Reflect" : 1 : "If checked, the ball will bounce off this surface at the defined multiplier."
 	reflectmultiplier(float) : "Reflect Multiplier" : 1 : "How much the wall will reflect"
-	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+	enable_shadows(boolean) { group = "Rendering" } : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
 	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
-// 
-// Minigolf.Water : Sandbox.AnimEntity 
-// 
-@PointClass = minigolf_water : ""
+//
+// Minigolf.Water
+//
+@PointClass base(BaseProperties_minigolf) = minigolf_water : ""
 [
-	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
-	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
-	enable_shadows(boolean) [ group="Render Properties" ] : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+	enable_shadows(boolean) { group = "Rendering" } : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
 	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
