@@ -1,7 +1,7 @@
 ﻿# Sandbox
 code/*.csproj
 code/obj
-code/Properties/launchSettings.json
+code/Properties
 .intermediate
 _bakeresourcecache
 tools_asset_info.bin
