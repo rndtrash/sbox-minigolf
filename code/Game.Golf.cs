@@ -1,19 +1,18 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Sandbox;
 
 namespace Minigolf
 {
-	partial class GolfGame
+	public partial class Game
 	{
+		[Net] public Course Course { get; set; }
+
 		[ServerVar( "minigolf_check_bounds" )]
 		public static bool CheckBounds { get; set; } = true;
 
-        static readonly SoundEvent SoundHoleInOne = new SoundEvent("sounds/minigolf.crowd_ovation.vsnd");
-		static readonly SoundEvent SoundBelowPar = new SoundEvent("sounds/minigolf.fart.vsnd");
-		static readonly SoundEvent InHoleSound = new SoundEvent("sounds/minigolf.ball_inhole.vsnd");
+        static readonly SoundEvent SoundHoleInOne = new("sounds/minigolf.crowd_ovation.vsnd");
+		static readonly SoundEvent SoundBelowPar = new("sounds/minigolf.fart.vsnd");
+		static readonly SoundEvent InHoleSound = new("sounds/minigolf.ball_inhole.vsnd");
 
 		public void OnBallStoppedMoving(Ball ball)
 		{
@@ -28,7 +27,7 @@ namespace Minigolf
 			Fire
 		}
 
-		public void BallOutOfBounds(GolfBall ball, OutOfBoundsType type)
+		public void BallOutOfBounds(Ball ball, OutOfBoundsType type)
         {
 			if ( IsClient )
 				return;
@@ -69,6 +68,11 @@ namespace Minigolf
 			// Let all players know the ball has been cupped.
 			// CuppedBall( To.Everyone, ball, player.Strokes );
 			CuppedBall( To.Everyone, ball );
+
+			// ball.DeleteAsync( 5.0f );
+
+			// Update their score?
+			// Delete their ball?
 
 			Action task = async () =>
 			{
