@@ -40,6 +40,8 @@ namespace Minigolf
 			// if ( Cupped || (!UnlimitedWhacks && Moving) )
 			// 	return;
 
+			InPlay = true;
+
 			direction = direction.Normal.WithZ(0);
 			power = Math.Clamp( power, 0, 1 );
 

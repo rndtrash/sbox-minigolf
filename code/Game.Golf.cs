@@ -123,6 +123,9 @@ namespace Minigolf
 			if ( ConsoleSystem.Caller.Pawn is not Ball ball )
 				return;
 
+			if ( ball.InPlay )
+				return;
+
 			// TODO: Check for stuff here
 
 			var score = client.Components.GetOrCreate<ScoreComponent>();

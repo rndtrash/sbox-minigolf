@@ -6,8 +6,7 @@ namespace Minigolf
 	{
 		[ServerVar( "minigolf_ball_debug" )]
 		public static bool Debug { get; set; } = false;
-
-		[Net] public bool Moving { get; set; } = false;
+		[Net] public bool InPlay { get; set; } = false;
 		[Net] public bool Cupped { get; set; } = false;
 
 		static readonly SoundEvent CuppedSound = new SoundEvent( "sounds/minigolf.ball_inhole.vsnd" );
@@ -59,7 +58,7 @@ namespace Minigolf
 			PhysicsBody.Position = position;
 			ResetInterpolation();
 
-			Moving = false;
+			InPlay = false;
 			Cupped = false;
 
 			// Tell the player we reset the ball

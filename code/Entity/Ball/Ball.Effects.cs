@@ -36,7 +36,7 @@ namespace Minigolf
 		{
 			DownTrace = Trace.Ray( Position, Position + Vector3.Down * (CollisionBounds.Size.z) ).Ignore( this ).WorldOnly().Run();
 
-			if ( !Moving )
+			if ( !InPlay )
 			{
 				var ballRadius = CollisionBounds.Size.z / 2;
 

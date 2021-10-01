@@ -12,6 +12,10 @@ namespace Minigolf
 
 		public override void BuildInput( InputBuilder input )
 		{
+			// If we're in play, don't do anything.
+			if ( InPlay )
+				return;
+
 			if ( input.Down( InputButton.Attack1 ) )
 			{
 				float delta = input.AnalogLook.pitch * Time.Delta;
