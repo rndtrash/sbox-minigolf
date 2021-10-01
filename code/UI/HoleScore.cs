@@ -10,9 +10,9 @@ namespace Minigolf
 	{
 		public static HoleScore Current;
 
-		private Label holeLabel;
-		private Label parLabel;
 		private Label strokeLabel;
+		private Label parLabel;
+		private Label holeLabel;
 
 		public HoleScore()
 		{
@@ -20,32 +20,33 @@ namespace Minigolf
 
 			StyleSheet.Load("/ui/HoleScore.scss");
 
-			var holeContainer = Add.Panel("hole");
-			holeContainer.Add.Label("HOLE", "first");
-			holeLabel = holeContainer.Add.Label("0", "last");
+			var strokeContainer = Add.Panel("stroke");
+			strokeLabel = strokeContainer.Add.Label("0");
 
 			var parContainer = Add.Panel("par");
 			parContainer.Add.Label("PAR", "first" );
 			parLabel = parContainer.Add.Label("0", "last");
 
-			var strokeContainer = Add.Panel("stroke");
-			strokeContainer.Add.Label("STROKE", "first");
-			strokeLabel = strokeContainer.Add.Label("0", "last");
+			var holeContainer = Add.Panel("hole");
+			holeContainer.Add.Label("HOLE", "first");
+			holeLabel = holeContainer.Add.Label("0", "last");
 		}
 
 		public override void Tick()
 		{
-			var game = Game.Current as GolfGame;
-			if (game == null) return;
+			if ( Game.Current == null) return;
 
-			
-
-			// var hole = game.Course.CurrentHole;
+			var hole = Game.Current.Course.CurrentHole;
 			// if (hole == null) return;
 
-			// holeLabel.Text = $"{hole.Number}";
-			// parLabel.Text = $"{hole.Par}";
+			holeLabel.Text = $"{hole.Number}";
+			parLabel.Text = $"{hole.Par}";
 			// strokeLabel.Text = $"{player.Strokes}";
+
+			var score = Local.Client.Components.Get<ScoreComponent>();
+			if ( score == null ) return;
+
+			strokeLabel.Text = $"{score.Score}";
 		}
 	}
 
