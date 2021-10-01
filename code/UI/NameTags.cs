@@ -46,7 +46,7 @@ namespace Minigolf
 			var deleteList = new List<Entity>();
 			deleteList.AddRange(ActiveTags.Keys);
 
-			foreach (var entity in Entity.All.OfType<GolfBall>().OrderBy(x => Vector3.DistanceBetween(x.EyePos, CurrentView.Position ) ))
+			foreach (var entity in Entity.All.OfType<Ball>().OrderBy(x => Vector3.DistanceBetween(x.EyePos, CurrentView.Position ) ))
 			{
 				if (UpdateNameTag(entity))
 					deleteList.Remove(entity);
@@ -69,19 +69,19 @@ namespace Minigolf
 		public bool UpdateNameTag( Entity entity )
 		{
 			// Don't draw local player
-			if ( entity == Local.Pawn )
+			// if ( entity == Local.Pawn )
+			// 	return false;
+
+			// If there's a ball without an owner remove it
+			if ( !entity.GetClientOwner().IsValid() )
 				return false;
 
-			var ball = entity.ActiveChild;
-			if (ball == null)
-				return false;
-
-			var labelPos = ball.Position + Vector3.Up * 16;
+			var labelPos = entity.Position + Vector3.Up * 16;
 
 			// Are we looking in this direction?
-			var lookDir = (labelPos - CurrentView.Position).Normal;
-			if (CurrentView.Rotation.Forward.Dot(lookDir) < 0.5)
-				return false;
+			// var lookDir = (labelPos - CurrentView.Position).Normal;
+			// if (CurrentView.Rotation.Forward.Dot(lookDir) < 0.5)
+			// 	return false;
 
 			float dist = labelPos.Distance( CurrentView.Position );
 			var objectSize = 0.05f / dist / (2.0f * MathF.Tan((CurrentView.FieldOfView / 2.0f).DegreeToRadian())) * 3000.0f;
