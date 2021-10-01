@@ -57,33 +57,11 @@ namespace Minigolf
 			Render.SetLighting( obj );
 
 			var startPos = Position;
-			var endPos = Position += Direction * Power * 100;
+			var endPos = Position + Direction * Power * 100;
 			var offset = Vector3.Cross( Direction, Vector3.Up ) * (1 + 2 * Power);
 
-			var trace = Trace.Ray( startPos, endPos );
-			var result = trace.Run();
-
-			var remainingLength = (result.EndPos - endPos).Length;
-
-			// Draw single arrow if no trace
-			if ( remainingLength.AlmostEqual(0.0f) )
-			{
-				var color = ColorConvert.HSLToRGB( 120 - (int)(Power * Power * 120), 1.0f, 0.5f );
-				DrawArrow( obj, startPos, endPos, Direction, offset, color, true );
-				return;
-			}
-
-			// Draw two arrows
-			var color2 = ColorConvert.HSLToRGB( 120 - (int)(Power * Power * 120), 1.0f, 0.5f );
-			DrawArrow( obj, startPos, result.EndPos, Direction, offset, color2, false );
-
-			var direction2 = Vector3.Reflect( Direction, result.Normal );
-
-			var endPos2 = result.EndPos + direction2 * remainingLength;
-			var offset2 = Vector3.Cross( direction2, Vector3.Up ) * (1 + 2 * Power);
-			DrawArrow( obj, result.EndPos, endPos2, direction2, offset2, color2, true );
-
-			DebugOverlay.Line( result.EndPos, endPos2 );
+			var color = ColorConvert.HSLToRGB( 120 - (int)(Power * Power * 120), 1.0f, 0.5f );
+			DrawArrow( obj, startPos, endPos, Direction, offset, color, true );
 		}
 	}
 }
