@@ -19,6 +19,7 @@ $button-size: 50px;
     color: $button-inactive-fg;
     align-items: center;
     min-height: $button-size;
+    transition: all 0.2s ease-out;
 
     > iconpanel {
         font-size: 22px;
