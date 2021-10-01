@@ -12,16 +12,17 @@ namespace Minigolf
 		{
 			StyleSheet.Load( "/ui/ControlsHelp.scss" );
 
-			AddEntry( "keyboard", "Other Bullshit" );
-			AddEntry( "mouse", "Move Camera" );
-			AddEntry( "keyboard", Input.GetKeyWithBinding( "+iv_score" ) );			
+			AddButton( "Stroke", "iv_attack" );
+			AddButton( "Scoreboard", "iv_score" );
 		}
 
-		protected void AddEntry(string icon, string name)
+		protected void AddButton( string name, string bind )
 		{
+			var key = Input.GetKeyWithBinding( bind ).ToUpper();
+
 			var row = Add.Panel( "row" );
-			row.Add.Icon( icon, "icon" );
-			row.Add.Label( name, "text" );
+			row.Add.Label( name, "name" );
+			row.Add.Label( key, "key" );
 		}
 	}
 

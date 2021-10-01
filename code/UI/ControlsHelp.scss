@@ -11,18 +11,25 @@
         margin-bottom: 8px;
         justify-content: flex-end;
 
-        .icon {
-            font-family: MaterialIcons;
-            font-size: 28px;
+        .name {
+            font-family: Poppins;
+            font-size: 15px;
+            font-weight: 500;
             color: white;
             margin-right: 8px;
         }
 
-        .text {
+        .key {
+            justify-content: center;
+            text-align: center;
+            width: 64px;
+            padding: 4px;
             font-family: Poppins;
-            font-size: 18px;
+            font-size: 13px;
             font-weight: 500;
             color: white;
+            background-color: rgba(black, 0.9);
+            border-radius: 4px;
         }
     }
 }
