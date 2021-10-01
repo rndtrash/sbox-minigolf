@@ -1,0 +1,28 @@
+﻿powerbar {
+    position: absolute;
+    bottom: 32px;
+    left: 64px;
+    flex-direction: column;
+
+    > text {
+        color: white;
+        font-family: Poppins;
+        font-size: 32px;
+        font-weight: 700;
+    }
+
+    > div {
+        flex-direction: row;
+        background-color: rgba(black, 0.3);
+        width: 300px;
+        height: 32px;
+        border-radius: 16px;
+        overflow: hidden;
+
+        .bar {
+            background-color: limegreen;
+            border-radius: 16px;
+            height: 32px;
+        }
+    }
+}
