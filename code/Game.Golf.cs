@@ -15,7 +15,7 @@ namespace Minigolf
 		static readonly SoundEvent SoundBelowPar = new SoundEvent("sounds/minigolf.fart.vsnd");
 		static readonly SoundEvent InHoleSound = new SoundEvent("sounds/minigolf.ball_inhole.vsnd");
 
-		public void OnBallStoppedMoving(GolfBall ball)
+		public void OnBallStoppedMoving(Ball ball)
 		{
 			// if ( CheckBounds && !ball.Cupped && !Course.CurrentHole.InBounds(ball) )
 			// 	BallOutOfBounds(ball, OutOfBoundsType.Normal);
@@ -50,8 +50,10 @@ namespace Minigolf
 		/// </summary>
 		/// <param name="ball"></param>
 		/// <param name="hole"></param>
-		public void CupBall( GolfBall ball, int hole )
+		public void CupBall( Ball ball, int hole )
         {
+			if ( IsClient ) return;
+
 			// Make sure the hole they cupped in is the current one...
 			if ( hole != Course.CurrentHole.Number )
 			{
@@ -77,13 +79,13 @@ namespace Minigolf
 
 				// Reset for now
 				// player.Strokes = 0;
-				ResetBall(ball);
+				// ResetBall(ball);
 			};
 			task.Invoke();
 		}
 
 		[ClientRpc]
-		protected void CuppedBall( GolfBall ball )
+		protected void CuppedBall( Ball ball )
 		{
 			// Add to UI
 			// Sandbox.UI.ChatBox.AddInformation(Player.All, $"{player.Name} scored on hole {hole}!", $"avatar:{player.SteamId}");
@@ -99,9 +101,34 @@ namespace Minigolf
 			_ = EndScore.Current.ShowScore( Course.CurrentHole.Number, Course.CurrentHole.Par, 3 );
 		}
 
-		protected void ResetBall(GolfBall ball)
+		protected void ResetBall(Ball ball)
 		{
+			if ( IsClient )
+				return;
+
 			ball.ResetPosition( Course.CurrentHole.SpawnPosition, Course.CurrentHole.SpawnAngles );
+		}
+
+		// fuck it do this somewhere else and keep score?
+		[ServerCmd]
+		public static void Stroke( float yaw, float power )
+		{
+			var client = ConsoleSystem.Caller;
+			if ( client == null ) return;
+
+			if ( ConsoleSystem.Caller.Pawn is not Ball ball )
+				return;
+
+			// TODO: Check for stuff here
+
+			var score = client.Components.GetOrCreate<ScoreComponent>();
+			Log.Info( $"Score Before: {score.Score}" );
+
+			score.Score += 1;
+
+			Log.Info( $"Score After: {score.Score}" );
+
+			ball.Stroke( Angles.AngleVector( new Angles( 0, yaw, 0 ) ), power );
 		}
 	}
 }
