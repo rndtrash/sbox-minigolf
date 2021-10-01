@@ -9,7 +9,7 @@ namespace Minigolf
 		public Vector3 Direction = Vector3.Zero;
 		public float Power = 0.0f;
 
-		protected void DrawArrow( SceneObject obj, Vector3 startPos, Vector3 endPos, Vector3 direction, Vector3 size, Color color, bool drawTip )
+		protected void DrawArrow( SceneObject obj, Vector3 startPos, Vector3 endPos, Vector3 direction, Vector3 size, Color color )
 		{
 			// vbos are drawn relative to world position
 			startPos -= Position;
@@ -31,18 +31,15 @@ namespace Minigolf
 			vertexBuffer.AddTriangleIndex( 4, 3, 2 );
 			vertexBuffer.AddTriangleIndex( 2, 1, 4 );
 
-			if (drawTip)
-			{
-				// Add the arrow tip
-				Vertex e = new( endPos + size * 2, Vector3.Up, Vector3.Right, new Vector4( 1, 0, 0, 0 ) );
-				Vertex f = new( endPos - size * 2, Vector3.Up, Vector3.Right, new Vector4( 0, 0, 0, 0 ) );
-				Vertex g = new( endPos + direction * 16 * Power, Vector3.Up, Vector3.Right, new Vector4( 1, 0, 0, 0 ) );
+			// Add the arrow tip
+			Vertex e = new( endPos + size * 1.75f, Vector3.Up, Vector3.Right, new Vector4( 1, 0, 0, 0 ) );
+			Vertex f = new( endPos - size * 1.75f, Vector3.Up, Vector3.Right, new Vector4( 0, 0, 0, 0 ) );
+			Vertex g = new( endPos + direction * 8, Vector3.Up, Vector3.Right, new Vector4( 1, 0, 0, 0 ) );
 
-				vertexBuffer.Add( e );
-				vertexBuffer.Add( f );
-				vertexBuffer.Add( g );
-				vertexBuffer.AddTriangleIndex( 1, 2, 3 );
-			}
+			vertexBuffer.Add( e );
+			vertexBuffer.Add( f );
+			vertexBuffer.Add( g );
+			vertexBuffer.AddTriangleIndex( 1, 2, 3 );
 
 			Render.Set( "color", color );
 
@@ -51,17 +48,17 @@ namespace Minigolf
 
 		public override void DoRender( SceneObject obj )
 		{
-			if ( Power == 0.0f )
+			if ( Power.AlmostEqual(0.0f) )
 				return;
 
 			Render.SetLighting( obj );
 
 			var startPos = Position;
 			var endPos = Position + Direction * Power * 100;
-			var offset = Vector3.Cross( Direction, Vector3.Up ) * (1 + 2 * Power);
+			var size = Vector3.Cross( Direction, Vector3.Up ) * 3f;
 
 			var color = ColorConvert.HSLToRGB( 120 - (int)(Power * Power * 120), 1.0f, 0.5f );
-			DrawArrow( obj, startPos, endPos, Direction, offset, color, true );
+			DrawArrow( obj, startPos, endPos, Direction, size, color );
 		}
 	}
 }

@@ -65,10 +65,10 @@ namespace Minigolf
 			// Only show the arrow if we're charging a shot, delete otherwise.
 			if ( ShotPower.AlmostEqual( 0 ) )
 			{
-				if ( Arrow != null )
+				if ( PowerArrow != null )
 				{
-					Arrow.Destroy(true);
-					Arrow = null;
+					PowerArrow.Delete();
+					PowerArrow = null;
 				}
 
 				return;
@@ -77,27 +77,13 @@ namespace Minigolf
 			if ( Game.Current.BallCamera is not FollowBallCamera camera )
 				return;
 
-			/*if ( Arrow == null )
-				Arrow = Particles.Create( "particles/ball_arrow.vpcf", this, "" );
-
-			var ArrowStart = Position + Vector3.Down * (CollisionBounds.Size.z / 2) + Vector3.Up * 0.01f;
-			var ArrowEnd = ArrowStart + Angles.AngleVector( new Angles( 0, camera.Angles.yaw, 0 ) ) * ShotPower;
-
-			Arrow.SetPosition( 0, ArrowStart );
-			Arrow.SetPosition( 1, ArrowEnd );
-
-			DebugOverlay.Line( ArrowStart, ArrowEnd );
-
-			// Arrow.SetForward( 1, Angles.AngleVector( new Angles( 0, camera.Angles.yaw, 0 ) ) );
-			// Arrow.SetPosition( 2, Vector3.One * ShotPower );*/
-
 			if ( !PowerArrow.IsValid() )
 				PowerArrow = new();
 
 			var direction = Angles.AngleVector( new Angles( 0, camera.Angles.yaw, 0 ) );
 
 			// TODO: hardcoded size
-			PowerArrow.Position = Position + Vector3.Down * 2.99f + direction * 5.0f;
+			PowerArrow.Position = Position + Vector3.Down * 3.99f + direction * 5.0f;
 			PowerArrow.Direction = direction;
 			PowerArrow.Power = ShotPower;
 		}
