@@ -12,6 +12,8 @@ namespace Minigolf
 		Particles Arrow { get; set; }
 		Particles Circle { get; set; }
 
+		PowerArrow PowerArrow { get; set; }
+
 		// TraceResult of a downwards trace run every clientside frame.
 		TraceResult DownTrace { get; set; }
 
@@ -75,7 +77,7 @@ namespace Minigolf
 			if ( Game.Current.BallCamera is not FollowBallCamera camera )
 				return;
 
-			if ( Arrow == null )
+			/*if ( Arrow == null )
 				Arrow = Particles.Create( "particles/ball_arrow.vpcf", this, "" );
 
 			var ArrowStart = Position + Vector3.Down * (CollisionBounds.Size.z / 2) + Vector3.Up * 0.01f;
@@ -87,7 +89,17 @@ namespace Minigolf
 			DebugOverlay.Line( ArrowStart, ArrowEnd );
 
 			// Arrow.SetForward( 1, Angles.AngleVector( new Angles( 0, camera.Angles.yaw, 0 ) ) );
-			// Arrow.SetPosition( 2, Vector3.One * ShotPower );
+			// Arrow.SetPosition( 2, Vector3.One * ShotPower );*/
+
+			if ( !PowerArrow.IsValid() )
+				PowerArrow = new();
+
+			var direction = Angles.AngleVector( new Angles( 0, camera.Angles.yaw, 0 ) );
+
+			// TODO: hardcoded size
+			PowerArrow.Position = Position + Vector3.Down * 2.99f + direction * 5.0f;
+			PowerArrow.Direction = direction;
+			PowerArrow.Power = ShotPower;
 		}
 	}
 }
