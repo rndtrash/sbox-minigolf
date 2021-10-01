@@ -2,7 +2,7 @@
 
 namespace Minigolf
 {
-	public partial class GolfBall : ModelEntity
+	public partial class Ball : ModelEntity
 	{
 		[ServerVar( "minigolf_ball_debug" )]
 		public static bool Debug { get; set; } = false;
@@ -11,11 +11,6 @@ namespace Minigolf
 		[Net] public bool Cupped { get; set; } = false;
 
 		static readonly SoundEvent CuppedSound = new SoundEvent( "sounds/minigolf.ball_inhole.vsnd" );
-
-		public GolfBall()
-		{
-			Camera = new FollowBallCamera( this );
-		}
 
 		public override void Spawn()
 		{
@@ -30,22 +25,26 @@ namespace Minigolf
 			UsePhysicsCollision = true;
 
 			Transmit = TransmitType.Always;
+
+			Predictable = false;
+		}
+
+		public override void ClientSpawn()
+		{
+			base.ClientSpawn();
+
+			CreateParticles();
 		}
 
 		public void Cup( bool holeInOne )
 		{
 			if ( Cupped ) return;
 
-			// TODO: Launch the ball on a hole in one
+			Cupped = true;
 
-			// Emit cupped sound
 			var sound = PlaySound( CuppedSound.Name );
 			sound.SetVolume( 1.0f );
 			sound.SetPitch( Rand.Float(0.75f, 1.25f) );
-
-			Particles.Create( "particles/ball_trail.vpcf", Position + Vector3.Up * 8 );
-
-			Cupped = true;
 		}
 
 		public void ResetPosition( Vector3 position, Angles direction )
@@ -70,7 +69,7 @@ namespace Minigolf
 		[ClientRpc]
 		protected void PlayerResetPosition( Vector3 position, Angles angles )
 		{
-			(Camera as FollowBallCamera).Angles = angles;
+			// (Camera as FollowBallCamera).Angles = angles;
 		}
 	}
 }

@@ -3,15 +3,24 @@ using System;
 
 namespace Minigolf
 {
-	public partial class GolfBall
+	public partial class Ball
 	{
-		[ServerVar( "minigolf_ball_linear_damping" )]
-		public static float DefaultLinearDamping { get; set; } = 0.1f;
-		[ServerVar( "minigolf_ball_angular_damping" )]
-		public static float DefaultAngularDamping { get; set; } = 4.00f;
+		static float PowerMultiplier => 5000.0f;
+		static float DefaultLinearDamping => 0.1f;
+		static float DefaultAngularDamping => 4.00f;
 
-		public override void Simulate( Client cl )
+		[Event.Tick.Server]
+		protected void AdjustPhysics()
 		{
+			if ( !Velocity.Length.AlmostEqual( 0.0f, 0.1f ) )
+				Moving = true;
+			else
+			{
+				if ( Moving )
+					Velocity = Vector3.Zero;
+				Moving = false;
+			}
+
 			// If the ball is in the hole, do nothing
 			if ( Cupped )
 				return;
@@ -46,6 +55,16 @@ namespace Minigolf
 			// We are in the air, do nothing? (Maybe we could adjust something to make ball airtime feel nicer?)
 			if ( !downTraceResult.Hit )
 				return;
+
+			// Give ourselves a shit load of damping at a low velocity, brings the ball to a faster stop in a more natural way.
+			if ( Velocity.Length < 5.0f )
+			{
+				PhysicsBody.LinearDamping = DefaultLinearDamping * 50.0f;
+				PhysicsBody.AngularDamping = DefaultAngularDamping * 50.0f;
+
+				return;
+			}
+
 
 			// See if we're on a flat surface by checking the dot product of the surface normal.
 			if ( downTraceResult.Normal.Dot( Vector3.Up ).AlmostEqual( 1, 0.001f ) )
@@ -95,29 +114,6 @@ namespace Minigolf
 			PhysicsBody.AngularDamping = 1.0f;
 		}
 
-		Vector3 prevWorldPos;
-		Vector3 clientVelocity;
-
-		/// <summary>
-		/// Velocity is currently null on the client, let's figure it out here.
-		/// </summary>
-		[Event( "client.tick" )]
-		protected void ClientVelocityWorkaround()
-		{
-			clientVelocity = Position - prevWorldPos;
-
-			if ( Trail == null )
-				return;
-
-			Trail.SetPosition( 0, Position );
-			Trail.SetPosition( 1, prevWorldPos );
-
-			var clientVelocityLength = clientVelocity.Length;
-			Trail.SetPosition( 2, new Vector3( clientVelocityLength ) );
-
-			prevWorldPos = Position;
-		}
-
 		/// <summary>
 		/// Do our own physics collisions, we create a fun bouncing effect this way and handle collision sounds.
 		/// </summary>
@@ -143,13 +139,6 @@ namespace Minigolf
 				}
 
 				ReflectBall( eventData, wall.ReflectMultiplier );
-				return;
-			}
-
-			if ( eventData.Entity is SimpleRotating )
-			{
-				// todo: get better results by looking at the rotating speed?
-				ReflectBall( eventData, 1.0f );
 				return;
 			}
 		}

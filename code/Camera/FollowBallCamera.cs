@@ -11,16 +11,14 @@ namespace Minigolf
 		private float Distance;
 		private float distanceTarget;
 
-		public float MinDistance => 50.0f;
-		public float MaxDistance => 200.0f;
-		public float DistanceStep => 50.0f;
+		public float MinDistance => 100.0f;
+		public float MaxDistance => 300.0f;
+		public float DistanceStep => 10.0f;
 
-		public GolfBall Ball;
+		public Ball Ball;
 
-		public FollowBallCamera( GolfBall ball )
+		public FollowBallCamera()
 		{
-			Ball = ball;
-
 			Distance = 150;
 			distanceTarget = Distance;
 		}
@@ -34,6 +32,8 @@ namespace Minigolf
 
 			distanceTarget = distanceTarget.LerpTo( Distance, Time.Delta * 5.0f );
 
+			// TODO: Camera snapping like this is horrible, do a better trace to prevent the camera being inside objects instead.
+			/*
 			var tr = Trace.Ray( pos, pos + rot.Backward * Distance )
 				.Ignore( Ball )
 				.WorldOnly()
@@ -44,6 +44,7 @@ namespace Minigolf
 			{
 				distanceTarget = Math.Min( distanceTarget, tr.Distance );
 			}
+			*/
 
 			pos += rot.Backward * distanceTarget;
 
@@ -51,7 +52,7 @@ namespace Minigolf
 
 			camSetup.Position = pos;
 			camSetup.Rotation = rot;
-			camSetup.FieldOfView = 90;
+			camSetup.FieldOfView = 80;
 		}
 
 		public override void BuildInput( InputBuilder input )

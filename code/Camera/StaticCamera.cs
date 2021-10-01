@@ -1,5 +1,4 @@
 ﻿using Sandbox;
-using System.Linq;
 
 namespace Minigolf
 {
@@ -9,11 +8,11 @@ namespace Minigolf
 		public Rotation Rotation;
 		public float FieldOfView;
 
-        public StaticCamera( Vector3 position, Angles angles )
+        public StaticCamera( Vector3 position, Angles angles, float fov = 90 )
         {
             Position = new Vector3(position);
             Rotation = Rotation.From(angles);
-            FieldOfView = 90;
+            FieldOfView = fov;
         }
 
 		public override void Build( ref CameraSetup camSetup )
@@ -23,9 +22,6 @@ namespace Minigolf
 			camSetup.FieldOfView = FieldOfView;
 		}
 
-		public override void BuildInput( InputBuilder builder )
-		{
-
-		}
+		public override void BuildInput( InputBuilder builder ) { }
     }
 }
