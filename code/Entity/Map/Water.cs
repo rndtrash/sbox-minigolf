@@ -76,8 +76,8 @@ namespace Minigolf
 
 				using ( Prediction.Off() )
 				{
-					if ( other is GolfBall ball )
-						(Game.Current as GolfGame).BallOutOfBounds( ball, GolfGame.OutOfBoundsType.Water );
+					if ( other is Ball ball )
+						Game.Current.BallOutOfBounds( ball, Game.OutOfBoundsType.Water );
 				}
 			};
 			task.Invoke();

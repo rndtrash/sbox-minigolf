@@ -17,14 +17,14 @@ namespace Minigolf
 		[Property]
 		public int HoleNumber { get; set; }
 
-		public IEnumerable<GolfBall> TouchingBalls => touchingBalls;
-		private readonly List<GolfBall> touchingBalls = new();
+		public IEnumerable<Ball> TouchingBalls => touchingBalls;
+		private readonly List<Ball> touchingBalls = new();
 
 		public override void StartTouch(Entity other)
 		{
 			base.StartTouch(other);
 
-			if (other is GolfBall ball)
+			if (other is Ball ball)
 				AddTouchingBall( ball );
 		}
 
@@ -32,16 +32,16 @@ namespace Minigolf
 		{
 			base.EndTouch(other);
 
-			if ( other is not GolfBall )
+			if ( other is not Ball )
 				return;
 
-			var ball = other as GolfBall;
+			var ball = other as Ball;
 
 			if (touchingBalls.Contains(ball))
 				touchingBalls.Remove(ball);
 		}
 
-		protected void AddTouchingBall( GolfBall ball )
+		protected void AddTouchingBall( Ball ball )
 		{
 			if (!ball.IsValid())
 				return;

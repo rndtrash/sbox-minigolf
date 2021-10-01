@@ -16,8 +16,8 @@ namespace Minigolf
 		[Property(Title = "Forgiveness Time")]
 		public int ForgiveTime { get; set; } = 3;
 
-		public IEnumerable<GolfBall> TouchingBalls => touchingBalls;
-		private readonly List<GolfBall> touchingBalls = new();
+		public IEnumerable<Ball> TouchingBalls => touchingBalls;
+		private readonly List<Ball> touchingBalls = new();
 
 		public override void Spawn()
 		{
@@ -35,12 +35,12 @@ namespace Minigolf
 		{
 			base.StartTouch( other );
 
-			if ( other is GolfBall ball )
+			if ( other is Ball ball )
 			{
 				AddTouchingBall( ball );
 
 				// TODO: forgiveness time
-				(Game.Current as GolfGame).BallOutOfBounds( ball, GolfGame.OutOfBoundsType.Normal );
+				Game.Current.BallOutOfBounds( ball, Game.OutOfBoundsType.Normal );
 			}
 		}
 
@@ -48,16 +48,16 @@ namespace Minigolf
 		{
 			base.EndTouch( other );
 
-			if ( other is not GolfBall )
+			if ( other is not Ball )
 				return;
 
-			var ball = other as GolfBall;
+			var ball = other as Ball;
 
 			if ( touchingBalls.Contains( ball ) )
 				touchingBalls.Remove( ball );
 		}
 
-		protected void AddTouchingBall( GolfBall ball )
+		protected void AddTouchingBall( Ball ball )
 		{
 			if ( !ball.IsValid() )
 				return;

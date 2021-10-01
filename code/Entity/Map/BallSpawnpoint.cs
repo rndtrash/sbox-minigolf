@@ -14,19 +14,24 @@ namespace Minigolf
 		/// <summary>
 		/// What hole number this spawnpoint belongs to.
 		/// </summary>
-		[Property]
+		[Property, Net]
 		public int HoleNumber { get; set; }
 
 		/// <summary>
 		/// The name of this hole, this is displayed in-game.
 		/// </summary>
-		[Property]
+		[Property, Net]
 		public string HoleName { get; set; } = "Untitled Hole";
 
 		/// <summary>
 		/// How many strokes should this hole be done in.
 		/// </summary>
-		[Property]
+		[Property, Net]
 		public int HolePar { get; set; } = 3;
+
+		public override void Spawn()
+		{
+			Transmit = TransmitType.Always;
+		}
 	}
 }

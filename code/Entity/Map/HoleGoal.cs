@@ -14,7 +14,7 @@ namespace Minigolf
 		/// <summary>
 		/// Which hole this hole is on.
 		/// </summary>
-		[Property]
+		[Property, Net]
 		public int HoleNumber { get; set; }
 
 		public override void Spawn()
@@ -25,14 +25,15 @@ namespace Minigolf
 			CollisionGroup = CollisionGroup.Trigger;
 			EnableSolidCollisions = false;
 			EnableTouch = true;
+			Transmit = TransmitType.Always;
 		}
 
 		public override void StartTouch( Entity other )
 		{
-			if ( other is not GolfBall ball )
+			if ( other is not Ball ball )
 				return;
 
-			(Game.Current as GolfGame).CupBall( ball, HoleNumber );
+			Game.Current.CupBall( ball, HoleNumber );
 		}
 	}
 }
