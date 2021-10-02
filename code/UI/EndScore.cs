@@ -47,14 +47,18 @@ namespace Minigolf
 
 			holeLabel.Text = $"Hole {hole}".ToUpper();
 
-			// (GolfHUD.Current as GolfHUD).Fade = true;
 			AddClass("show");
 
 			await Task.DelaySeconds(5);
 
-			// (GolfHUD.Current as GolfHUD).Fade = false;
 			RemoveClass("show");
         }
+
+		[ClientCmd("minigolf_debug_testscore")]
+		public static void TestScore(int hole, int par, int strokes)
+		{
+			EndScore.Current.ShowScore( hole, par, strokes );
+		}
 	}
 
 }

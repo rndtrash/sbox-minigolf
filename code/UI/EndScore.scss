@@ -8,12 +8,15 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    background-color: rgba(black, 0.8);
+    opacity: 0;
+    transition: opacity 0.25s ease-in;
+    z-index: 5000;
 
     label {
-        color: rgba(255, 255, 255, 0);
-        font-family: No Virus;
+        color: white;
+        font-family: Poppins;
         font-weight: bold;
-        transition: color 0.6s ease-out;
     }
 
     label.score {
@@ -30,10 +33,5 @@
 
     &.show {
         opacity: 1;
-
-        label {
-            transition: color 1s ease-in;
-            color: white;
-        }
     }
 }

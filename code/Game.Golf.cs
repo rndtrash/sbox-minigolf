@@ -66,8 +66,8 @@ namespace Minigolf
 			ball.Cup();
 
 			// Let all players know the ball has been cupped.
-			// CuppedBall( To.Everyone, ball, player.Strokes );
-			CuppedBall( To.Everyone, ball );
+			var score = ball.GetClientOwner().Components.GetOrCreate<ScoreComponent>();
+			CuppedBall( To.Everyone, ball, score.Score );
 
 			// ball.DeleteAsync( 5.0f );
 
@@ -89,20 +89,16 @@ namespace Minigolf
 		}
 
 		[ClientRpc]
-		protected void CuppedBall( Ball ball )
+		protected void CuppedBall( Ball ball, int score )
 		{
-			// Add to UI
-			// Sandbox.UI.ChatBox.AddInformation(Player.All, $"{player.Name} scored on hole {hole}!", $"avatar:{player.SteamId}");
+			var client = ball.GetClientOwner();
 
-			if ( Local.Pawn != ball ) return;
+			// Add to UI ( This should be our "kill" feed )
+			Minigolf.ChatBox.AddInformation($"{client.Name} scored on hole {Course.CurrentHole.Number}!", $"avatar:{client.SteamId}");
 
-			// nice job bro, hole in one!
-			/* if ( strokes == 1 )
-				Sound.FromScreen( SoundHoleInOne.Name ).SetVolume( 0.8f );
-			else if ( strokes - Course.CurrentHole.Par > 0 )
-				Sound.FromScreen( SoundBelowPar.Name ); */
+			if ( Local.Client != client ) return;
 
-			_ = EndScore.Current.ShowScore( Course.CurrentHole.Number, Course.CurrentHole.Par, 3 );
+			_ = EndScore.Current.ShowScore( Course.CurrentHole.Number, Course.CurrentHole.Par, score );
 		}
 
 		protected void ResetBall(Ball ball)
@@ -126,14 +122,8 @@ namespace Minigolf
 			if ( ball.InPlay )
 				return;
 
-			// TODO: Check for stuff here
-
 			var score = client.Components.GetOrCreate<ScoreComponent>();
-			Log.Info( $"Score Before: {score.Score}" );
-
 			score.Score += 1;
-
-			Log.Info( $"Score After: {score.Score}" );
 
 			ball.Stroke( Angles.AngleVector( new Angles( 0, yaw, 0 ) ), power );
 		}
