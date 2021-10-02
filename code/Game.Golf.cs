@@ -66,7 +66,7 @@ namespace Minigolf
 			ball.Cup();
 
 			// Let all players know the ball has been cupped.
-			var score = ball.GetClientOwner().Components.GetOrCreate<ScoreComponent>();
+			var score = ball.Client.Components.GetOrCreate<ScoreComponent>();
 			CuppedBall( To.Everyone, ball, score.Score );
 
 			// ball.DeleteAsync( 5.0f );
@@ -91,7 +91,7 @@ namespace Minigolf
 		[ClientRpc]
 		protected void CuppedBall( Ball ball, int score )
 		{
-			var client = ball.GetClientOwner();
+			var client = ball.Client;
 
 			// Add to UI ( This should be our "kill" feed )
 			Minigolf.ChatBox.AddInformation($"{client.Name} scored on hole {Course.CurrentHole.Number}!", $"avatar:{client.SteamId}");

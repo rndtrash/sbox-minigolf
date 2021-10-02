@@ -18,7 +18,7 @@ namespace Minigolf
 		{
 			this.entity = entity;
 
-			var client = entity.GetClientOwner();
+			var client = entity.Client;
 
 			NameLabel = Add.Label( $"{client.Name}" );
 			Avatar = Add.Image( $"avatar:{client.SteamId}" );
@@ -73,7 +73,7 @@ namespace Minigolf
 			// 	return false;
 
 			// If there's a ball without an owner remove it
-			if ( !entity.GetClientOwner().IsValid() )
+			if ( !entity.Client.IsValid() )
 				return false;
 
 			var labelPos = entity.Position + Vector3.Up * 16;
