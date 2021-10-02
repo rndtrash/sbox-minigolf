@@ -83,7 +83,8 @@ namespace Minigolf
 			var direction = Angles.AngleVector( new Angles( 0, camera.Angles.yaw, 0 ) );
 
 			// TODO: hardcoded size
-			PowerArrow.Position = Position + Vector3.Down * 3.99f + direction * 5.0f;
+			var ballRadius = CollisionBounds.Size.z / 2;
+			PowerArrow.Position = Position + Vector3.Down * ballRadius + Vector3.Up * 0.01f + direction * 5.0f;
 			PowerArrow.Direction = direction;
 			PowerArrow.Power = ShotPower;
 		}
