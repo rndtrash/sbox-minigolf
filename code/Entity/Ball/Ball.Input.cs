@@ -9,6 +9,7 @@ namespace Minigolf
 		/// The current shot power...
 		/// </summary>
 		public float ShotPower { get; set; } = 0.0f;
+		public float LastShotPower { get; set; } = 0.0f;
 
 		public override void BuildInput( InputBuilder input )
 		{
@@ -25,6 +26,7 @@ namespace Minigolf
 			if ( ShotPower >= 0.01f && !input.Down( InputButton.Attack1 ) )
 			{
 				Game.Stroke( Game.Current.BallCamera.Angles.yaw, ShotPower );
+				LastShotPower = ShotPower;
 				ShotPower = 0;
 			}
 		}
