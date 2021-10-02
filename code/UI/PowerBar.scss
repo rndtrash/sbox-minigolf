@@ -1,4 +1,4 @@
-﻿powerbar {
+powerbar {
     position: absolute;
     bottom: 32px;
     left: 64px;
@@ -9,6 +9,9 @@
         font-family: Poppins;
         font-size: 32px;
         font-weight: 700;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+        left: -8px;
+        top: -2px;
     }
 
     > div {
