@@ -74,8 +74,12 @@ namespace Minigolf
 			var downTraceResult = downTrace.Run();
 
 			DebugOverlay.Line( downTraceResult.StartPos, downTraceResult.EndPos, 0, false );
-			DebugOverlay.ScreenText( 10, $"On Ground:      {downTraceResult.Hit}" );
-			DebugOverlay.ScreenText( 11, $"Ground Surface: {downTraceResult.Surface.Name}" );
+			DebugOverlay.ScreenText( 10, $"On Ground:          {downTraceResult.Hit}" );
+			DebugOverlay.ScreenText( 11, $"Ground Surface:     {downTraceResult.Surface.Name}" );
+			DebugOverlay.ScreenText( 12, $"Surface Friction:   {downTraceResult.Surface.Friction}" );
+			DebugOverlay.ScreenText( 13, $"Surface Elasticity: {downTraceResult.Surface.Elasticity}" );
+			DebugOverlay.ScreenText( 14, $"Surface Dampening:  {downTraceResult.Surface.Dampening}" );
+
 
 			// If there is nothing below us we're in the air, handle that specifically.
 			if ( !downTraceResult.Hit )
