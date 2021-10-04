@@ -9,7 +9,7 @@
 
 # Making Maps
 
-* [MAPPING.md](MAPPING.md)
+* [MAPPING.md](docs/MAPPING.md)
 
 # License
 
