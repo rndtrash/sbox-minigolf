@@ -77,9 +77,9 @@ namespace Minigolf
 			return true;
 		}
 
-		public override void OnKilled()
+		protected override void OnDestroy()
 		{
-			base.OnKilled();
+			base.OnDestroy();
 
 			foreach (var at in ActiveTags)
 			{
