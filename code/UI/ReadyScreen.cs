@@ -28,12 +28,7 @@ namespace Minigolf
 			if ( !Client.IsValid() )
 				return;
 
-			var readyComponent = Client.GetEntity().Components.Get<ReadyComponent>();
-
-			if ( readyComponent == null )
-				return;
-
-			SetClass( "ready", readyComponent.Ready );
+			SetClass( "ready", Client.GetValue( "ready", false ) );
 		}
 	}
 
@@ -78,12 +73,10 @@ namespace Minigolf
 			var readyPlayers = 0;
 			foreach ( var client in Client.All )
 			{
-				var component = client.GetEntity().Components.Get<ReadyComponent>();
-				if ( component == null )
+				if ( !client.GetValue<bool>( "ready", false ) )
 					continue;
 
-				if ( component.Ready )
-					readyPlayers++;
+				readyPlayers++;
 			}
 			ReadyCount.Text = $"{readyPlayers}/{Client.All.Count} Players Ready";
 		}

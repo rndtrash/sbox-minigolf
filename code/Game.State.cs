@@ -29,14 +29,13 @@ namespace Minigolf
 			var client = ConsoleSystem.Caller;
 			if ( client == null ) return;
 
-			var readyComponent = client.Components.GetOrCreate<ReadyComponent>();
-			readyComponent.Ready = !readyComponent.Ready;
+			client.SetValue( "ready", !client.GetValue<bool>( "ready", false ) );
 
 			// TODO: move this to a tick or some shit
 			foreach ( var cl in Client.All )
 			{
-				var rdy = cl.Components.GetOrCreate<ReadyComponent>();
-				if ( !rdy.Ready ) return;
+				if ( !cl.GetValue<bool>( "ready", false ) )
+					return;
 			}
 
 			Current.StartGame();
@@ -47,8 +46,7 @@ namespace Minigolf
 			PlayingClients = new List<Client>();
 			foreach( var client in Client.All )
 			{
-				var readyComponent = client.Components.GetOrCreate<ReadyComponent>();
-				if ( readyComponent.Ready )
+				if ( client.GetValue<bool>( "ready", false ) )
 					PlayingClients.Add( client );
 			}
 
@@ -71,7 +69,7 @@ namespace Minigolf
 			// Force everyone to ready
 			foreach ( var client in Client.All )
 			{
-				client.Components.GetOrCreate<ReadyComponent>().Ready = true;
+				client.SetValue( "ready", true );
 			}
 
 			Current.StartGame();

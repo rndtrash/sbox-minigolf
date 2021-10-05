@@ -57,8 +57,6 @@ namespace Minigolf
 			// Course.SendCourseInfo( To.Single( cl ) );
 			// Score.SendFullScore( To.Single( cl ) );
 
-			cl.GetEntity().Components.Add( new ReadyComponent() );
-
 			// todo: if game is active, spectate
 		}
 
