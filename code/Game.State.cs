@@ -12,7 +12,7 @@ namespace Minigolf
 
 	partial class Game
 	{
-		[Net, Change( nameof( OnStateChanged ) )]
+		[Net, Change]
 		public GameState State { get; set; } = GameState.WaitingForPlayers;
 
 		[Net] public List<Client> PlayingClients { get; set; }
@@ -21,6 +21,15 @@ namespace Minigolf
 		{
 			Event.Run( "minigolf.state.changed", newState );
 			// Pass to HUD?
+
+			if ( newState == GameState.Playing )
+			{
+				NameTags = new();
+			}
+			else if ( NameTags.IsValid() )
+			{
+				NameTags.Delete();
+			}
 		}
 
 		[ServerCmd]

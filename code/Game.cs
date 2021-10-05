@@ -9,6 +9,7 @@ namespace Minigolf
 	{
 		public static Game Current { get; protected set; }
 		public Hud Hud { get; private set; }
+		public NameTags NameTags { get; private set; }
 
 		public Game()
 		{

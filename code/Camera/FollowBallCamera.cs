@@ -6,6 +6,7 @@ namespace Minigolf
 	public class FollowBallCamera : ICamera
 	{
 		public Angles Angles;
+		public Angles AnglesTowardsPlayer;
 		public Vector3 Position;
 
 		private float Distance;
@@ -68,6 +69,9 @@ namespace Minigolf
 
 			if ( !input.Down( InputButton.Attack1 ) )
 				Angles.pitch = Angles.pitch.Clamp( 0, 89 );
+
+			AnglesTowardsPlayer.pitch = 270;//-Angles.pitch;
+			AnglesTowardsPlayer.yaw = 180 + Angles.yaw;
 		}
 	}
 }
