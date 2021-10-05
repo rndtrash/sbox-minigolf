@@ -16,19 +16,22 @@
     label {
         color: white;
         font-family: Poppins;
-        font-weight: bold;
+        font-weight: 700;
+        text-transform: uppercase;
     }
 
     label.score {
-        font-size: 104px;
-        line-height: 104px; // set a line height so we dont fuck up sizing with transition
-        text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8);
+        color: #efa307;
+        font-size: 144px;
+        text-shadow: 5px 5px 5px #732a00;
         margin-bottom: 12px;
+        transform: rotate( -3deg );
     }
 
     label.hole {
         font-size: 42px;
         text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+        margin-top: -32px;
     }
 
     &.show {
