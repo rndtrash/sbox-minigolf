@@ -1,11 +1,11 @@
-﻿using Sandbox;
+using Sandbox;
 using System;
 
 namespace Minigolf
 {
 	public partial class Ball
 	{
-		static float PowerMultiplier => 5000.0f;
+		static float PowerMultiplier => 2500.0f;
 
 		// Damping values
 		static float DefaultLinearDamping => 0.1f;
